@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CineMatch — Begin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* =========================================================
+   CineMatch — form page (matches landing brutalist aesthetic)
+   ========================================================= */
+
+:root {
+  --bg:          #0c0c0c;
+  --ink:         #f5f5f0;
+  --ink-mute:    #a8a8a3;
+  --ink-faint:   #5a5a58;
+  --accent:      #a78bff;
+  --accent-deep: #6b48d6;
+  --rule:        #1f1f1f;
+  --rule-soft:   #161616;
+
+  --serif: 'Fraunces', 'Times New Roman', serif;
+  --mono:  'JetBrains Mono', ui-monospace, monospace;
+
+  --gutter: clamp(24px, 4vw, 56px);
+  --max:    1200px;
+
+  --ease:  cubic-bezier(.2, .7, .2, 1);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+button { font-family: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible, textarea:focus-visible, input:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 4px;
+}
+a { color: inherit; text-decoration: none; }
+
+/* film grain overlay (matches landing) */
+.grain {
+  pointer-events: none;
+  position: fixed; inset: 0;
+  z-index: 100;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- HEADER (matches landing) ---------- */
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px var(--gutter);
+  border-bottom: 1px solid var(--rule);
+  max-width: var(--max);
+  margin: 0 auto;
+}
+.logo {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  font-weight: 500;
+  color: var(--ink);
+}
+.site-nav {
+  display: flex;
+  gap: 32px;
+}
+.nav-link {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  position: relative;
+  padding: 4px 0;
+  transition: color .3s var(--ease);
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s var(--ease);
+}
+.nav-link:hover { color: var(--ink); }
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* ---------- FORM CONTAINER ---------- */
+
+.form-page {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(36px, 6vh, 64px) var(--gutter) 24px;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  animation: fadeUp 0.7s var(--ease) 0.1s forwards;
+}
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--accent);
+}
+.intro {
+  font-family: var(--serif);
+  font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--ink);
+  margin: 0 0 56px;
+  max-width: 36ch;
+  opacity: 0;
+  animation: fadeUp 0.8s var(--ease) 0.2s forwards;
+}
+.intro em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* ---------- FIELDS ---------- */
+
+.field {
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) 1fr;
+  gap: clamp(20px, 4vw, 56px);
+  padding: 36px 0;
+  border-top: 1px solid var(--rule);
+  align-items: start;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 0.8s var(--ease) forwards;
+}
+.field:nth-of-type(1) { animation-delay: 0.4s; }
+.field:nth-of-type(2) { animation-delay: 0.55s; }
+.field:nth-of-type(3) { animation-delay: 0.7s; }
+.field:last-of-type { border-bottom: 1px solid var(--rule); }
+
+@media (max-width: 720px) {
+  .field {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 28px 0;
+  }
+}
+
+/* big italic number */
+.field-num {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(56px, 8vw, 84px);
+  line-height: 0.85;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  margin: 0;
+  position: relative;
+}
+.field-num::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 1.5px;
+  background: var(--accent);
+  margin-top: 14px;
+}
+
+.field-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 6px;
+}
+
+.field-label {
+  font-family: var(--serif);
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.2;
+}
+.field-label .hint {
+  font-style: italic;
+  color: var(--ink-faint);
+  font-size: 0.7em;
+  font-weight: 400;
+  margin-left: 12px;
+}
+
+/* text inputs — underline style only */
+textarea, input[type="text"] {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.7vw, 20px);
+  line-height: 1.45;
+  padding: 8px 0 14px;
+  resize: none;
+  transition: border-color .35s var(--ease);
+  margin-top: 4px;
+}
+textarea::placeholder, input[type="text"]::placeholder {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+textarea:focus, input[type="text"]:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+textarea {
+  min-height: 64px;
+}
+
+/* chip group */
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.chip {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--ink-mute);
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 400;
+  padding: 8px 18px;
+  border-radius: 999px;
+  transition: all .25s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.chip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  border-radius: 999px;
+  transform: scale(0);
+  transition: transform .35s var(--ease);
+  z-index: -1;
+}
+.chip:hover {
+  color: var(--ink);
+  border-color: var(--ink-faint);
+}
+.chip.active {
+  color: var(--bg);
+  border-color: var(--accent);
+}
+.chip.active::before {
+  transform: scale(1);
+}
+
+/* ---------- BOTTOM BAR ---------- */
+
+.bottom-bar {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 28px var(--gutter) 28px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.8s var(--ease) 0.9s forwards;
+}
+
+.cta {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  padding: 16px 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  transition: background .35s var(--ease), opacity .3s var(--ease);
+}
+.cta:disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-deep);
+  transform: translateX(-101%);
+  transition: transform .45s var(--ease);
+  z-index: 0;
+}
+.cta:hover { color: var(--ink); }
+.cta:hover::before { transform: translateX(0); }
+.cta-label, .cta-arrow { position: relative; z-index: 1; }
+.cta-arrow {
+  display: inline-block;
+  transition: transform .35s var(--ease);
+}
+.cta:hover .cta-arrow { transform: translateX(6px); }
+
+.back-link {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: color .3s var(--ease), gap .35s var(--ease);
+}
+.back-link:hover {
+  color: var(--accent);
+  gap: 14px;
+}
+
+.progress {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.001s !important;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header class="site-header">
+  <a href="index.html" class="logo">CINEMATCH</a>
+  <nav class="site-nav">
+    <a href="about.html" class="nav-link">About</a>
+    <a href="contact.html" class="nav-link">Contact</a>
+  </nav>
+</header>
+
+<main class="form-page">
+
+  <p class="eyebrow">Three questions</p>
+  <p class="intro">
+    Tell us a little about <em>what you're looking for</em>. We'll handle the rest.
+  </p>
+
+  <form id="form">
+
+    <!-- 01 — MOOD -->
+    <div class="field">
+      <h2 class="field-num">01</h2>
+      <div class="field-body">
+        <label for="mood" class="field-label">What are you feeling?</label>
+        <textarea
+          id="mood"
+          name="mood"
+          rows="2"
+          placeholder="restless, can't sleep, want something quiet…"
+          autocomplete="off"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- 02 — GENRE -->
+    <div class="field">
+      <h2 class="field-num">02</h2>
+      <div class="field-body">
+        <span class="field-label">What kind of film?<span class="hint">pick a few</span></span>
+        <div class="chip-group" data-multi="true">
+          <button type="button" class="chip" data-value="drama">Drama</button>
+          <button type="button" class="chip" data-value="comedy">Comedy</button>
+          <button type="button" class="chip" data-value="thriller">Thriller</button>
+          <button type="button" class="chip" data-value="scifi">Sci-Fi</button>
+          <button type="button" class="chip" data-value="horror">Horror</button>
+          <button type="button" class="chip" data-value="romance">Romance</button>
+          <button type="button" class="chip" data-value="documentary">Documentary</button>
+          <button type="button" class="chip" data-value="animation">Animation</button>
+          <button type="button" class="chip" data-value="action">Action</button>
+          <button type="button" class="chip" data-value="mystery">Mystery</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 — OCCASION -->
+    <div class="field">
+      <h2 class="field-num">03</h2>
+      <div class="field-body">
+        <label for="occasion" class="field-label">What's the occasion?</label>
+        <input
+          id="occasion"
+          name="occasion"
+          type="text"
+          placeholder="rainy Sunday alone, date night, friends over…"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+
+  </form>
+
+</main>
+
+<div class="bottom-bar">
+  <a href="index.html" class="back-link">← Back</a>
+  <span class="progress" id="progress">0 of 3 answered</span>
+  <button class="cta" type="button" onclick="document.getElementById('form').requestSubmit()">
+    <span class="cta-label">Find my film</span>
+    <span class="cta-arrow">→</span>
+  </button>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // chip toggle
+  document.querySelectorAll('.chip-group').forEach(group => {
+    const isMulti = group.dataset.multi === 'true';
+    group.addEventListener('click', e => {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
+      if (isMulti) chip.classList.toggle('active');
+      else {
+        group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+      }
+      updateProgress();
+    });
+  });
+
+  // progress counter
+  const moodEl = document.getElementById('mood');
+  const occasionEl = document.getElementById('occasion');
+  const progressEl = document.getElementById('progress');
+
+  const ctaBtn = document.querySelector('.cta');
+
+  function updateProgress() {
+    let count = 0;
+    if (moodEl.value.trim()) count++;
+    if (document.querySelector('.chip-group .chip.active')) count++;
+    if (occasionEl.value.trim()) count++;
+    progressEl.textContent = `${count} of 3 answered`;
+    ctaBtn.disabled = count === 0;
+  }
+
+  // pre-populate ONLY when returning via "Refine your mood" on results
+  if (localStorage.getItem('cm_refine') === '1') {
+    const prevMood     = localStorage.getItem('cm_mood');
+    const prevGenres   = JSON.parse(localStorage.getItem('cm_genres') || '[]');
+    const prevOccasion = localStorage.getItem('cm_occasion');
+
+    if (prevMood)     moodEl.value = prevMood;
+    if (prevOccasion) occasionEl.value = prevOccasion;
+    prevGenres.forEach(g => {
+      const chip = document.querySelector(`.chip[data-value="${g}"]`);
+      if (chip) chip.classList.add('active');
+    });
+
+    // single-use flag — clear so any future visit is blank
+    localStorage.removeItem('cm_refine');
+  }
+
+  // initialize progress + CTA state
+  updateProgress();
+
+  moodEl.addEventListener('input', updateProgress);
+  occasionEl.addEventListener('input', updateProgress);
+
+  // save inputs to localStorage then go to loading
+  document.getElementById('form').addEventListener('submit', e => {
+    e.preventDefault();
+    const genres = [...document.querySelectorAll('.chip.active')].map(c => c.dataset.value);
+    localStorage.setItem('cm_mood',    moodEl.value.trim());
+    localStorage.setItem('cm_genres',  JSON.stringify(genres));
+    localStorage.setItem('cm_occasion', occasionEl.value.trim());
+    window.location.href = 'loading.html';
+  });
+
+});
+</script>
+
+</body>
+</html>

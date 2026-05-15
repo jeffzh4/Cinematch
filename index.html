@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CineMatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* =========================================================
+   CineMatch — brutalist editorial, purple
+   ========================================================= */
+
+:root {
+  --bg:          #0c0c0c;
+  --ink:         #f5f5f0;
+  --ink-mute:    #a8a8a3;
+  --ink-faint:   #5a5a58;
+  --accent:      #a78bff;
+  --accent-deep: #6b48d6;
+  --rule:        #1f1f1f;
+  --rule-soft:   #161616;
+
+  --serif: 'Fraunces', 'Times New Roman', serif;
+  --mono:  'JetBrains Mono', ui-monospace, monospace;
+
+  --gutter: clamp(24px, 4vw, 56px);
+  --max:    1200px;
+
+  --ease:  cubic-bezier(.2, .7, .2, 1);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+button { font-family: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 4px;
+}
+a { color: inherit; text-decoration: none; }
+
+/* film grain — fixed, very subtle */
+.grain {
+  pointer-events: none;
+  position: fixed; inset: 0;
+  z-index: 100;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- HEADER ---------- */
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px var(--gutter);
+  border-bottom: 1px solid var(--rule);
+  max-width: var(--max);
+  margin: 0 auto;
+}
+.logo {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  font-weight: 500;
+  color: var(--ink);
+}
+.site-nav {
+  display: flex;
+  gap: 32px;
+}
+.nav-link {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  position: relative;
+  padding: 4px 0;
+  transition: color .3s var(--ease);
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s var(--ease);
+}
+.nav-link:hover { color: var(--ink); }
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* ---------- HERO ---------- */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(40px, 8vh, 90px) var(--gutter) 60px;
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: clamp(24px, 5vw, 80px);
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-top: 50px;
+  }
+}
+
+/* left column */
+.hero-left { position: relative; }
+
+.big-num {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(120px, 18vw, 200px);
+  line-height: 0.85;
+  color: var(--accent);
+  margin: 0;
+  letter-spacing: -0.04em;
+  position: relative;
+  /* clip during entry */
+  overflow: hidden;
+}
+.big-num span {
+  display: inline-block;
+  transform: translateY(105%);
+  animation: stamp 1.1s var(--ease) 0.2s forwards;
+}
+@keyframes stamp {
+  0%   { transform: translateY(105%); }
+  60%  { transform: translateY(-3%); }
+  80%  { transform: translateY(2%); }
+  100% { transform: translateY(0); }
+}
+
+.rule {
+  height: 2px;
+  background: var(--accent);
+  width: 0;
+  margin-top: 12px;
+  animation: ruleSlide 0.9s var(--ease) 1.1s forwards;
+}
+@keyframes ruleSlide {
+  to { width: min(220px, 100%); }
+}
+
+.tagline {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 18px 0 0;
+  line-height: 1.7;
+  opacity: 0;
+  animation: fadeUp 0.8s var(--ease) 1.4s forwards;
+}
+
+/* right column: massive headline */
+.hero-right { position: relative; }
+
+.hero-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(56px, 10vw, 128px);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  margin: 0;
+  color: var(--ink);
+}
+.hero-title .line {
+  display: block;
+  overflow: hidden;
+}
+.hero-title .line > span {
+  display: inline-block;
+  transform: translateY(110%);
+  animation: lineUp 1s var(--ease) forwards;
+}
+.hero-title .line:nth-child(1) > span { animation-delay: 0.5s; }
+.hero-title .line:nth-child(2) > span { animation-delay: 0.7s; }
+.hero-title .line:nth-child(3) > span { animation-delay: 0.9s; }
+@keyframes lineUp {
+  to { transform: translateY(0); }
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--accent);
+  font-variation-settings: "opsz" 144;
+}
+
+.subline {
+  margin: clamp(28px, 5vw, 48px) 0 0;
+  font-family: var(--serif);
+  font-size: clamp(15px, 1.5vw, 17px);
+  color: var(--ink-mute);
+  max-width: 38ch;
+  line-height: 1.6;
+  opacity: 0;
+  animation: fadeUp 0.8s var(--ease) 1.5s forwards;
+}
+.subline em {
+  font-style: italic;
+  color: var(--ink);
+}
+
+/* CTA + bottom row */
+.bottom-bar {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 32px var(--gutter) 32px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.8s var(--ease) 1.7s forwards;
+}
+
+.cta {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  padding: 16px 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  transition: background .35s var(--ease);
+}
+.cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-deep);
+  transform: translateX(-101%);
+  transition: transform .45s var(--ease);
+  z-index: 0;
+}
+.cta:hover { color: var(--ink); }
+.cta:hover::before { transform: translateX(0); }
+.cta-label, .cta-arrow { position: relative; z-index: 1; }
+.cta-arrow {
+  display: inline-block;
+  transition: transform .35s var(--ease);
+}
+.cta:hover .cta-arrow { transform: translateX(6px); }
+
+.byline {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+/* one big universal fade-up for delayed bits */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.001s !important;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header class="site-header">
+  <a href="index.html" class="logo">CINEMATCH</a>
+  <nav class="site-nav">
+    <a href="about.html" class="nav-link">About</a>
+    <a href="contact.html" class="nav-link">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+
+  <div class="hero-left">
+    <h2 class="big-num"><span>00</span></h2>
+    <div class="rule"></div>
+    <p class="tagline">
+      A film recommender<br>for the overwhelmed.
+    </p>
+  </div>
+
+  <div class="hero-right">
+    <h1 class="hero-title">
+      <span class="line"><span>FIND</span></span>
+      <span class="line"><span>YOUR</span></span>
+      <span class="line"><span><em>film.</em></span></span>
+    </h1>
+
+    <p class="subline">
+      Three questions. Six recommendations. No infinite scroll, no thumbnails — just an <em>answer</em>.
+    </p>
+  </div>
+
+</section>
+
+<div class="bottom-bar">
+  <button class="cta" type="button" onclick="window.location.href='form.html'">
+    <span class="cta-label">Begin</span>
+    <span class="cta-arrow">→</span>
+  </button>
+  <span class="byline">A passion project · J. Zhang · 2026</span>
+</div>
+
+</body>
+</html>
