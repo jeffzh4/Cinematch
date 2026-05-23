@@ -41,10 +41,12 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Server missing ANTHROPIC_API_KEY' });
   }
 
-  const { mood = '', genres = [], occasion = '' } = req.body || {};
+  const { mood = '', genres, occasion = '' } = req.body || {};
+  // Guard: ensure genres is always an array regardless of what was sent
+  const genresArr = Array.isArray(genres) ? genres : [];
 
   const userMessage = `Mood: ${mood || '(not specified)'}
-Genres: ${genres.length ? genres.join(', ') : '(no preference)'}
+Genres: ${genresArr.length ? genresArr.join(', ') : '(no preference)'}
 Occasion: ${occasion || '(not specified)'}`;
 
   try {
