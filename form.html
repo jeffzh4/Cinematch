@@ -429,16 +429,16 @@ textarea {
       <div class="field-body">
         <span class="field-label">What kind of film?<span class="hint">pick a few</span></span>
         <div class="chip-group" data-multi="true">
-          <button type="button" class="chip" data-value="drama">Drama</button>
-          <button type="button" class="chip" data-value="comedy">Comedy</button>
-          <button type="button" class="chip" data-value="thriller">Thriller</button>
-          <button type="button" class="chip" data-value="scifi">Sci-Fi</button>
-          <button type="button" class="chip" data-value="horror">Horror</button>
-          <button type="button" class="chip" data-value="romance">Romance</button>
-          <button type="button" class="chip" data-value="documentary">Documentary</button>
-          <button type="button" class="chip" data-value="animation">Animation</button>
-          <button type="button" class="chip" data-value="action">Action</button>
-          <button type="button" class="chip" data-value="mystery">Mystery</button>
+          <button type="button" class="chip" data-value="drama" aria-pressed="false">Drama</button>
+          <button type="button" class="chip" data-value="comedy" aria-pressed="false">Comedy</button>
+          <button type="button" class="chip" data-value="thriller" aria-pressed="false">Thriller</button>
+          <button type="button" class="chip" data-value="scifi" aria-pressed="false">Sci-Fi</button>
+          <button type="button" class="chip" data-value="horror" aria-pressed="false">Horror</button>
+          <button type="button" class="chip" data-value="romance" aria-pressed="false">Romance</button>
+          <button type="button" class="chip" data-value="documentary" aria-pressed="false">Documentary</button>
+          <button type="button" class="chip" data-value="animation" aria-pressed="false">Animation</button>
+          <button type="button" class="chip" data-value="action" aria-pressed="false">Action</button>
+          <button type="button" class="chip" data-value="mystery" aria-pressed="false">Mystery</button>
         </div>
       </div>
     </div>
@@ -474,16 +474,22 @@ textarea {
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-  // chip toggle
+  // chip toggle — keeps aria-pressed in sync for screen readers
   document.querySelectorAll('.chip-group').forEach(group => {
     const isMulti = group.dataset.multi === 'true';
     group.addEventListener('click', e => {
       const chip = e.target.closest('.chip');
       if (!chip) return;
-      if (isMulti) chip.classList.toggle('active');
-      else {
-        group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      if (isMulti) {
+        chip.classList.toggle('active');
+        chip.setAttribute('aria-pressed', chip.classList.contains('active') ? 'true' : 'false');
+      } else {
+        group.querySelectorAll('.chip').forEach(c => {
+          c.classList.remove('active');
+          c.setAttribute('aria-pressed', 'false');
+        });
         chip.classList.add('active');
+        chip.setAttribute('aria-pressed', 'true');
       }
       updateProgress();
     });
@@ -515,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (prevOccasion) occasionEl.value = prevOccasion;
     prevGenres.forEach(g => {
       const chip = document.querySelector(`.chip[data-value="${g}"]`);
-      if (chip) chip.classList.add('active');
+      if (chip) { chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true'); }
     });
 
     // single-use flag — clear so any future visit is blank

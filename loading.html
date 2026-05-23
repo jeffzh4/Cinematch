@@ -248,51 +248,61 @@ Occasion: ${occasion || '(not specified)'}`;
 // Two recommendation paths:
 //   - LOCAL  (config.local.js present): call Anthropic directly from browser
 //   - DEPLOYED (no config): POST to /api/recommend serverless function
+// A 30-second AbortController timeout prevents the page hanging indefinitely.
 async function getRecommendations() {
-  if (cfg.ANTHROPIC_API_KEY) {
-    // Direct call — local development only
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': cfg.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: cfg.ANTHROPIC_MODEL || 'claude-sonnet-4-6',
-        max_tokens: 2000,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: userMessage }]
-      })
-    });
-    if (!res.ok) {
-      const errBody = await res.text();
-      throw new Error(`API ${res.status}: ${errBody.slice(0, 200)}`);
+  const controller = new AbortController();
+  const timeoutId  = setTimeout(() => controller.abort(), 30000);
+
+  try {
+    if (cfg.ANTHROPIC_API_KEY) {
+      // Direct call — local development only
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        signal: controller.signal,
+        headers: {
+          'content-type': 'application/json',
+          'x-api-key': cfg.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: cfg.ANTHROPIC_MODEL || 'claude-sonnet-4-6',
+          max_tokens: 2000,
+          system: SYSTEM_PROMPT,
+          messages: [{ role: 'user', content: userMessage }]
+        })
+      });
+      if (!res.ok) {
+        const errBody = await res.text();
+        throw new Error(`API ${res.status}: ${errBody.slice(0, 200)}`);
+      }
+      const data = await res.json();
+      const text = data.content?.[0]?.text || '';
+      const cleaned = text
+        .replace(/^\s*```(?:json)?\s*/i, '')
+        .replace(/\s*```\s*$/i, '')
+        .trim();
+      const parsed = JSON.parse(cleaned);
+      if (!parsed.films || !Array.isArray(parsed.films) || parsed.films.length === 0) {
+        throw new Error('Invalid response shape');
+      }
+      return parsed;
+    } else {
+      // Serverless proxy — deployed mode
+      const res = await fetch('/api/recommend', {
+        method: 'POST',
+        signal: controller.signal,
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ mood, genres, occasion })
+      });
+      if (!res.ok) {
+        const errBody = await res.text();
+        throw new Error(`Proxy ${res.status}: ${errBody.slice(0, 200)}`);
+      }
+      return await res.json();
     }
-    const data = await res.json();
-    const text = data.content?.[0]?.text || '';
-    const cleaned = text
-      .replace(/^\s*```(?:json)?\s*/i, '')
-      .replace(/\s*```\s*$/i, '')
-      .trim();
-    const parsed = JSON.parse(cleaned);
-    if (!parsed.films || !Array.isArray(parsed.films) || parsed.films.length === 0) {
-      throw new Error('Invalid response shape');
-    }
-    return parsed;
-  } else {
-    // Serverless proxy — deployed mode
-    const res = await fetch('/api/recommend', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ mood, genres, occasion })
-    });
-    if (!res.ok) {
-      const errBody = await res.text();
-      throw new Error(`Proxy ${res.status}: ${errBody.slice(0, 200)}`);
-    }
-    return await res.json();
+  } finally {
+    clearTimeout(timeoutId); // always cancel the timer once the fetch settles
   }
 }
 

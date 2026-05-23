@@ -507,7 +507,7 @@ a { color: inherit; text-decoration: none; }
 
 <div class="bottom-bar">
   <a href="form.html" class="back-link" onclick="localStorage.setItem('cm_refine','1')">← Refine your mood</a>
-  <span class="summary-line">Six picks · Generated just now</span>
+  <span class="summary-line" id="summary-line">Six picks · Generated just now</span>
   <button class="cta" type="button" onclick="window.location.href='form.html'">
     <span class="cta-label">Find another</span>
     <span class="cta-arrow">→</span>
@@ -519,6 +519,14 @@ a { color: inherit; text-decoration: none; }
 document.addEventListener('DOMContentLoaded', () => {
 
   const cfg = window.CINEMATCH_CONFIG || {};
+
+  // --- Live timestamp in bottom bar ---
+  const summaryEl = document.getElementById('summary-line');
+  if (summaryEl) {
+    const now = new Date();
+    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    summaryEl.textContent = `Six picks · Generated at ${time}`;
+  }
 
   // --- Read API response from localStorage ---
   const resultsJson = localStorage.getItem('cm_results');
@@ -668,13 +676,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const img = document.createElement('img');
       img.className = 'poster-image';
       img.alt = title;
-      img.src = url;
       img.onload = () => {
         posterEl.classList.add('has-image');
         posterEl.innerHTML = '';
         posterEl.appendChild(img);
-        requestAnimationFrame(() => img.classList.add('loaded'));
+        // Double-rAF ensures the opacity:0 state is painted before we add .loaded
+        requestAnimationFrame(() => requestAnimationFrame(() => img.classList.add('loaded')));
       };
+      img.src = url; // set last — onload must be wired before src triggers the fetch
     } catch (_) { /* fall back to gradient placeholder */ }
   });
 
