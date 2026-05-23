@@ -2,7 +2,9 @@
 
 A personalized movie recommendation web app. Three questions → six tailored film picks with spoiler-free explanations, powered by Claude.
 
-**Live demo:** _(add Vercel URL once deployed)_
+**Live demo:** https://cinematch-jeffzh4-ux.vercel.app _(update slug if different — check your Vercel dashboard)_
+
+**GitHub:** https://github.com/jeffzh4-ux/Cinematch
 
 ---
 
@@ -23,6 +25,7 @@ A personalized movie recommendation web app. Three questions → six tailored fi
 | `loading.html` | Calls the recommendation API |
 | `results.html` | Renders Claude's response + TMDB posters |
 | `error.html` | Fallback when API calls fail |
+| `404.html` | Custom page-not-found |
 | `about.html`, `contact.html` | Static info pages |
 
 ## Serverless functions (Vercel)
