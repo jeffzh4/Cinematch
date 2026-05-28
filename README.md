@@ -2,7 +2,7 @@
 
 A personalized movie recommendation web app. Three questions → six tailored film picks with spoiler-free explanations, powered by Claude.
 
-**Live demo:** https://cinematch-jeffzh4.vercel.app _(update slug if different — check your Vercel dashboard)_
+**Live demo:** https://cinematch-navy.vercel.app
 
 **GitHub:** https://github.com/jeffzh4/Cinematch
 
