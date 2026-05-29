@@ -329,6 +329,93 @@ a { color: inherit; text-decoration: none; }
   max-width: 56ch;
 }
 
+/* ---------- SHARE BUTTON ---------- */
+
+.share-btn {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  padding: 14px 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: color .3s var(--ease), border-color .3s var(--ease);
+}
+.share-btn:hover { color: var(--accent); border-color: var(--accent); }
+.share-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.share-arrow { display: inline-block; transition: transform .3s var(--ease); }
+.share-btn:hover .share-arrow { transform: translate(3px, -3px); }
+
+.bottom-actions { display: flex; align-items: center; gap: 12px; }
+
+/* share toast */
+.share-toast {
+  position: fixed;
+  bottom: 88px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111019;
+  border: 1px solid var(--accent);
+  padding: 20px 24px;
+  min-width: min(420px, 90vw);
+  z-index: 200;
+  animation: fadeUp 0.35s var(--ease) forwards;
+}
+.share-toast-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 12px;
+}
+.share-toast-row {
+  display: flex;
+  gap: 8px;
+}
+.share-toast-input {
+  flex: 1;
+  background: var(--rule);
+  border: none;
+  color: var(--ink-mute);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 10px 12px;
+  min-width: 0;
+}
+.share-toast-input:focus { outline: 1px solid var(--accent); }
+.share-copy-btn {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background .3s var(--ease);
+  white-space: nowrap;
+}
+.share-copy-btn:hover { background: var(--accent-deep); color: var(--ink); }
+.share-close {
+  position: absolute;
+  top: 10px; right: 12px;
+  background: transparent;
+  border: none;
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px;
+  transition: color .3s var(--ease);
+}
+.share-close:hover { color: var(--ink); }
+
 /* ---------- BOTTOM BAR ---------- */
 
 .bottom-bar {
@@ -506,13 +593,28 @@ a { color: inherit; text-decoration: none; }
 
 </main>
 
+<div class="share-toast" id="share-toast" hidden>
+  <p class="share-toast-label">Shareable link · expires in 30 days</p>
+  <div class="share-toast-row">
+    <input class="share-toast-input" id="share-url-input" type="text" readonly />
+    <button class="share-copy-btn" id="share-copy-btn" type="button">Copy</button>
+  </div>
+  <button class="share-close" id="share-close" type="button" aria-label="Close">✕</button>
+</div>
+
 <div class="bottom-bar">
   <a href="form.html" class="back-link" onclick="localStorage.setItem('cm_refine','1')">← Refine your mood</a>
   <span class="summary-line" id="summary-line">Six picks · Generated just now</span>
-  <button class="cta" type="button" onclick="window.location.href='form.html'">
-    <span class="cta-label">Find another</span>
-    <span class="cta-arrow">→</span>
-  </button>
+  <div class="bottom-actions">
+    <button class="share-btn" id="share-btn" type="button">
+      <span class="share-label">Share</span>
+      <span class="share-arrow">↗</span>
+    </button>
+    <button class="cta" type="button" onclick="window.location.href='form.html'">
+      <span class="cta-label">Find another</span>
+      <span class="cta-arrow">→</span>
+    </button>
+  </div>
 </div>
 
 <script src="config.local.js"></script>
@@ -687,6 +789,46 @@ document.addEventListener('DOMContentLoaded', () => {
       img.src = url; // set last — onload must be wired before src triggers the fetch
     } catch (_) { /* fall back to gradient placeholder */ }
   });
+
+  // --- Share button ---
+  const shareBtn   = document.getElementById('share-btn');
+  const shareToast = document.getElementById('share-toast');
+  const shareInput = document.getElementById('share-url-input');
+  const copyBtn    = document.getElementById('share-copy-btn');
+  const closeBtn   = document.getElementById('share-close');
+
+  shareBtn?.addEventListener('click', async () => {
+    const lbl = shareBtn.querySelector('.share-label');
+    shareBtn.disabled = true;
+    if (lbl) lbl.textContent = 'Sharing…';
+
+    try {
+      const res  = await fetch('/api/share', {
+        method:  'POST',
+        headers: { 'content-type': 'application/json' },
+        body:    JSON.stringify(results)
+      });
+      if (!res.ok) throw new Error(`${res.status}`);
+      const { url } = await res.json();
+      if (shareInput) (shareInput as HTMLInputElement).value = url;
+      shareToast?.removeAttribute('hidden');
+    } catch {
+      alert('Sharing requires the deployed Vercel app — not available in local dev.');
+    }
+
+    shareBtn.disabled = false;
+    if (lbl) lbl.textContent = 'Share';
+  });
+
+  copyBtn?.addEventListener('click', () => {
+    const input = shareInput as HTMLInputElement;
+    input.select();
+    navigator.clipboard?.writeText(input.value).catch(() => document.execCommand('copy'));
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
+  });
+
+  closeBtn?.addEventListener('click', () => shareToast?.setAttribute('hidden', ''));
 
 });
 </script>
