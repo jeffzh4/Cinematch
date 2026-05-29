@@ -169,7 +169,30 @@ a { color: inherit; text-decoration: none; }
 .field:nth-of-type(1) { animation-delay: 0.4s; }
 .field:nth-of-type(2) { animation-delay: 0.55s; }
 .field:nth-of-type(3) { animation-delay: 0.7s; }
+/* optional fields — 5th/6th/7th div children (after the divider) */
+.field:nth-of-type(5) { animation-delay: 0.82s; }
+.field:nth-of-type(6) { animation-delay: 0.94s; }
+.field:nth-of-type(7) { animation-delay: 1.06s; }
 .field:last-of-type { border-bottom: 1px solid var(--rule); }
+
+/* optional section divider */
+.optional-divider {
+  display: flex; align-items: center; gap: 16px;
+  padding: 28px 0 4px;
+  opacity: 0; animation: fadeUp 0.7s var(--ease) 0.78s forwards;
+}
+.optional-divider-line { flex: 1; height: 1px; background: var(--rule); }
+.optional-divider-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.32em;
+  text-transform: uppercase; color: var(--ink-faint); white-space: nowrap;
+}
+
+/* muted treatment for optional questions */
+.field--optional { opacity: 0.85; }
+.field-num--optional {
+  color: var(--ink-faint);
+  font-size: clamp(44px, 6vw, 66px);
+}
 
 @media (max-width: 720px) {
   .field {
@@ -459,6 +482,61 @@ textarea {
       </div>
     </div>
 
+    <!-- OPTIONAL DIVIDER -->
+    <div class="optional-divider">
+      <span class="optional-divider-line"></span>
+      <span class="optional-divider-label">Refine further · optional</span>
+      <span class="optional-divider-line"></span>
+    </div>
+
+    <!-- 04 — RUNTIME -->
+    <div class="field field--optional">
+      <h2 class="field-num field-num--optional">04</h2>
+      <div class="field-body">
+        <span class="field-label">How long do you have?<span class="hint">optional</span></span>
+        <div class="chip-group" data-multi="false" id="runtime-group">
+          <button type="button" class="chip" data-value="short" aria-pressed="false">Short · under 90 min</button>
+          <button type="button" class="chip" data-value="standard" aria-pressed="false">Standard · 90–120 min</button>
+          <button type="button" class="chip" data-value="long" aria-pressed="false">Long · over 2 hrs</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 — DECADE -->
+    <div class="field field--optional">
+      <h2 class="field-num field-num--optional">05</h2>
+      <div class="field-body">
+        <span class="field-label">Any era in mind?<span class="hint">optional</span></span>
+        <div class="chip-group" data-multi="false" id="decade-group">
+          <button type="button" class="chip" data-value="pre-1960s" aria-pressed="false">Pre-60s</button>
+          <button type="button" class="chip" data-value="1960s" aria-pressed="false">60s</button>
+          <button type="button" class="chip" data-value="1970s" aria-pressed="false">70s</button>
+          <button type="button" class="chip" data-value="1980s" aria-pressed="false">80s</button>
+          <button type="button" class="chip" data-value="1990s" aria-pressed="false">90s</button>
+          <button type="button" class="chip" data-value="2000s" aria-pressed="false">00s</button>
+          <button type="button" class="chip" data-value="2010s" aria-pressed="false">10s</button>
+          <button type="button" class="chip" data-value="recent" aria-pressed="false">Recent</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 — STREAMING PLATFORMS -->
+    <div class="field field--optional">
+      <h2 class="field-num field-num--optional">06</h2>
+      <div class="field-body">
+        <span class="field-label">Where are you watching?<span class="hint">optional · pick a few</span></span>
+        <div class="chip-group" data-multi="true" id="platform-group">
+          <button type="button" class="chip" data-value="Netflix" aria-pressed="false">Netflix</button>
+          <button type="button" class="chip" data-value="Prime Video" aria-pressed="false">Prime Video</button>
+          <button type="button" class="chip" data-value="Disney+" aria-pressed="false">Disney+</button>
+          <button type="button" class="chip" data-value="Hulu" aria-pressed="false">Hulu</button>
+          <button type="button" class="chip" data-value="Max" aria-pressed="false">Max</button>
+          <button type="button" class="chip" data-value="Apple TV+" aria-pressed="false">Apple TV+</button>
+          <button type="button" class="chip" data-value="Criterion Channel" aria-pressed="false">Criterion</button>
+        </div>
+      </div>
+    </div>
+
   </form>
 
 </main>
@@ -514,14 +592,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // pre-populate ONLY when returning via "Refine your mood" on results
   if (localStorage.getItem('cm_refine') === '1') {
-    const prevMood     = localStorage.getItem('cm_mood');
-    const prevGenres   = JSON.parse(localStorage.getItem('cm_genres') || '[]');
-    const prevOccasion = localStorage.getItem('cm_occasion');
+    const prevMood      = localStorage.getItem('cm_mood');
+    const prevGenres    = JSON.parse(localStorage.getItem('cm_genres')    || '[]');
+    const prevOccasion  = localStorage.getItem('cm_occasion');
+    const prevRuntime   = localStorage.getItem('cm_runtime')  || '';
+    const prevDecade    = localStorage.getItem('cm_decade')   || '';
+    const prevPlatforms = JSON.parse(localStorage.getItem('cm_platforms') || '[]');
 
     if (prevMood)     moodEl.value = prevMood;
     if (prevOccasion) occasionEl.value = prevOccasion;
+
     prevGenres.forEach(g => {
       const chip = document.querySelector(`.chip[data-value="${g}"]`);
+      if (chip) { chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true'); }
+    });
+
+    if (prevRuntime) {
+      const chip = document.querySelector(`#runtime-group .chip[data-value="${prevRuntime}"]`);
+      if (chip) { chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true'); }
+    }
+    if (prevDecade) {
+      const chip = document.querySelector(`#decade-group .chip[data-value="${prevDecade}"]`);
+      if (chip) { chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true'); }
+    }
+    prevPlatforms.forEach(p => {
+      const chip = document.querySelector(`#platform-group .chip[data-value="${p}"]`);
       if (chip) { chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true'); }
     });
 
@@ -538,10 +633,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // save inputs to localStorage then go to loading
   document.getElementById('form').addEventListener('submit', e => {
     e.preventDefault();
-    const genres = [...document.querySelectorAll('.chip.active')].map(c => c.dataset.value);
-    localStorage.setItem('cm_mood',    moodEl.value.trim());
-    localStorage.setItem('cm_genres',  JSON.stringify(genres));
-    localStorage.setItem('cm_occasion', occasionEl.value.trim());
+    const genres    = [...document.querySelectorAll('.chip-group[data-multi="true"] .chip.active')].map(c => c.dataset.value);
+    const runtime   = document.querySelector('#runtime-group .chip.active')?.dataset.value  || '';
+    const decade    = document.querySelector('#decade-group .chip.active')?.dataset.value   || '';
+    const platforms = [...document.querySelectorAll('#platform-group .chip.active')].map(c => c.dataset.value);
+
+    localStorage.setItem('cm_mood',      moodEl.value.trim());
+    localStorage.setItem('cm_genres',    JSON.stringify(genres));
+    localStorage.setItem('cm_occasion',  occasionEl.value.trim());
+    localStorage.setItem('cm_runtime',   runtime);
+    localStorage.setItem('cm_decade',    decade);
+    localStorage.setItem('cm_platforms', JSON.stringify(platforms));
     window.location.href = 'loading.html';
   });
 

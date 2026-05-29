@@ -205,9 +205,12 @@ body {
 <script>
 const cfg = window.CINEMATCH_CONFIG || {};
 
-const mood     = localStorage.getItem('cm_mood')     || '';
-const genres   = JSON.parse(localStorage.getItem('cm_genres') || '[]');
-const occasion = localStorage.getItem('cm_occasion') || '';
+const mood      = localStorage.getItem('cm_mood')      || '';
+const genres    = JSON.parse(localStorage.getItem('cm_genres')    || '[]');
+const occasion  = localStorage.getItem('cm_occasion')  || '';
+const runtime   = localStorage.getItem('cm_runtime')   || '';
+const decade    = localStorage.getItem('cm_decade')    || '';
+const platforms = JSON.parse(localStorage.getItem('cm_platforms') || '[]');
 
 // step1 lights up immediately — we've read the inputs
 document.getElementById('step1').classList.add('active');
@@ -240,11 +243,18 @@ Respond with ONLY a JSON object in this exact schema, no other text:
   ]
 }
 
-Return runtime in minutes (integer), year as an integer, rating as a number out of 5 (one decimal). Return exactly 6 films. Output valid JSON only — no markdown, no code fences, no commentary.`;
+Return runtime in minutes (integer), year as an integer, rating as a number out of 5 (one decimal). Return exactly 6 films. Output valid JSON only — no markdown, no code fences, no commentary.
 
-const userMessage = `Mood: ${mood || '(not specified)'}
-Genres: ${genres.length ? genres.join(', ') : '(no preference)'}
-Occasion: ${occasion || '(not specified)'}`;
+If the user provides optional preferences (runtime, decade, streaming platforms), use them to refine your picks. Weight toward films matching those constraints but do not exclude an otherwise ideal match because it falls slightly outside them. Streaming availability changes frequently — treat platform hints as a soft preference only.`;
+
+const userMessage = [
+  `Mood: ${mood || '(not specified)'}`,
+  `Genres: ${genres.length ? genres.join(', ') : '(no preference)'}`,
+  `Occasion: ${occasion || '(not specified)'}`,
+  ...(runtime          ? [`Runtime preference: ${runtime}`]                          : []),
+  ...(decade           ? [`Decade preference: ${decade}`]                            : []),
+  ...(platforms.length ? [`Streaming platforms available: ${platforms.join(', ')}`]  : []),
+].join('\n');
 
 // Two recommendation paths:
 //   - LOCAL  (config.local.js present): call Anthropic directly from browser
@@ -300,7 +310,7 @@ async function getRecommendations() {
         method: 'POST',
         signal: controller.signal,
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ mood, genres, occasion })
+        body: JSON.stringify({ mood, genres, occasion, runtime, decade, platforms })
       });
       if (!res.ok) {
         const errBody = await res.text();
@@ -319,6 +329,16 @@ async function getRecommendations() {
     document.getElementById('step2').classList.add('active');
     document.getElementById('step3').classList.add('active');
     localStorage.setItem('cm_results', JSON.stringify(parsed));
+
+    // Fire-and-forget analytics log (deployed mode only — no local API server)
+    if (!cfg.ANTHROPIC_API_KEY) {
+      fetch('/api/analytics', {
+        method:  'POST',
+        headers: { 'content-type': 'application/json' },
+        body:    JSON.stringify({ mood, genres, occasion, runtime, decade, platforms })
+      }).catch(() => {}); // silently ignore; analytics must never affect UX
+    }
+
     setTimeout(() => { window.location.href = 'results.html'; }, 450);
   } catch (err) {
     console.error('CineMatch API error:', err);
