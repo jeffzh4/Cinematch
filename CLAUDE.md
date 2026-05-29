@@ -1,24 +1,39 @@
 # CineMatch — CLAUDE.md
 
 ## Project Overview
-CineMatch is a personalized movie recommendation web app. Users answer three questions (mood, genre, occasion) and receive 6 tailored film picks with spoiler-free explanations powered by Claude's API.
+CineMatch is a personalized movie recommendation web app. Users answer up to six questions (three required, three optional filters) and receive 6 tailored film picks with spoiler-free explanations powered by Claude's API.
 
-**Deadline:** May 29th, 2026  
-**Deliverable:** Functional, locally-runnable web app with clean UI, 5–7 recommendations per query, and a per-film explanation of why each was chosen.
+**Deadline:** May 29th, 2026 (delivered)
+**Live URL:** https://cinematch-navy.vercel.app
+**GitHub:** https://github.com/jeffzh4/Cinematch
 
 ---
 
-## Current State
-Three static HTML pages — no backend, no API calls, everything hardcoded.
+## Current State — Fully Shipped
+
+All pages are live, API-connected, and deployed on Vercel.
 
 | File | Purpose | Status |
 |---|---|---|
-| `index.html` | Landing page | Complete |
-| `form.html` | 3-question input form | Complete (UI only) |
-| `results.html` | Film results page | Complete (hardcoded data) |
+| `index.html` | Landing page | ✅ Complete |
+| `form.html` | Six-question form (3 required + 3 optional filters) | ✅ Complete |
+| `loading.html` | Calls recommendation API, logs analytics | ✅ Complete |
+| `results.html` | Dynamic film cards + TMDB posters + share button | ✅ Complete |
+| `share.html` | Shared results card (read-only, `?id=xxx`) | ✅ Complete |
+| `analytics.html` | Usage dashboard via Vercel KV | ✅ Complete |
+| `error.html` | Error fallback ("Erm.") | ✅ Complete |
+| `404.html` | Custom 404 ("Wrong reel.") | ✅ Complete |
+| `about.html` | Project description | ✅ Complete |
+| `contact.html` | Email + LinkedIn | ✅ Complete |
 
-**What's wired up:** chip toggle, progress counter ("X of 3 answered"), scroll-triggered film animations, page navigation.  
-**What's not wired up:** form data is not passed to results; results are static; no Claude API call exists yet.
+**Serverless functions (TypeScript):**
+
+| File | Purpose |
+|---|---|
+| `api/recommend.ts` | Proxies Anthropic API with prompt caching |
+| `api/poster.ts` | Proxies TMDB poster search |
+| `api/analytics.ts` | Logs to / reads from Vercel KV |
+| `api/share.ts` | Stores / retrieves shareable result sets (30-day TTL) |
 
 ---
 
@@ -34,74 +49,66 @@ Preserve this across all changes — the aesthetic is intentional and polished.
 
 ---
 
-## Architecture Plan (Next Steps)
+## Architecture
 
-### Step 1 — Wire the form to the results page
-Pass form inputs via `localStorage` or URL params so `results.html` can read mood, genres, and occasion. The form submit handler in `form.html` currently just redirects to `results.html` — it should serialize and store inputs first.
+### Data flow
+```
+form.html → localStorage → loading.html → /api/recommend → Anthropic API
+                                        ↓
+                                  /api/analytics → Vercel KV
+                                        ↓
+                              results.html → /api/poster → TMDB
+                                        ↓
+                              [Share] → /api/share → Vercel KV
+                                                      ↓
+                                              share.html?id=xxx
+```
 
-### Step 2 — Add a backend
-A minimal Node.js/Express (or Python/Flask) server to:
-- Accept the form inputs as a POST request
-- Call Claude's API with a carefully engineered prompt
-- Return structured JSON (array of 6 film objects)
+### Dual-path architecture
+- **Local dev (Option A):** `config.local.js` present → calls Anthropic + TMDB directly from browser
+- **Production (Option B):** no `config.local.js` → calls Vercel serverless proxies
 
-Alternatively, this can be done client-side with the Claude API directly via `fetch` (simpler, no server needed for local use — just keep the API key out of public repos).
+### Environment variables required
+- `ANTHROPIC_API_KEY` — Anthropic API key
+- `TMDB_API_KEY` — TMDB v3 API key
+- `ANTHROPIC_MODEL` _(optional)_ — defaults to `claude-sonnet-4-6`
+- `KV_REST_API_URL` — auto-added by Vercel KV
+- `KV_REST_API_TOKEN` — auto-added by Vercel KV
 
-### Step 3 — Claude API integration
-Build the prompt to accept: `mood`, `genres[]`, `occasion` and return 6 films each with:
-- `title`, `director`, `year`, `runtime`, `genre`, `rating`
-- `reason` — 2–3 sentence spoiler-free explanation tailored to the user's input
+---
 
-Use `claude-sonnet-4-6` or `claude-haiku-4-5` (faster/cheaper for iteration). Apply prompt caching on the system prompt since it's static and sent with every request.
+## Form Inputs & localStorage Keys
 
-### Step 4 — Replace hardcoded results with dynamic data
-`results.html` should render from the API response rather than static HTML. Either:
-- Generate the film cards via JS from a JSON response, or
-- Use a templating approach (server-side render)
-
-The zigzag layout (`.film` / `.film.flip` alternation) and all existing CSS classes should be preserved — just generate the HTML dynamically.
-
-### Step 5 — Milestone 3 features (after core works)
-- Additional filters: runtime (short / standard / long), decade, streaming platform
-- These can be added as optional chip groups on `form.html` (question 04, 05)
-- Pass them as optional context in the Claude prompt
+| Key | Type | Description |
+|---|---|---|
+| `cm_mood` | string | Free-text mood (required) |
+| `cm_genres` | JSON array | Selected genre chips (required) |
+| `cm_occasion` | string | Free-text occasion (required) |
+| `cm_runtime` | string | `"short"` / `"standard"` / `"long"` (optional) |
+| `cm_decade` | string | e.g. `"1980s"`, `"recent"` (optional) |
+| `cm_platforms` | JSON array | e.g. `["Netflix","Max"]` (optional) |
+| `cm_results` | JSON object | Full Claude response `{ headline, films[] }` |
+| `cm_refine` | `"1"` | Single-use flag — pre-populates form on "Refine your mood" |
 
 ---
 
 ## Claude Prompt Strategy
-The system prompt should instruct Claude to:
+The system prompt instructs Claude to:
 - Act as a film curator, not a search engine
 - Return exactly 6 films in a consistent JSON schema
-- Write reasons in 2–3 sentences, in a voice that matches the editorial tone of the UI (literary, not listicle)
+- Write reasons in 2–3 sentences, in a voice matching the editorial tone of the UI (literary, not listicle)
 - Never spoil plot twists, endings, or reveals
-- Weight toward lesser-known films when mood/occasion allow (avoid always picking the most obvious choice)
+- Weight toward lesser-known films when mood/occasion allow
+- Honour optional runtime/decade/platform preferences as soft constraints
 
-Example schema per film:
-```json
-{
-  "num": 1,
-  "title": "Lost in Translation",
-  "director": "Sofia Coppola",
-  "year": 2003,
-  "runtime": 102,
-  "genre": "Drama",
-  "rating": 4.2,
-  "reason": "..."
-}
-```
+Prompt caching is applied via `cache_control: { type: 'ephemeral' }` on the system prompt, reducing cost by ~90% after the first request in a 5-minute window.
 
 ---
 
-## Data Sources (Milestone 2)
-- **MovieLens 100K** — ratings, metadata; good for grounding recommendations in real data
-- **IMDB open dataset** — runtimes, genres, director names
-- These can be used to validate/enrich Claude's output (check that suggested films exist and have correct metadata), or fed into the prompt as context
-
----
-
-## What NOT to change
-- The three-page HTML structure (`index` → `form` → `results`)
+## What NOT to Change
+- The overall page flow (`index` → `form` → `loading` → `results`)
 - The visual design system (colors, fonts, grain, animations)
 - The editorial copy voice ("For a slow night that asks nothing of you")
 - The zigzag layout pattern on results
 - The brutalist header + bottom-bar pattern shared across all pages
+- `config.local.js` must stay gitignored — never commit API keys

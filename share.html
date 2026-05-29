@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>CineMatch — Shared picks</title>
+<!-- OG tags — headline updated dynamically once data loads -->
+<meta property="og:site_name" content="CineMatch">
+<meta property="og:type"      content="website">
+<meta name="description"      content="Six film picks curated by CineMatch — powered by Claude.">
+<meta property="og:description" content="Six film picks curated by CineMatch — powered by Claude.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0c0c0c;--ink:#f5f5f0;--ink-mute:#a8a8a3;--ink-faint:#5a5a58;
+  --accent:#a78bff;--accent-deep:#6b48d6;--rule:#1f1f1f;
+  --serif:'Fraunces','Times New Roman',serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --gutter:clamp(24px,4vw,56px);--max:1200px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box;}html,body{margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:17px;
+  line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button:focus-visible,a:focus-visible{outline:1px solid var(--accent);outline-offset:4px;}
+
+.grain{pointer-events:none;position:fixed;inset:0;z-index:100;opacity:0.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");}
+
+.site-header{display:flex;justify-content:space-between;align-items:center;
+  padding:22px var(--gutter);border-bottom:1px solid var(--rule);max-width:var(--max);margin:0 auto;}
+.logo{font-family:var(--mono);font-size:12px;letter-spacing:0.32em;font-weight:500;}
+.site-nav{display:flex;gap:32px;}
+.nav-link{font-family:var(--mono);font-size:10px;letter-spacing:0.28em;color:var(--ink-faint);
+  text-transform:uppercase;position:relative;padding:4px 0;transition:color .3s var(--ease);}
+.nav-link::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease);}
+.nav-link:hover{color:var(--ink);}.nav-link:hover::after{transform:scaleX(1);}
+
+.share-page{max-width:var(--max);margin:0 auto;
+  padding:clamp(40px,7vh,72px) var(--gutter) 0;}
+
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:0.32em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 24px;display:inline-flex;align-items:center;gap:12px;
+  opacity:0;animation:fadeUp 0.7s var(--ease) 0.1s forwards;}
+.eyebrow::before{content:'';width:28px;height:1px;background:var(--accent);}
+
+.share-headline{font-family:var(--serif);font-weight:400;
+  font-size:clamp(32px,5vw,56px);line-height:1.05;letter-spacing:-0.025em;
+  margin:0 0 48px;max-width:24ch;
+  opacity:0;animation:fadeUp 0.9s var(--ease) 0.2s forwards;}
+.share-headline em{font-style:italic;color:var(--accent);font-variation-settings:"opsz" 144;}
+
+/* simplified film list — no posters, no toggle */
+.film-list{padding-top:8px;}
+.film-item{display:grid;grid-template-columns:48px 1fr;gap:20px;
+  padding:28px 0;border-top:1px solid var(--rule);align-items:start;
+  opacity:0;transform:translateY(12px);}
+.film-item.in-view{animation:fadeUp 0.7s var(--ease) forwards;}
+.film-item:last-of-type{border-bottom:1px solid var(--rule);}
+.film-num{font-family:var(--serif);font-style:italic;font-weight:400;
+  font-size:22px;color:var(--accent);line-height:1;padding-top:4px;}
+.film-info{}
+.film-title{font-family:var(--serif);font-weight:400;
+  font-size:clamp(22px,2.8vw,32px);line-height:1.05;letter-spacing:-0.02em;margin:0 0 6px;}
+.film-title em{font-style:italic;color:var(--accent);font-variation-settings:"opsz" 144;}
+.film-meta{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;
+  text-transform:uppercase;color:var(--ink-faint);}
+.film-meta .dot{color:var(--accent);margin:0 4px;}
+.film-reason{font-family:var(--serif);font-size:15px;line-height:1.65;
+  color:var(--ink-mute);margin:10px 0 0;max-width:58ch;}
+
+/* state messages */
+.state-msg{font-family:var(--mono);font-size:11px;letter-spacing:0.24em;
+  text-transform:uppercase;color:var(--ink-faint);padding:80px 0;}
+
+.bottom-bar{max-width:var(--max);margin:0 auto;padding:32px var(--gutter);
+  border-top:1px solid var(--rule);display:flex;align-items:center;
+  justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.cta{background:var(--accent);color:var(--bg);border:none;font-family:var(--mono);
+  font-weight:500;font-size:11px;letter-spacing:0.3em;padding:16px 28px;
+  display:inline-flex;align-items:center;gap:14px;text-transform:uppercase;
+  position:relative;overflow:hidden;transition:background .35s var(--ease);cursor:pointer;}
+.cta::before{content:'';position:absolute;inset:0;background:var(--accent-deep);
+  transform:translateX(-101%);transition:transform .45s var(--ease);z-index:0;}
+.cta:hover::before{transform:translateX(0);}
+.cta-label,.cta-arrow{position:relative;z-index:1;}
+.cta-arrow{display:inline-block;transition:transform .35s var(--ease);}
+.cta:hover .cta-arrow{transform:translateX(6px);}
+.share-credit{font-family:var(--mono);font-size:9px;letter-spacing:0.28em;
+  text-transform:uppercase;color:var(--ink-faint);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{
+  animation-duration:0.001s !important;animation-delay:0s !important;transition-duration:0.001s !important;}
+  .film-item{opacity:1;transform:none;}}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<header class="site-header">
+  <a href="index.html" class="logo">CINEMATCH</a>
+  <nav class="site-nav">
+    <a href="about.html" class="nav-link">About</a>
+    <a href="contact.html" class="nav-link">Contact</a>
+  </nav>
+</header>
+
+<main class="share-page">
+  <p class="eyebrow" id="share-eyebrow">Six films · Shared with you</p>
+  <h1 class="share-headline" id="share-headline">Loading your<br><em>shared picks…</em></h1>
+  <div class="film-list" id="film-list">
+    <p class="state-msg" id="state-msg">Fetching the list…</p>
+  </div>
+</main>
+
+<div class="bottom-bar" id="bottom-bar" hidden>
+  <span class="share-credit">Shared via CineMatch · cinematch-navy.vercel.app</span>
+  <button class="cta" type="button" onclick="window.location.href='form.html'">
+    <span class="cta-label">Get your own</span>
+    <span class="cta-arrow">→</span>
+  </button>
+</div>
+
+<script>
+const esc = s => String(s ?? '')
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function sanitizeHeadline(html) {
+  return esc(html)
+    .replace(/&lt;em&gt;/gi,  '<em>')
+    .replace(/&lt;\/em&gt;/gi,'</em>')
+    .replace(/&lt;br\s*\/?&gt;/gi,'<br>');
+}
+
+function wrapLastWord(title) {
+  const escaped = esc(title);
+  const words = escaped.split(' ');
+  if (words.length === 1) return `<em>${words[0]}</em>`;
+  const last = words.pop();
+  return `${words.join(' ')} <em>${last}</em>`;
+}
+
+(async () => {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+
+  const headlineEl = document.getElementById('share-headline');
+  const listEl     = document.getElementById('film-list');
+  const stateEl    = document.getElementById('state-msg');
+  const bottomBar  = document.getElementById('bottom-bar');
+
+  if (!id) {
+    headlineEl.innerHTML = 'Nothing <em>here.</em>';
+    stateEl.textContent  = 'No share ID in the URL. Try generating a fresh list.';
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/share?id=${encodeURIComponent(id)}`);
+    if (res.status === 404) throw new Error('expired');
+    if (!res.ok)            throw new Error(`${res.status}`);
+
+    const data  = await res.json();
+    const films = Array.isArray(data.films) ? data.films : [];
+
+    if (!films.length) throw new Error('empty');
+
+    // Update headline
+    if (headlineEl) {
+      headlineEl.innerHTML = data.headline
+        ? sanitizeHeadline(data.headline)
+        : `Six films,<br>just for <em>you</em>.`;
+      document.title = `CineMatch — ${headlineEl.textContent?.replace(/\n/g,' ')}`;
+    }
+
+    // Render films
+    listEl.innerHTML = '';
+    films.forEach((film, idx) => {
+      const item = document.createElement('div');
+      item.className = 'film-item';
+      const num = String(idx + 1).padStart(2,'0');
+      item.innerHTML = `
+        <span class="film-num">${num}</span>
+        <div class="film-info">
+          <h2 class="film-title">${wrapLastWord(film.title ?? '')}</h2>
+          <p class="film-meta">
+            ${esc(film.year ?? '')}
+            <span class="dot">·</span>${esc(film.director ?? '')}
+            <span class="dot">·</span>${esc(film.genre ?? '')}
+            <span class="dot">·</span>${esc(film.runtime ?? '')} min
+            <span class="dot">·</span>★ ${esc(film.rating ?? '')}
+          </p>
+          <p class="film-reason">${esc(film.reason ?? '')}</p>
+        </div>
+      `;
+      listEl.appendChild(item);
+    });
+
+    // Scroll-triggered fade-up
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('in-view'), i * 60);
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.film-item').forEach(f => io.observe(f));
+    } else {
+      document.querySelectorAll('.film-item').forEach(f => f.classList.add('in-view'));
+    }
+
+    bottomBar?.removeAttribute('hidden');
+
+  } catch (err) {
+    const expired = err.message === 'expired';
+    headlineEl.innerHTML = `Couldn't find<br>these <em>picks.</em>`;
+    stateEl.textContent  = expired
+      ? 'This share link has expired (30-day TTL) or was never created.'
+      : 'Something went wrong loading this list. Try the link again.';
+  }
+})();
+</script>
+</body>
+</html>
