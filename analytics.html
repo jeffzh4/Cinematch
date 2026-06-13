@@ -4,6 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://cinematch-navy.vercel.app/analytics.html">
+<link rel="dns-prefetch" href="https://api.anthropic.com">
+<link rel="dns-prefetch" href="https://api.themoviedb.org">
 <title>CineMatch — Analytics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -101,6 +104,11 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--accent);outline-off
 .state-msg{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;
   color:var(--ink-faint);text-transform:uppercase;padding:40px 0;}
 
+/* loading skeleton */
+.skeleton-bar{height:28px;background:linear-gradient(90deg,var(--rule) 25%,var(--accent-soft) 50%,var(--rule) 75%);
+  background-size:200% 100%;animation:skeletonShimmer 1.5s infinite;border-radius:4px;margin:8px 0;}
+@keyframes skeletonShimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
 .bottom-bar{max-width:var(--max);margin:0 auto;padding:32px var(--gutter);
   border-top:1px solid var(--rule);display:flex;align-items:center;
   justify-content:space-between;gap:24px;flex-wrap:wrap;
@@ -140,7 +148,19 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--accent);outline-off
     <h1 class="headline">What the world<br>is watching <em>for</em>.</h1>
 
     <div class="stats-body" id="stats-body">
-      <p class="state-msg" id="loading-msg">Loading stats…</p>
+      <div class="stat-block">
+        <p class="stat-label">Total recommendations served</p>
+        <div class="skeleton-bar" style="height:64px;margin:12px 0;"></div>
+      </div>
+      <div class="stat-block">
+        <p class="stat-label">Genre breakdown</p>
+        <div class="bars">
+          <div class="bar-row"><div class="skeleton-bar" style="flex:1;"></div></div>
+          <div class="bar-row"><div class="skeleton-bar" style="flex:1;"></div></div>
+          <div class="bar-row"><div class="skeleton-bar" style="flex:1;"></div></div>
+          <div class="bar-row"><div class="skeleton-bar" style="flex:1;"></div></div>
+        </div>
+      </div>
     </div>
   </div>
 </main>
