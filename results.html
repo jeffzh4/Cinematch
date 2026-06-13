@@ -4,6 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://cinematch-navy.vercel.app/results.html">
+<link rel="dns-prefetch" href="https://api.anthropic.com">
+<link rel="dns-prefetch" href="https://api.themoviedb.org">
 <title>CineMatch — Your six</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -623,12 +626,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const cfg = window.CINEMATCH_CONFIG || {};
 
-  // --- Live timestamp in bottom bar ---
+  // --- Live timestamp in bottom bar (relative time, updates every minute) ---
   const summaryEl = document.getElementById('summary-line');
+  const loadTime = Date.now();
   if (summaryEl) {
-    const now = new Date();
-    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    summaryEl.textContent = `Six picks · Generated at ${time}`;
+    function updateTimestamp() {
+      const elapsedMs = Date.now() - loadTime;
+      const elapsedMins = Math.floor(elapsedMs / 60000);
+      const timeStr = elapsedMins === 0
+        ? 'just now'
+        : elapsedMins === 1
+        ? '1 min ago'
+        : `${elapsedMins} min ago`;
+      summaryEl.textContent = `Six picks · Generated ${timeStr}`;
+    }
+    updateTimestamp();
+    setInterval(updateTimestamp, 60000); // update every minute
   }
 
   // --- Read API response from localStorage ---
@@ -812,6 +825,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const { url } = await res.json();
       if (shareInput) (shareInput as HTMLInputElement).value = url;
       shareToast?.removeAttribute('hidden');
+      document.body.style.overflow = 'hidden';
     } catch {
       alert('Sharing requires the deployed Vercel app — not available in local dev.');
     }
@@ -828,7 +842,10 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
   });
 
-  closeBtn?.addEventListener('click', () => shareToast?.setAttribute('hidden', ''));
+  closeBtn?.addEventListener('click', () => {
+    shareToast?.setAttribute('hidden', '');
+    document.body.style.overflow = '';
+  });
 
 });
 </script>
