@@ -823,7 +823,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       if (!res.ok) throw new Error(`${res.status}`);
       const { url } = await res.json();
-      if (shareInput) (shareInput as HTMLInputElement).value = url;
+      if (shareInput) shareInput.value = url;
       shareToast?.removeAttribute('hidden');
       document.body.style.overflow = 'hidden';
     } catch {
@@ -835,7 +835,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   copyBtn?.addEventListener('click', () => {
-    const input = shareInput as HTMLInputElement;
+    const input = shareInput;
     input.select();
     navigator.clipboard?.writeText(input.value).catch(() => document.execCommand('copy'));
     copyBtn.textContent = 'Copied!';
