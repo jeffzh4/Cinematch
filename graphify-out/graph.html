@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>graphify - graphify-out/graph.html</title>
+<script src="https://unpkg.com/vis-network@9.1.6/standalone/umd/vis-network.min.js"
+        integrity="sha384-Ux6phic9PEHJ38YtrijhkzyJ8yQlH8i/+buBR8s3mAZOJrP1gwyvAcIYl3GWtpX1"
+        crossorigin="anonymous"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; height: 100vh; overflow: hidden; }
+  #graph { flex: 1; }
+  #sidebar { width: 280px; background: #1a1a2e; border-left: 1px solid #2a2a4e; display: flex; flex-direction: column; overflow: hidden; }
+  #search-wrap { padding: 12px; border-bottom: 1px solid #2a2a4e; }
+  #search { width: 100%; background: #0f0f1a; border: 1px solid #3a3a5e; color: #e0e0e0; padding: 7px 10px; border-radius: 6px; font-size: 13px; outline: none; }
+  #search:focus { border-color: #4E79A7; }
+  #search-results { max-height: 140px; overflow-y: auto; padding: 4px 12px; border-bottom: 1px solid #2a2a4e; display: none; }
+  .search-item { padding: 4px 6px; cursor: pointer; border-radius: 4px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .search-item:hover { background: #2a2a4e; }
+  #info-panel { padding: 14px; border-bottom: 1px solid #2a2a4e; min-height: 140px; }
+  #info-panel h3 { font-size: 13px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #info-content { font-size: 13px; color: #ccc; line-height: 1.6; }
+  #info-content .field { margin-bottom: 5px; }
+  #info-content .field b { color: #e0e0e0; }
+  #info-content .empty { color: #555; font-style: italic; }
+  .neighbor-link { display: block; padding: 2px 6px; margin: 2px 0; border-radius: 3px; cursor: pointer; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #333; }
+  .neighbor-link:hover { background: #2a2a4e; }
+  #neighbors-list { max-height: 160px; overflow-y: auto; margin-top: 4px; }
+  #legend-wrap { flex: 1; overflow-y: auto; padding: 12px; }
+  #legend-wrap h3 { font-size: 13px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; border-radius: 4px; font-size: 12px; }
+  .legend-item:hover { background: #2a2a4e; padding-left: 4px; }
+  .legend-item.dimmed { opacity: 0.35; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend-count { color: #666; font-size: 11px; }
+  #stats { padding: 10px 14px; border-top: 1px solid #2a2a4e; font-size: 11px; color: #555; }
+  #legend-controls { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 4px 0; }
+  #legend-controls label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; color: #aaa; user-select: none; }
+  #legend-controls label:hover { color: #e0e0e0; }
+  .legend-cb, #select-all-cb { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid #3a3a5e; border-radius: 3px; background: #0f0f1a; cursor: pointer; position: relative; flex-shrink: 0; }
+  .legend-cb:checked, #select-all-cb:checked { background: #4E79A7; border-color: #4E79A7; }
+  .legend-cb:checked::after, #select-all-cb:checked::after { content: ''; position: absolute; left: 3.5px; top: 1px; width: 4px; height: 7px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  #select-all-cb:indeterminate { background: #4E79A7; border-color: #4E79A7; }
+  #select-all-cb:indeterminate::after { content: ''; position: absolute; left: 2px; top: 5px; width: 8px; height: 2px; background: #fff; border: none; transform: none; }
+</style>
+</head>
+<body>
+<div id="graph"></div>
+<div id="sidebar">
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Search nodes..." autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <div id="info-panel">
+    <h3>Node Info</h3>
+    <div id="info-content"><span class="empty">Click a node to inspect it</span></div>
+  </div>
+  <div id="legend-wrap">
+    <h3>Communities</h3>
+    <div id="legend-controls">
+      <label><input type="checkbox" id="select-all-cb" checked onchange="toggleAllCommunities(!this.checked)">Select All</label>
+    </div>
+    <div id="legend"></div>
+  </div>
+  <div id="stats">59 nodes &middot; 53 edges &middot; 10 communities</div>
+</div>
+<script>
+const RAW_NODES = [{"id": "api_analytics", "label": "analytics.ts", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "analytics.ts", "community": 3, "community_name": "analytics.ts", "source_file": "api/analytics.ts", "file_type": "code", "degree": 4}, {"id": "api_analytics_analyticsentry", "label": "AnalyticsEntry", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "AnalyticsEntry", "community": 3, "community_name": "analytics.ts", "source_file": "api/analytics.ts", "file_type": "code", "degree": 1}, {"id": "api_analytics_kvresult", "label": "KVResult", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "KVResult", "community": 3, "community_name": "analytics.ts", "source_file": "api/analytics.ts", "file_type": "code", "degree": 1}, {"id": "api_analytics_kvpipeline", "label": "kvPipeline()", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "kvPipeline()", "community": 3, "community_name": "analytics.ts", "source_file": "api/analytics.ts", "file_type": "code", "degree": 2}, {"id": "api_analytics_handler", "label": "handler()", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "handler()", "community": 3, "community_name": "analytics.ts", "source_file": "api/analytics.ts", "file_type": "code", "degree": 2}, {"id": "api_poster", "label": "poster.ts", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "poster.ts", "community": 5, "community_name": "poster.ts", "source_file": "api/poster.ts", "file_type": "code", "degree": 3}, {"id": "api_poster_tmdbmovie", "label": "TMDBMovie", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "TMDBMovie", "community": 5, "community_name": "poster.ts", "source_file": "api/poster.ts", "file_type": "code", "degree": 1}, {"id": "api_poster_tmdbsearchresponse", "label": "TMDBSearchResponse", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "TMDBSearchResponse", "community": 5, "community_name": "poster.ts", "source_file": "api/poster.ts", "file_type": "code", "degree": 1}, {"id": "api_poster_handler", "label": "handler()", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "handler()", "community": 5, "community_name": "poster.ts", "source_file": "api/poster.ts", "file_type": "code", "degree": 1}, {"id": "api_recommend", "label": "recommend.ts", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "recommend.ts", "community": 6, "community_name": "recommend.ts", "source_file": "api/recommend.ts", "file_type": "code", "degree": 3}, {"id": "api_recommend_film", "label": "Film", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Film", "community": 6, "community_name": "recommend.ts", "source_file": "api/recommend.ts", "file_type": "code", "degree": 1}, {"id": "api_recommend_recommendationresult", "label": "RecommendationResult", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "RecommendationResult", "community": 6, "community_name": "recommend.ts", "source_file": "api/recommend.ts", "file_type": "code", "degree": 1}, {"id": "api_recommend_handler", "label": "handler()", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "handler()", "community": 6, "community_name": "recommend.ts", "source_file": "api/recommend.ts", "file_type": "code", "degree": 1}, {"id": "api_share", "label": "share.ts", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "share.ts", "community": 7, "community_name": "share.ts", "source_file": "api/share.ts", "file_type": "code", "degree": 3}, {"id": "api_share_kvresult", "label": "KVResult", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "KVResult", "community": 7, "community_name": "share.ts", "source_file": "api/share.ts", "file_type": "code", "degree": 1}, {"id": "api_share_kvpipeline", "label": "kvPipeline()", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "kvPipeline()", "community": 7, "community_name": "share.ts", "source_file": "api/share.ts", "file_type": "code", "degree": 2}, {"id": "api_share_handler", "label": "handler()", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "handler()", "community": 7, "community_name": "share.ts", "source_file": "api/share.ts", "file_type": "code", "degree": 2}, {"id": "package", "label": "package.json", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "package.json", "community": 9, "community_name": "devDependencies", "source_file": "package.json", "file_type": "code", "degree": 1}, {"id": "package_devdependencies", "label": "devDependencies", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "devDependencies", "community": 9, "community_name": "devDependencies", "source_file": "package.json", "file_type": "code", "degree": 2}, {"id": "package_devdependencies_vercel_node", "label": "@vercel/node", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "@vercel/node", "community": 9, "community_name": "devDependencies", "source_file": "package.json", "file_type": "code", "degree": 1}, {"id": "vercel", "label": "vercel.json", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "vercel.json", "community": 8, "community_name": "vercel.json", "source_file": "vercel.json", "file_type": "code", "degree": 3}, {"id": "vercel_schema", "label": "$schema", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "$schema", "community": 8, "community_name": "vercel.json", "source_file": "vercel.json", "file_type": "code", "degree": 1}, {"id": "vercel_cleanurls", "label": "cleanUrls", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "cleanUrls", "community": 8, "community_name": "vercel.json", "source_file": "vercel.json", "file_type": "code", "degree": 1}, {"id": "vercel_trailingslash", "label": "trailingSlash", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "trailingSlash", "community": 8, "community_name": "vercel.json", "source_file": "vercel.json", "file_type": "code", "degree": 1}, {"id": "case_study", "label": "CASE_STUDY.md", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "CASE_STUDY.md", "community": 4, "community_name": "CineMatch \u2014 Case Study", "source_file": "CASE_STUDY.md", "file_type": "document", "degree": 2}, {"id": "case_study_cinematch_case_study", "label": "CineMatch \u2014 Case Study", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "CineMatch \u2014 Case Study", "community": 4, "community_name": "CineMatch \u2014 Case Study", "source_file": "CASE_STUDY.md", "file_type": "document", "degree": 4}, {"id": "case_study_the_problem", "label": "The Problem", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "The Problem", "community": 4, "community_name": "CineMatch \u2014 Case Study", "source_file": "CASE_STUDY.md", "file_type": "document", "degree": 1}, {"id": "case_study_technical_decisions", "label": "Technical Decisions", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 36.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Technical Decisions", "community": 2, "community_name": "Technical Decisions", "source_file": "CASE_STUDY.md", "file_type": "document", "degree": 7}, {"id": "case_study_why_serverless", "label": "Why serverless?", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Why serverless?", "community": 2, "community_name": "Technical Decisions", "source_file": "CASE_STUDY.md", "file_type": "document", "degree": 1}, {"id": "case_study_why_claude_for_recommendations", "label": "Why Claude for recommendations?", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Why Claude for recommendations?", "community": 2, "community_name": "Technical Decisions", "source_file": "CASE_STUDY.md", "file_type": "document", "degree": 1}, {"id": "case_study_why_prompt_caching", "label": "Why prompt caching?", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Why prompt caching?", "community": 2, "community_name": "Technical Decisions", "source_file": "CASE_STUDY.md", "file_type": "document", "degree": 1}, {"id": "case_study_why_tmdb_for_posters", "label": "Why TMDB for posters?", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Why TMDB for posters?", "community": 2, "community_name": "Technical Decisions", "source_file": "CASE_STUDY.md", "file_type": "document", "degree": 1}, {"id": "case_study_typescript_for_the_api_layer", "label": "TypeScript for the API layer", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "TypeScript for the API layer", "community": 2, "community_name": "Technical Decisions", "source_file": "CASE_STUDY.md", "file_type": "document", "degree": 1}, {"id": "case_study_vercel_kv_for_analytics_and_sharing", "label": "Vercel KV for analytics and sharing", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Vercel KV for analytics and sharing", "community": 2, "community_name": "Technical Decisions", "source_file": "CASE_STUDY.md", "file_type": "document", "degree": 1}, {"id": "case_study_what_i_d_do_differently", "label": "What I'd Do Differently", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "What I&#x27;d Do Differently", "community": 4, "community_name": "CineMatch \u2014 Case Study", "source_file": "CASE_STUDY.md", "file_type": "document", "degree": 1}, {"id": "claude", "label": "CLAUDE.md", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "CLAUDE.md", "community": 0, "community_name": "CineMatch \u2014 CLAUDE.md", "source_file": "CLAUDE.md", "file_type": "document", "degree": 1}, {"id": "claude_cinematch_claude_md", "label": "CineMatch \u2014 CLAUDE.md", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "CineMatch \u2014 CLAUDE.md", "community": 0, "community_name": "CineMatch \u2014 CLAUDE.md", "source_file": "CLAUDE.md", "file_type": "document", "degree": 8}, {"id": "claude_project_overview", "label": "Project Overview", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Project Overview", "community": 0, "community_name": "CineMatch \u2014 CLAUDE.md", "source_file": "CLAUDE.md", "file_type": "document", "degree": 1}, {"id": "claude_current_state_fully_shipped", "label": "Current State \u2014 Fully Shipped", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Current State \u2014 Fully Shipped", "community": 0, "community_name": "CineMatch \u2014 CLAUDE.md", "source_file": "CLAUDE.md", "file_type": "document", "degree": 1}, {"id": "claude_design_system", "label": "Design System", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Design System", "community": 0, "community_name": "CineMatch \u2014 CLAUDE.md", "source_file": "CLAUDE.md", "file_type": "document", "degree": 1}, {"id": "claude_architecture", "label": "Architecture", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Architecture", "community": 0, "community_name": "CineMatch \u2014 CLAUDE.md", "source_file": "CLAUDE.md", "file_type": "document", "degree": 4}, {"id": "claude_data_flow", "label": "Data flow", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Data flow", "community": 0, "community_name": "CineMatch \u2014 CLAUDE.md", "source_file": "CLAUDE.md", "file_type": "document", "degree": 1}, {"id": "claude_dual_path_architecture", "label": "Dual-path architecture", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Dual-path architecture", "community": 0, "community_name": "CineMatch \u2014 CLAUDE.md", "source_file": "CLAUDE.md", "file_type": "document", "degree": 1}, {"id": "claude_environment_variables_required", "label": "Environment variables required", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Environment variables required", "community": 0, "community_name": "CineMatch \u2014 CLAUDE.md", "source_file": "CLAUDE.md", "file_type": "document", "degree": 1}, {"id": "claude_form_inputs_localstorage_keys", "label": "Form Inputs & localStorage Keys", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Form Inputs &amp; localStorage Keys", "community": 0, "community_name": "CineMatch \u2014 CLAUDE.md", "source_file": "CLAUDE.md", "file_type": "document", "degree": 1}, {"id": "claude_claude_prompt_strategy", "label": "Claude Prompt Strategy", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Claude Prompt Strategy", "community": 0, "community_name": "CineMatch \u2014 CLAUDE.md", "source_file": "CLAUDE.md", "file_type": "document", "degree": 1}, {"id": "claude_what_not_to_change", "label": "What NOT to Change", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "What NOT to Change", "community": 0, "community_name": "CineMatch \u2014 CLAUDE.md", "source_file": "CLAUDE.md", "file_type": "document", "degree": 1}, {"id": "readme", "label": "README.md", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "README.md", "community": 4, "community_name": "CineMatch \u2014 Case Study", "source_file": "README.md", "file_type": "document", "degree": 2}, {"id": "readme_cinematch", "label": "CineMatch", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "CineMatch", "community": 1, "community_name": "CineMatch", "source_file": "README.md", "file_type": "document", "degree": 8}, {"id": "readme_how_it_works", "label": "How it works", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "How it works", "community": 1, "community_name": "CineMatch", "source_file": "README.md", "file_type": "document", "degree": 1}, {"id": "readme_pages", "label": "Pages", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Pages", "community": 1, "community_name": "CineMatch", "source_file": "README.md", "file_type": "document", "degree": 1}, {"id": "readme_serverless_functions_vercel", "label": "Serverless functions (Vercel)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Serverless functions (Vercel)", "community": 1, "community_name": "CineMatch", "source_file": "README.md", "file_type": "document", "degree": 1}, {"id": "readme_architecture", "label": "Architecture", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Architecture", "community": 1, "community_name": "CineMatch", "source_file": "README.md", "file_type": "document", "degree": 1}, {"id": "readme_local_development", "label": "Local development", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Local development", "community": 1, "community_name": "CineMatch", "source_file": "README.md", "file_type": "document", "degree": 3}, {"id": "readme_option_a_simple_direct_api_calls_from_browser", "label": "Option A \u2014 Simple (direct API calls from browser)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Option A \u2014 Simple (direct API calls from browser)", "community": 1, "community_name": "CineMatch", "source_file": "README.md", "file_type": "document", "degree": 1}, {"id": "readme_option_b_with_serverless_functions_matches_production", "label": "Option B \u2014 With serverless functions (matches production)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Option B \u2014 With serverless functions (matches production)", "community": 1, "community_name": "CineMatch", "source_file": "README.md", "file_type": "document", "degree": 1}, {"id": "readme_deploying_to_vercel", "label": "Deploying to Vercel", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Deploying to Vercel", "community": 1, "community_name": "CineMatch", "source_file": "README.md", "file_type": "document", "degree": 2}, {"id": "readme_setting_up_vercel_kv_for_analytics_share_links", "label": "Setting up Vercel KV (for analytics + share links)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Setting up Vercel KV (for analytics + share links)", "community": 1, "community_name": "CineMatch", "source_file": "README.md", "file_type": "document", "degree": 1}, {"id": "readme_tech", "label": "Tech", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Tech", "community": 1, "community_name": "CineMatch", "source_file": "README.md", "file_type": "document", "degree": 1}];
+const RAW_EDGES = [{"from": "api_analytics", "to": "api_analytics_analyticsentry", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_analytics", "to": "api_analytics_handler", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_analytics", "to": "api_analytics_kvpipeline", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_analytics", "to": "api_analytics_kvresult", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_analytics_handler", "to": "api_analytics_kvpipeline", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_poster", "to": "api_poster_handler", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_poster", "to": "api_poster_tmdbmovie", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_poster", "to": "api_poster_tmdbsearchresponse", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_recommend", "to": "api_recommend_film", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_recommend", "to": "api_recommend_handler", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_recommend", "to": "api_recommend_recommendationresult", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_share", "to": "api_share_handler", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_share", "to": "api_share_kvpipeline", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_share", "to": "api_share_kvresult", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "api_share_handler", "to": "api_share_kvpipeline", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "package", "to": "package_devdependencies", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "package_devdependencies", "to": "package_devdependencies_vercel_node", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "vercel", "to": "vercel_cleanurls", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "vercel", "to": "vercel_schema", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "vercel", "to": "vercel_trailingslash", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "case_study", "to": "case_study_cinematch_case_study", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "readme", "to": "case_study", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "case_study_cinematch_case_study", "to": "case_study_technical_decisions", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "case_study_cinematch_case_study", "to": "case_study_the_problem", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "case_study_cinematch_case_study", "to": "case_study_what_i_d_do_differently", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "case_study_technical_decisions", "to": "case_study_typescript_for_the_api_layer", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "case_study_technical_decisions", "to": "case_study_vercel_kv_for_analytics_and_sharing", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "case_study_technical_decisions", "to": "case_study_why_claude_for_recommendations", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "case_study_technical_decisions", "to": "case_study_why_prompt_caching", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "case_study_technical_decisions", "to": "case_study_why_serverless", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "case_study_technical_decisions", "to": "case_study_why_tmdb_for_posters", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude", "to": "claude_cinematch_claude_md", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_cinematch_claude_md", "to": "claude_architecture", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_cinematch_claude_md", "to": "claude_claude_prompt_strategy", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_cinematch_claude_md", "to": "claude_current_state_fully_shipped", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_cinematch_claude_md", "to": "claude_design_system", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_cinematch_claude_md", "to": "claude_form_inputs_localstorage_keys", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_cinematch_claude_md", "to": "claude_project_overview", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_cinematch_claude_md", "to": "claude_what_not_to_change", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_architecture", "to": "claude_data_flow", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_architecture", "to": "claude_dual_path_architecture", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_architecture", "to": "claude_environment_variables_required", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "readme", "to": "readme_cinematch", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "readme_cinematch", "to": "readme_architecture", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "readme_cinematch", "to": "readme_deploying_to_vercel", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "readme_cinematch", "to": "readme_how_it_works", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "readme_cinematch", "to": "readme_local_development", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "readme_cinematch", "to": "readme_pages", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "readme_cinematch", "to": "readme_serverless_functions_vercel", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "readme_cinematch", "to": "readme_tech", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "readme_local_development", "to": "readme_option_a_simple_direct_api_calls_from_browser", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "readme_local_development", "to": "readme_option_b_with_serverless_functions_matches_production", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "readme_deploying_to_vercel", "to": "readme_setting_up_vercel_kv_for_analytics_share_links", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}];
+const LEGEND = [{"cid": 0, "color": "#4E79A7", "label": "CineMatch \u2014 CLAUDE.md", "count": 12}, {"cid": 1, "color": "#F28E2B", "label": "CineMatch", "count": 11}, {"cid": 2, "color": "#E15759", "label": "Technical Decisions", "count": 7}, {"cid": 3, "color": "#76B7B2", "label": "analytics.ts", "count": 5}, {"cid": 4, "color": "#59A14F", "label": "CineMatch \u2014 Case Study", "count": 5}, {"cid": 5, "color": "#EDC948", "label": "poster.ts", "count": 4}, {"cid": 6, "color": "#B07AA1", "label": "recommend.ts", "count": 4}, {"cid": 7, "color": "#FF9DA7", "label": "share.ts", "count": 4}, {"cid": 8, "color": "#9C755F", "label": "vercel.json", "count": 4}, {"cid": 9, "color": "#BAB0AC", "label": "devDependencies", "count": 3}];
+
+// HTML-escape helper — prevents XSS when injecting graph data into innerHTML
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Build vis datasets
+const nodesDS = new vis.DataSet(RAW_NODES.map(n => ({
+  id: n.id, label: n.label, color: n.color, size: n.size,
+  font: n.font, title: n.title,
+  _community: n.community, _community_name: n.community_name,
+  _source_file: n.source_file, _file_type: n.file_type, _degree: n.degree,
+})));
+
+const edgesDS = new vis.DataSet(RAW_EDGES.map((e, i) => ({
+  id: i, from: e.from, to: e.to,
+  label: '',
+  title: e.title,
+  dashes: e.dashes,
+  width: e.width,
+  color: e.color,
+  arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+})));
+
+const container = document.getElementById('graph');
+const network = new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {
+  physics: {
+    enabled: true,
+    solver: 'forceAtlas2Based',
+    forceAtlas2Based: {
+      gravitationalConstant: -60,
+      centralGravity: 0.005,
+      springLength: 120,
+      springConstant: 0.08,
+      damping: 0.4,
+      avoidOverlap: 0.8,
+    },
+    stabilization: { iterations: 200, fit: true },
+  },
+  interaction: {
+    hover: true,
+    tooltipDelay: 100,
+    hideEdgesOnDrag: true,
+    navigationButtons: false,
+    keyboard: false,
+  },
+  nodes: { shape: 'dot', borderWidth: 1.5 },
+  edges: { smooth: { type: 'continuous', roundness: 0.2 }, selectionWidth: 3 },
+});
+
+network.once('stabilizationIterationsDone', () => {
+  network.setOptions({ physics: { enabled: false } });
+});
+
+function showInfo(nodeId) {
+  const n = nodesDS.get(nodeId);
+  if (!n) return;
+  const neighborIds = network.getConnectedNodes(nodeId);
+  const neighborItems = neighborIds.map(nid => {
+    const nb = nodesDS.get(nid);
+    const color = nb ? nb.color.background : '#555';
+    return `<span class="neighbor-link" style="border-left-color:${esc(color)}" onclick="focusNode(${JSON.stringify(nid)})">${esc(nb ? nb.label : nid)}</span>`;
+  }).join('');
+  document.getElementById('info-content').innerHTML = `
+    <div class="field"><b>${esc(n.label)}</b></div>
+    <div class="field">Type: ${esc(n._file_type || 'unknown')}</div>
+    <div class="field">Community: ${esc(n._community_name)}</div>
+    <div class="field">Source: ${esc(n._source_file || '-')}</div>
+    <div class="field">Degree: ${n._degree}</div>
+    ${neighborIds.length ? `<div class="field" style="margin-top:8px;color:#aaa;font-size:11px">Neighbors (${neighborIds.length})</div><div id="neighbors-list">${neighborItems}</div>` : ''}
+  `;
+}
+
+function focusNode(nodeId) {
+  network.focus(nodeId, { scale: 1.4, animation: true });
+  network.selectNodes([nodeId]);
+  showInfo(nodeId);
+}
+
+// Track hovered node — hover detection is more reliable than click params
+let hoveredNodeId = null;
+network.on('hoverNode', params => {
+  hoveredNodeId = params.node;
+  container.style.cursor = 'pointer';
+});
+network.on('blurNode', () => {
+  hoveredNodeId = null;
+  container.style.cursor = 'default';
+});
+container.addEventListener('click', () => {
+  if (hoveredNodeId !== null) {
+    showInfo(hoveredNodeId);
+    network.selectNodes([hoveredNodeId]);
+  }
+});
+network.on('click', params => {
+  if (params.nodes.length > 0) {
+    showInfo(params.nodes[0]);
+  } else if (hoveredNodeId === null) {
+    document.getElementById('info-content').innerHTML = '<span class="empty">Click a node to inspect it</span>';
+  }
+});
+
+const searchInput = document.getElementById('search');
+const searchResults = document.getElementById('search-results');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  searchResults.innerHTML = '';
+  if (!q) { searchResults.style.display = 'none'; return; }
+  const matches = RAW_NODES.filter(n => n.label.toLowerCase().includes(q)).slice(0, 20);
+  if (!matches.length) { searchResults.style.display = 'none'; return; }
+  searchResults.style.display = 'block';
+  matches.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'search-item';
+    el.textContent = n.label;
+    el.style.borderLeft = `3px solid ${n.color.background}`;
+    el.style.paddingLeft = '8px';
+    el.onclick = () => {
+      network.focus(n.id, { scale: 1.5, animation: true });
+      network.selectNodes([n.id]);
+      showInfo(n.id);
+      searchResults.style.display = 'none';
+      searchInput.value = '';
+    };
+    searchResults.appendChild(el);
+  });
+});
+document.addEventListener('click', e => {
+  if (!searchResults.contains(e.target) && e.target !== searchInput)
+    searchResults.style.display = 'none';
+});
+
+const hiddenCommunities = new Set();
+
+const selectAllCb = document.getElementById('select-all-cb');
+
+function updateSelectAllState() {
+  const total = LEGEND.length;
+  const hidden = hiddenCommunities.size;
+  selectAllCb.checked = hidden === 0;
+  selectAllCb.indeterminate = hidden > 0 && hidden < total;
+}
+
+function toggleAllCommunities(hide) {
+  document.querySelectorAll('.legend-item').forEach(item => {
+    hide ? item.classList.add('dimmed') : item.classList.remove('dimmed');
+  });
+  document.querySelectorAll('.legend-cb').forEach(cb => {
+    cb.checked = !hide;
+  });
+  LEGEND.forEach(c => {
+    if (hide) hiddenCommunities.add(c.cid); else hiddenCommunities.delete(c.cid);
+  });
+  const updates = RAW_NODES.map(n => ({ id: n.id, hidden: hide }));
+  nodesDS.update(updates);
+  updateSelectAllState();
+}
+
+const legendEl = document.getElementById('legend');
+LEGEND.forEach(c => {
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  const cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.className = 'legend-cb';
+  cb.checked = true;
+  cb.addEventListener('change', (e) => {
+    e.stopPropagation();
+    if (cb.checked) {
+      hiddenCommunities.delete(c.cid);
+      item.classList.remove('dimmed');
+    } else {
+      hiddenCommunities.add(c.cid);
+      item.classList.add('dimmed');
+    }
+    const updates = RAW_NODES
+      .filter(n => n.community === c.cid)
+      .map(n => ({ id: n.id, hidden: !cb.checked }));
+    nodesDS.update(updates);
+    updateSelectAllState();
+  });
+  item.innerHTML = `<div class="legend-dot" style="background:${c.color}"></div>
+    <span class="legend-label">${c.label}</span>
+    <span class="legend-count">${c.count}</span>`;
+  item.prepend(cb);
+  item.onclick = (e) => {
+    if (e.target === cb) return;
+    cb.checked = !cb.checked;
+    cb.dispatchEvent(new Event('change'));
+  };
+  legendEl.appendChild(item);
+});
+</script>
+<script>
+// Render hyperedges as shaded regions
+const hyperedges = [];
+// afterDrawing passes ctx already transformed to network coordinate space.
+// Draw node positions raw — no manual pan/zoom/DPR math needed.
+network.on('afterDrawing', function(ctx) {
+    hyperedges.forEach(h => {
+        const positions = h.nodes
+            .map(nid => network.getPositions([nid])[nid])
+            .filter(p => p !== undefined);
+        if (positions.length < 2) return;
+        ctx.save();
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = '#6366f1';
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        // Centroid and expanded hull in network coordinates
+        const cx = positions.reduce((s, p) => s + p.x, 0) / positions.length;
+        const cy = positions.reduce((s, p) => s + p.y, 0) / positions.length;
+        const expanded = positions.map(p => ({
+            x: cx + (p.x - cx) * 1.15,
+            y: cy + (p.y - cy) * 1.15
+        }));
+        ctx.moveTo(expanded[0].x, expanded[0].y);
+        expanded.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 0.4;
+        ctx.stroke();
+        // Label
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = '#4f46e5';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(h.label, cx, cy - 5);
+        ctx.restore();
+    });
+});
+</script>
+</body>
+</html>
