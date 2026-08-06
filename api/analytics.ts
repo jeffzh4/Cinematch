@@ -5,6 +5,7 @@
 // GET  — return aggregated stats (used by analytics.html)
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { applySecurityHeaders, boundedString, boundedStringArray, rateLimit } from './_security';
 
 interface AnalyticsEntry {
   mood:      string;
@@ -36,18 +37,19 @@ async function kvPipeline(commands: unknown[][]): Promise<KVResult[]> {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  applySecurityHeaders(res);
+  if (!rateLimit(req, res, req.method === 'GET' ? 30 : 20, 60_000)) return;
 
   // ── POST: log one anonymised entry ──────────────────────────────────────
   if (req.method === 'POST') {
     const body = (req.body as Record<string, unknown>) || {};
     const entry: AnalyticsEntry = {
-      mood:      String(body.mood      ?? '').slice(0, 200),
-      genres:    Array.isArray(body.genres)    ? (body.genres    as string[]).slice(0, 10) : [],
-      occasion:  String(body.occasion   ?? '').slice(0, 200),
-      runtime:   String(body.runtime    ?? ''),
-      decade:    String(body.decade     ?? ''),
-      platforms: Array.isArray(body.platforms) ? (body.platforms as string[]).slice(0, 10) : [],
+      mood:      boundedString(body.mood, 200),
+      genres:    boundedStringArray(body.genres, 10, 60),
+      occasion:  boundedString(body.occasion, 200),
+      runtime:   boundedString(body.runtime, 40),
+      decade:    boundedString(body.decade, 40),
+      platforms: boundedStringArray(body.platforms, 10, 60),
       ts: Date.now(),
     };
 
@@ -101,8 +103,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
       res.status(200).json({ total, genres: genreCounts, runtimes: runtimeCounts, moods, occasions });
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'KV error';
-      res.status(500).json({ error: message });
+      res.status(500).json({ error: 'Unable to load analytics' });
     }
     return;
   }

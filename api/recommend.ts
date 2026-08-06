@@ -2,6 +2,7 @@
 // API key lives in Vercel env vars (ANTHROPIC_API_KEY), never in source.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { applySecurityHeaders, boundedString, boundedStringArray, rateLimit } from './_security';
 
 interface Film {
   num:      number;
@@ -52,10 +53,12 @@ Respond with ONLY a JSON object in this exact schema, no other text:
 Return runtime in minutes (integer), year as an integer, rating as a number out of 5 (one decimal). Return exactly 6 films. Output valid JSON only — no markdown, no code fences, no commentary.`;
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
+  applySecurityHeaders(res);
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
   }
+  if (!rateLimit(req, res, 10, 60_000)) return;
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
@@ -64,12 +67,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   }
 
   const body      = (req.body as Record<string, unknown>) || {};
-  const mood      = String(body.mood      ?? '');
-  const genres    = Array.isArray(body.genres)    ? (body.genres    as string[]) : [];
-  const occasion  = String(body.occasion   ?? '');
-  const runtime   = String(body.runtime    ?? '');
-  const decade    = String(body.decade     ?? '');
-  const platforms = Array.isArray(body.platforms) ? (body.platforms as string[]) : [];
+  const mood      = boundedString(body.mood, 200);
+  const genres    = boundedStringArray(body.genres, 10, 60);
+  const occasion  = boundedString(body.occasion, 200);
+  const runtime   = boundedString(body.runtime, 40);
+  const decade    = boundedString(body.decade, 40);
+  const platforms = boundedStringArray(body.platforms, 10, 60);
 
   const userMessage = [
     `Mood: ${mood     || '(not specified)'}`,
@@ -103,8 +106,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     });
 
     if (!response.ok) {
-      const errText = await response.text();
-      res.status(response.status).json({ error: `Anthropic ${response.status}`, detail: errText.slice(0, 300) });
+      res.status(502).json({ error: 'Recommendation provider unavailable' });
       return;
     }
 
@@ -130,7 +132,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
     res.status(200).json(parsed);
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Unknown server error';
-    res.status(500).json({ error: message });
+    res.status(502).json({ error: 'Recommendation provider unavailable' });
   }
 }

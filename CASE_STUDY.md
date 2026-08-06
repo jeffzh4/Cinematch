@@ -8,7 +8,7 @@
 
 Finding the right film to watch on any given night is paradoxically hard. Streaming platforms surface thousands of options, but the discovery UI is optimised for engagement, not taste — infinite thumbnails, algorithmic bubbles, the slow drift toward whatever's loudest on the homepage. The mental overhead of choosing exceeds the commitment of watching.
 
-CineMatch is an attempt to strip that back to a single, direct question: tell me what you're in the mood for, and I'll tell you what to watch. Three inputs (mood, genre, occasion) produce six picks with spoiler-free explanations written in a voice that reads like a recommendation from a friend who actually cares about cinema — not a ranked list from a database.
+CineMatch strips that back to a single, direct question: tell me what you're in the mood for, and I'll tell you what to watch. Three inputs (mood, genre, occasion) produce six picks with spoiler-free explanations written like a recommendation from a friend who actually cares about cinema — not a ranked list from a database.
 
 ---
 

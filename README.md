@@ -1,6 +1,6 @@
 # CineMatch
 
-A personalized movie recommendation web app. Three questions → six tailored film picks with spoiler-free explanations, powered by Claude.
+A movie recommendation web app. Three questions → six film picks with spoiler-free explanations, powered by Claude.
 
 **Live demo:** https://cinematch-navy.vercel.app
 
@@ -83,41 +83,27 @@ flowchart LR
 
 ## Local development
 
-Two options:
+### Local development
 
-### Option A — Simple (direct API calls from browser)
-
-1. Copy your Anthropic + TMDB keys into `config.local.js`:
-   ```js
-   window.CINEMATCH_CONFIG = {
-     ANTHROPIC_API_KEY: 'sk-ant-...',
-     ANTHROPIC_MODEL:   'claude-sonnet-4-6',
-     TMDB_API_KEY:      '...'
-   };
+1. Create a `.env.local` with the server-side keys listed below.
+2. Install Vercel CLI: `npm i -g vercel`.
+3. Run the local server:
    ```
-   (`config.local.js` is gitignored.)
-
-2. Serve the directory:
-   ```
-   python3 -m http.server 7821
+   vercel dev
    ```
 
-3. Open <http://localhost:7821>
+API keys are never sent to the browser; local development uses the same serverless proxies as production.
 
-> **Note:** Analytics logging and share links require Vercel KV and only work in Option B / production.
+### Environment variables
 
-### Option B — With serverless functions (matches production)
-
-1. Install Vercel CLI: `npm i -g vercel`
-2. Create `.env.local`:
+Create `.env.local`:
    ```
    ANTHROPIC_API_KEY=sk-ant-...
    TMDB_API_KEY=...
    KV_REST_API_URL=...
    KV_REST_API_TOKEN=...
    ```
-3. Run `vercel dev`
-4. Open the URL it prints
+Open the URL printed by `vercel dev`.
 
 ---
 

@@ -64,9 +64,8 @@ form.html → localStorage → loading.html → /api/recommend → Anthropic API
                                               share.html?id=xxx
 ```
 
-### Dual-path architecture
-- **Local dev (Option A):** `config.local.js` present → calls Anthropic + TMDB directly from browser
-- **Production (Option B):** no `config.local.js` → calls Vercel serverless proxies
+### API architecture
+- **All environments:** calls Vercel serverless proxies; provider keys never enter browser code
 
 ### Environment variables required
 - `ANTHROPIC_API_KEY` — Anthropic API key
@@ -111,4 +110,4 @@ Prompt caching is applied via `cache_control: { type: 'ephemeral' }` on the syst
 - The editorial copy voice ("For a slow night that asks nothing of you")
 - The zigzag layout pattern on results
 - The brutalist header + bottom-bar pattern shared across all pages
-- `config.local.js` must stay gitignored — never commit API keys
+- API keys must stay in server-side environment variables — never commit or expose them to browser code

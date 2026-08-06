@@ -5,6 +5,8 @@
 // GET  ?id=xxx             → { headline, films } — retrieve stored results
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { randomUUID } from 'node:crypto';
+import { applySecurityHeaders, boundedString, rateLimit } from './_security';
 
 interface KVResult {
   result: unknown;
@@ -26,17 +28,33 @@ async function kvPipeline(commands: unknown[][]): Promise<KVResult[]> {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
+  applySecurityHeaders(res);
+  if (!rateLimit(req, res, req.method === 'POST' ? 20 : 60, 60_000)) return;
 
   // ── POST: persist a result set and return a short ID ────────────────────
   if (req.method === 'POST') {
-    const data = req.body as Record<string, unknown>;
-    if (!data || !Array.isArray(data.films)) {
+    const body = req.body as Record<string, unknown>;
+    if (!body || !Array.isArray(body.films) || body.films.length !== 6) {
       res.status(400).json({ error: 'Invalid payload — expected { headline, films }' });
       return;
     }
 
-    // Short unique ID: 7 base-36 random chars + base-36 timestamp suffix
-    const id = Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
+    const films = body.films.map((film) => {
+      const item = film as Record<string, unknown>;
+      return {
+        num: typeof item.num === 'number' ? item.num : 0,
+        title: boundedString(item.title, 160),
+        director: boundedString(item.director, 160),
+        year: typeof item.year === 'number' ? item.year : 0,
+        runtime: typeof item.runtime === 'number' ? item.runtime : 0,
+        genre: boundedString(item.genre, 80),
+        rating: typeof item.rating === 'number' ? item.rating : 0,
+        reason: boundedString(item.reason, 600),
+      };
+    });
+    const data = { headline: boundedString(body.headline, 240), films };
+
+    const id = randomUUID().replaceAll('-', '');
 
     try {
       await kvPipeline([
@@ -44,8 +62,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
         ['SET', `cm:share:${id}`, JSON.stringify(data), 'EX', '2592000'],
       ]);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'KV error';
-      res.status(500).json({ error: message });
+      res.status(500).json({ error: 'Unable to create share link' });
       return;
     }
 
@@ -76,8 +93,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
       res.status(200).json(JSON.parse(raw));
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'KV error';
-      res.status(500).json({ error: message });
+      res.status(500).json({ error: 'Unable to load share link' });
     }
     return;
   }

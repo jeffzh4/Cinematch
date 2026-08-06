@@ -2,6 +2,7 @@
 // API key lives in Vercel env vars (TMDB_API_KEY), never in source.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { applySecurityHeaders, boundedString, rateLimit } from './_security';
 
 interface TMDBMovie {
   poster_path:  string | null;
@@ -14,14 +15,17 @@ interface TMDBSearchResponse {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
+  applySecurityHeaders(res);
+  if (req.method !== 'GET') { res.status(405).json({ error: 'Method not allowed' }); return; }
+  if (!rateLimit(req, res, 60, 60_000)) return;
   const apiKey = process.env.TMDB_API_KEY;
   if (!apiKey) {
     res.status(500).json({ error: 'Server missing TMDB_API_KEY' });
     return;
   }
 
-  const title = String(req.query?.title ?? '').trim();
-  const year  = String(req.query?.year  ?? '').trim();
+  const title = boundedString(req.query?.title, 200);
+  const year  = boundedString(req.query?.year, 4);
 
   if (!title) {
     res.status(400).json({ error: 'Missing title' });
