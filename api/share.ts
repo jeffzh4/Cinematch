@@ -76,8 +76,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
   // ── GET: retrieve stored results by ID ──────────────────────────────────
   if (req.method === 'GET') {
-    const id = String(req.query.id ?? '').trim();
-    if (!id) {
+    const id = boundedString(req.query.id, 32);
+    if (!/^[a-f0-9]{32}$/i.test(id)) {
       res.status(400).json({ error: 'Missing ?id param' });
       return;
     }

@@ -1,0 +1,1133 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "analytics.ts",
+      "file_type": "code",
+      "source_file": "api/analytics.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "api_analytics",
+      "community": 3,
+      "norm_label": "analytics.ts"
+    },
+    {
+      "label": "AnalyticsEntry",
+      "file_type": "code",
+      "source_file": "api/analytics.ts",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "api_analytics_analyticsentry",
+      "community": 3,
+      "norm_label": "analyticsentry"
+    },
+    {
+      "label": "KVResult",
+      "file_type": "code",
+      "source_file": "api/analytics.ts",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "api_analytics_kvresult",
+      "community": 3,
+      "norm_label": "kvresult"
+    },
+    {
+      "label": "kvPipeline()",
+      "file_type": "code",
+      "source_file": "api/analytics.ts",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "api_analytics_kvpipeline",
+      "community": 3,
+      "norm_label": "kvpipeline()"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/analytics.ts",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "api_analytics_handler",
+      "community": 3,
+      "norm_label": "handler()"
+    },
+    {
+      "label": "poster.ts",
+      "file_type": "code",
+      "source_file": "api/poster.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "api_poster",
+      "community": 5,
+      "norm_label": "poster.ts"
+    },
+    {
+      "label": "TMDBMovie",
+      "file_type": "code",
+      "source_file": "api/poster.ts",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "api_poster_tmdbmovie",
+      "community": 5,
+      "norm_label": "tmdbmovie"
+    },
+    {
+      "label": "TMDBSearchResponse",
+      "file_type": "code",
+      "source_file": "api/poster.ts",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "api_poster_tmdbsearchresponse",
+      "community": 5,
+      "norm_label": "tmdbsearchresponse"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/poster.ts",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "api_poster_handler",
+      "community": 5,
+      "norm_label": "handler()"
+    },
+    {
+      "label": "recommend.ts",
+      "file_type": "code",
+      "source_file": "api/recommend.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "api_recommend",
+      "community": 6,
+      "norm_label": "recommend.ts"
+    },
+    {
+      "label": "Film",
+      "file_type": "code",
+      "source_file": "api/recommend.ts",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "api_recommend_film",
+      "community": 6,
+      "norm_label": "film"
+    },
+    {
+      "label": "RecommendationResult",
+      "file_type": "code",
+      "source_file": "api/recommend.ts",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "api_recommend_recommendationresult",
+      "community": 6,
+      "norm_label": "recommendationresult"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/recommend.ts",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "api_recommend_handler",
+      "community": 6,
+      "norm_label": "handler()"
+    },
+    {
+      "label": "share.ts",
+      "file_type": "code",
+      "source_file": "api/share.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "api_share",
+      "community": 7,
+      "norm_label": "share.ts"
+    },
+    {
+      "label": "KVResult",
+      "file_type": "code",
+      "source_file": "api/share.ts",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "api_share_kvresult",
+      "community": 7,
+      "norm_label": "kvresult"
+    },
+    {
+      "label": "kvPipeline()",
+      "file_type": "code",
+      "source_file": "api/share.ts",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "api_share_kvpipeline",
+      "community": 7,
+      "norm_label": "kvpipeline()"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/share.ts",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "api_share_handler",
+      "community": 7,
+      "norm_label": "handler()"
+    },
+    {
+      "label": "package.json",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "package",
+      "community": 9,
+      "norm_label": "package.json"
+    },
+    {
+      "label": "devDependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "package_devdependencies",
+      "community": 9,
+      "norm_label": "devdependencies"
+    },
+    {
+      "label": "@vercel/node",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "package_devdependencies_vercel_node",
+      "community": 9,
+      "norm_label": "@vercel/node"
+    },
+    {
+      "label": "vercel.json",
+      "file_type": "code",
+      "source_file": "vercel.json",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "vercel",
+      "community": 8,
+      "norm_label": "vercel.json"
+    },
+    {
+      "label": "$schema",
+      "file_type": "code",
+      "source_file": "vercel.json",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "vercel_schema",
+      "community": 8,
+      "norm_label": "$schema"
+    },
+    {
+      "label": "cleanUrls",
+      "file_type": "code",
+      "source_file": "vercel.json",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "vercel_cleanurls",
+      "community": 8,
+      "norm_label": "cleanurls"
+    },
+    {
+      "label": "trailingSlash",
+      "file_type": "code",
+      "source_file": "vercel.json",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "vercel_trailingslash",
+      "community": 8,
+      "norm_label": "trailingslash"
+    },
+    {
+      "label": "CASE_STUDY.md",
+      "file_type": "document",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "case_study",
+      "community": 4,
+      "norm_label": "case_study.md"
+    },
+    {
+      "label": "CineMatch \u2014 Case Study",
+      "file_type": "document",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "case_study_cinematch_case_study",
+      "community": 4,
+      "norm_label": "cinematch \u2014 case study"
+    },
+    {
+      "label": "The Problem",
+      "file_type": "document",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "case_study_the_problem",
+      "community": 4,
+      "norm_label": "the problem"
+    },
+    {
+      "label": "Technical Decisions",
+      "file_type": "document",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "case_study_technical_decisions",
+      "community": 2,
+      "norm_label": "technical decisions"
+    },
+    {
+      "label": "Why serverless?",
+      "file_type": "document",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "case_study_why_serverless",
+      "community": 2,
+      "norm_label": "why serverless?"
+    },
+    {
+      "label": "Why Claude for recommendations?",
+      "file_type": "document",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "case_study_why_claude_for_recommendations",
+      "community": 2,
+      "norm_label": "why claude for recommendations?"
+    },
+    {
+      "label": "Why prompt caching?",
+      "file_type": "document",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "case_study_why_prompt_caching",
+      "community": 2,
+      "norm_label": "why prompt caching?"
+    },
+    {
+      "label": "Why TMDB for posters?",
+      "file_type": "document",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "case_study_why_tmdb_for_posters",
+      "community": 2,
+      "norm_label": "why tmdb for posters?"
+    },
+    {
+      "label": "TypeScript for the API layer",
+      "file_type": "document",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "case_study_typescript_for_the_api_layer",
+      "community": 2,
+      "norm_label": "typescript for the api layer"
+    },
+    {
+      "label": "Vercel KV for analytics and sharing",
+      "file_type": "document",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L41",
+      "_origin": "ast",
+      "id": "case_study_vercel_kv_for_analytics_and_sharing",
+      "community": 2,
+      "norm_label": "vercel kv for analytics and sharing"
+    },
+    {
+      "label": "What I'd Do Differently",
+      "file_type": "document",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "case_study_what_i_d_do_differently",
+      "community": 4,
+      "norm_label": "what i'd do differently"
+    },
+    {
+      "label": "CLAUDE.md",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "claude",
+      "community": 0,
+      "norm_label": "claude.md"
+    },
+    {
+      "label": "CineMatch \u2014 CLAUDE.md",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "claude_cinematch_claude_md",
+      "community": 0,
+      "norm_label": "cinematch \u2014 claude.md"
+    },
+    {
+      "label": "Project Overview",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "claude_project_overview",
+      "community": 0,
+      "norm_label": "project overview"
+    },
+    {
+      "label": "Current State \u2014 Fully Shipped",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "claude_current_state_fully_shipped",
+      "community": 0,
+      "norm_label": "current state \u2014 fully shipped"
+    },
+    {
+      "label": "Design System",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L40",
+      "_origin": "ast",
+      "id": "claude_design_system",
+      "community": 0,
+      "norm_label": "design system"
+    },
+    {
+      "label": "Architecture",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "claude_architecture",
+      "community": 0,
+      "norm_label": "architecture"
+    },
+    {
+      "label": "Data flow",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "claude_data_flow",
+      "community": 0,
+      "norm_label": "data flow"
+    },
+    {
+      "label": "Dual-path architecture",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L67",
+      "_origin": "ast",
+      "id": "claude_dual_path_architecture",
+      "community": 0,
+      "norm_label": "dual-path architecture"
+    },
+    {
+      "label": "Environment variables required",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L71",
+      "_origin": "ast",
+      "id": "claude_environment_variables_required",
+      "community": 0,
+      "norm_label": "environment variables required"
+    },
+    {
+      "label": "Form Inputs & localStorage Keys",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L80",
+      "_origin": "ast",
+      "id": "claude_form_inputs_localstorage_keys",
+      "community": 0,
+      "norm_label": "form inputs & localstorage keys"
+    },
+    {
+      "label": "Claude Prompt Strategy",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L95",
+      "_origin": "ast",
+      "id": "claude_claude_prompt_strategy",
+      "community": 0,
+      "norm_label": "claude prompt strategy"
+    },
+    {
+      "label": "What NOT to Change",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L108",
+      "_origin": "ast",
+      "id": "claude_what_not_to_change",
+      "community": 0,
+      "norm_label": "what not to change"
+    },
+    {
+      "label": "README.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "readme",
+      "community": 4,
+      "norm_label": "readme.md"
+    },
+    {
+      "label": "CineMatch",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "readme_cinematch",
+      "community": 1,
+      "norm_label": "cinematch"
+    },
+    {
+      "label": "How it works",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "readme_how_it_works",
+      "community": 1,
+      "norm_label": "how it works"
+    },
+    {
+      "label": "Pages",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "readme_pages",
+      "community": 1,
+      "norm_label": "pages"
+    },
+    {
+      "label": "Serverless functions (Vercel)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "readme_serverless_functions_vercel",
+      "community": 1,
+      "norm_label": "serverless functions (vercel)"
+    },
+    {
+      "label": "Architecture",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "readme_architecture",
+      "community": 1,
+      "norm_label": "architecture"
+    },
+    {
+      "label": "Local development",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L84",
+      "_origin": "ast",
+      "id": "readme_local_development",
+      "community": 1,
+      "norm_label": "local development"
+    },
+    {
+      "label": "Option A \u2014 Simple (direct API calls from browser)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L88",
+      "_origin": "ast",
+      "id": "readme_option_a_simple_direct_api_calls_from_browser",
+      "community": 1,
+      "norm_label": "option a \u2014 simple (direct api calls from browser)"
+    },
+    {
+      "label": "Option B \u2014 With serverless functions (matches production)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L109",
+      "_origin": "ast",
+      "id": "readme_option_b_with_serverless_functions_matches_production",
+      "community": 1,
+      "norm_label": "option b \u2014 with serverless functions (matches production)"
+    },
+    {
+      "label": "Deploying to Vercel",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L124",
+      "_origin": "ast",
+      "id": "readme_deploying_to_vercel",
+      "community": 1,
+      "norm_label": "deploying to vercel"
+    },
+    {
+      "label": "Setting up Vercel KV (for analytics + share links)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L134",
+      "_origin": "ast",
+      "id": "readme_setting_up_vercel_kv_for_analytics_share_links",
+      "community": 1,
+      "norm_label": "setting up vercel kv (for analytics + share links)"
+    },
+    {
+      "label": "Tech",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L145",
+      "_origin": "ast",
+      "id": "readme_tech",
+      "community": 1,
+      "norm_label": "tech"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/analytics.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "api_analytics",
+      "target": "api_analytics_analyticsentry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/analytics.ts",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "api_analytics",
+      "target": "api_analytics_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/analytics.ts",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "api_analytics",
+      "target": "api_analytics_kvpipeline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/analytics.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "api_analytics",
+      "target": "api_analytics_kvresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/analytics.ts",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "api_analytics_handler",
+      "target": "api_analytics_kvpipeline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/poster.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "api_poster",
+      "target": "api_poster_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/poster.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "api_poster",
+      "target": "api_poster_tmdbmovie",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/poster.ts",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "api_poster",
+      "target": "api_poster_tmdbsearchresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/recommend.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "api_recommend",
+      "target": "api_recommend_film",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/recommend.ts",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "api_recommend",
+      "target": "api_recommend_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/recommend.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "api_recommend",
+      "target": "api_recommend_recommendationresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/share.ts",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "api_share",
+      "target": "api_share_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/share.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "api_share",
+      "target": "api_share_kvpipeline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/share.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "api_share",
+      "target": "api_share_kvresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/share.ts",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "api_share_handler",
+      "target": "api_share_kvpipeline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_devdependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_vercel_node",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "vercel.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "vercel",
+      "target": "vercel_cleanurls",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "vercel.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "vercel",
+      "target": "vercel_schema",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "vercel.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "vercel",
+      "target": "vercel_trailingslash",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "case_study",
+      "target": "case_study_cinematch_case_study",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L154",
+      "weight": 1.0,
+      "source": "readme",
+      "target": "case_study",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "case_study_cinematch_case_study",
+      "target": "case_study_technical_decisions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "case_study_cinematch_case_study",
+      "target": "case_study_the_problem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "case_study_cinematch_case_study",
+      "target": "case_study_what_i_d_do_differently",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "case_study_technical_decisions",
+      "target": "case_study_typescript_for_the_api_layer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "case_study_technical_decisions",
+      "target": "case_study_vercel_kv_for_analytics_and_sharing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "case_study_technical_decisions",
+      "target": "case_study_why_claude_for_recommendations",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "case_study_technical_decisions",
+      "target": "case_study_why_prompt_caching",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "case_study_technical_decisions",
+      "target": "case_study_why_serverless",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "case_study_technical_decisions",
+      "target": "case_study_why_tmdb_for_posters",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "claude",
+      "target": "claude_cinematch_claude_md",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "claude_cinematch_claude_md",
+      "target": "claude_architecture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "claude_cinematch_claude_md",
+      "target": "claude_claude_prompt_strategy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "claude_cinematch_claude_md",
+      "target": "claude_current_state_fully_shipped",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "claude_cinematch_claude_md",
+      "target": "claude_design_system",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "claude_cinematch_claude_md",
+      "target": "claude_form_inputs_localstorage_keys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "claude_cinematch_claude_md",
+      "target": "claude_project_overview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "claude_cinematch_claude_md",
+      "target": "claude_what_not_to_change",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "claude_architecture",
+      "target": "claude_data_flow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "claude_architecture",
+      "target": "claude_dual_path_architecture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "claude_architecture",
+      "target": "claude_environment_variables_required",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "readme",
+      "target": "readme_cinematch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "readme_cinematch",
+      "target": "readme_architecture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L124",
+      "weight": 1.0,
+      "source": "readme_cinematch",
+      "target": "readme_deploying_to_vercel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "readme_cinematch",
+      "target": "readme_how_it_works",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "readme_cinematch",
+      "target": "readme_local_development",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "readme_cinematch",
+      "target": "readme_pages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "readme_cinematch",
+      "target": "readme_serverless_functions_vercel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L145",
+      "weight": 1.0,
+      "source": "readme_cinematch",
+      "target": "readme_tech",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "readme_local_development",
+      "target": "readme_option_a_simple_direct_api_calls_from_browser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "readme_local_development",
+      "target": "readme_option_b_with_serverless_functions_matches_production",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "readme_deploying_to_vercel",
+      "target": "readme_setting_up_vercel_kv_for_analytics_share_links",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "0758f733e2586c7f897100c254e806645b3e2b7f"
+}
