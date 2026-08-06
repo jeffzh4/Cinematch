@@ -587,7 +587,7 @@ a { color: inherit; text-decoration: none; }
 
 <main class="results-page">
 
-  <p class="eyebrow" id="results-eyebrow">Six films · Curated for you</p>
+  <p class="eyebrow" id="results-eyebrow">Six films · Picked for you</p>
   <h1 class="results-headline" id="results-headline">For a slow night<br>that asks <em>nothing</em> of you.</h1>
   <p class="results-query" id="results-query">"Restless, can't sleep, want something quiet — a rainy Sunday alone."</p>
 
@@ -620,11 +620,8 @@ a { color: inherit; text-decoration: none; }
   </div>
 </div>
 
-<script src="config.local.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
-  const cfg = window.CINEMATCH_CONFIG || {};
 
   // --- Live timestamp in bottom bar (relative time, updates every minute) ---
   const summaryEl = document.getElementById('summary-line');
@@ -760,26 +757,14 @@ document.addEventListener('DOMContentLoaded', () => {
     filmEls.forEach(f => f.classList.add('in-view'));
   }
 
-  // --- TMDB poster fetch (parallel, dual-path) ---
-  //   - LOCAL  (config.local.js present): hit TMDB directly
-  //   - DEPLOYED (no config): hit /api/poster serverless proxy
+  // --- TMDB poster fetch through the server-side proxy ---
   async function fetchPosterUrl(title, year) {
-    if (cfg.TMDB_API_KEY) {
-      const params = new URLSearchParams({ api_key: cfg.TMDB_API_KEY, query: title });
-      if (year) params.set('year', year);
-      const res = await fetch(`https://api.themoviedb.org/3/search/movie?${params}`);
-      if (!res.ok) return null;
-      const data = await res.json();
-      const hit = data.results?.find(r => r.poster_path) || null;
-      return hit ? `https://image.tmdb.org/t/p/w500${hit.poster_path}` : null;
-    } else {
-      const params = new URLSearchParams({ title });
-      if (year) params.set('year', String(year));
-      const res = await fetch(`/api/poster?${params}`);
-      if (!res.ok) return null;
-      const data = await res.json();
-      return data.posterUrl || null;
-    }
+    const params = new URLSearchParams({ title });
+    if (year) params.set('year', String(year));
+    const res = await fetch(`/api/poster?${params}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.posterUrl || null;
   }
 
   document.querySelectorAll('.film-poster').forEach(async (posterEl) => {

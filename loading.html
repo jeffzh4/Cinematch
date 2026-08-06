@@ -7,7 +7,7 @@
 <link rel="canonical" href="https://cinematch-navy.vercel.app/loading.html">
 <link rel="dns-prefetch" href="https://api.anthropic.com">
 <link rel="dns-prefetch" href="https://api.themoviedb.org">
-<title>CineMatch — Curating your six</title>
+<title>CineMatch — Choosing your six</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -186,7 +186,7 @@ body {
 
 <div class="loading-stage">
   <p class="loading-label">Working on it</p>
-  <h1 class="loading-headline">Curating your<br><em>six films…</em></h1>
+  <h1 class="loading-headline">Choosing your<br><em>six films…</em></h1>
 
   <div class="progress-track">
     <div class="progress-fill" id="progressFill"></div>
@@ -204,10 +204,7 @@ body {
   </div>
 </div>
 
-<script src="config.local.js"></script>
 <script>
-const cfg = window.CINEMATCH_CONFIG || {};
-
 const mood      = localStorage.getItem('cm_mood')      || '';
 const genres    = JSON.parse(localStorage.getItem('cm_genres')    || '[]');
 const occasion  = localStorage.getItem('cm_occasion')  || '';
@@ -259,68 +256,21 @@ const userMessage = [
   ...(platforms.length ? [`Streaming platforms available: ${platforms.join(', ')}`]  : []),
 ].join('\n');
 
-// Two recommendation paths:
-//   - LOCAL  (config.local.js present): call Anthropic directly from browser
-//   - DEPLOYED (no config): POST to /api/recommend serverless function
-// A 30-second AbortController timeout prevents the page hanging indefinitely.
+// API keys stay server-side in all environments. A 30-second timeout prevents
+// the page hanging indefinitely when the proxy or provider is unavailable.
 async function getRecommendations() {
   const controller = new AbortController();
   const timeoutId  = setTimeout(() => controller.abort(), 30000);
 
   try {
-    if (cfg.ANTHROPIC_API_KEY) {
-      // Direct call — local development only
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        signal: controller.signal,
-        headers: {
-          'content-type': 'application/json',
-          'x-api-key': cfg.ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({
-          model: cfg.ANTHROPIC_MODEL || 'claude-sonnet-4-6',
-          max_tokens: 2000,
-          system: [
-            {
-              type: 'text',
-              text: SYSTEM_PROMPT,
-              cache_control: { type: 'ephemeral' }
-            }
-          ],
-          messages: [{ role: 'user', content: userMessage }]
-        })
-      });
-      if (!res.ok) {
-        const errBody = await res.text();
-        throw new Error(`API ${res.status}: ${errBody.slice(0, 200)}`);
-      }
-      const data = await res.json();
-      const text = data.content?.[0]?.text || '';
-      const cleaned = text
-        .replace(/^\s*```(?:json)?\s*/i, '')
-        .replace(/\s*```\s*$/i, '')
-        .trim();
-      const parsed = JSON.parse(cleaned);
-      if (!parsed.films || !Array.isArray(parsed.films) || parsed.films.length === 0) {
-        throw new Error('Invalid response shape');
-      }
-      return parsed;
-    } else {
-      // Serverless proxy — deployed mode
-      const res = await fetch('/api/recommend', {
-        method: 'POST',
-        signal: controller.signal,
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ mood, genres, occasion, runtime, decade, platforms })
-      });
-      if (!res.ok) {
-        const errBody = await res.text();
-        throw new Error(`Proxy ${res.status}: ${errBody.slice(0, 200)}`);
-      }
-      return await res.json();
-    }
+    const res = await fetch('/api/recommend', {
+      method: 'POST',
+      signal: controller.signal,
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ mood, genres, occasion, runtime, decade, platforms })
+    });
+    if (!res.ok) throw new Error(`Proxy ${res.status}`);
+    return await res.json();
   } finally {
     clearTimeout(timeoutId); // always cancel the timer once the fetch settles
   }
@@ -333,14 +283,12 @@ async function getRecommendations() {
     document.getElementById('step3').classList.add('active');
     localStorage.setItem('cm_results', JSON.stringify(parsed));
 
-    // Fire-and-forget analytics log (deployed mode only — no local API server)
-    if (!cfg.ANTHROPIC_API_KEY) {
-      fetch('/api/analytics', {
-        method:  'POST',
-        headers: { 'content-type': 'application/json' },
-        body:    JSON.stringify({ mood, genres, occasion, runtime, decade, platforms })
-      }).catch(() => {}); // silently ignore; analytics must never affect UX
-    }
+    // Fire-and-forget analytics log; it must never affect the main flow.
+    fetch('/api/analytics', {
+      method:  'POST',
+      headers: { 'content-type': 'application/json' },
+      body:    JSON.stringify({ mood, genres, occasion, runtime, decade, platforms })
+    }).catch(() => {});
 
     setTimeout(() => { window.location.href = 'results.html'; }, 450);
   } catch (err) {

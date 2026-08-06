@@ -11,8 +11,8 @@
 <!-- OG tags — headline updated dynamically once data loads -->
 <meta property="og:site_name" content="CineMatch">
 <meta property="og:type"      content="website">
-<meta name="description"      content="Six film picks curated by CineMatch — powered by Claude.">
-<meta property="og:description" content="Six film picks curated by CineMatch — powered by Claude.">
+<meta name="description"      content="Six film picks chosen by CineMatch — powered by Claude.">
+<meta property="og:description" content="Six film picks chosen by CineMatch — powered by Claude.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -179,9 +179,7 @@ function wrapLastWord(title) {
 
     // Update headline
     if (headlineEl) {
-      headlineEl.innerHTML = data.headline
-        ? sanitizeHeadline(data.headline)
-        : `Six films,<br>just for <em>you</em>.`;
+      headlineEl.textContent = data.headline || 'Six films, just for you.';
       document.title = `CineMatch — ${headlineEl.textContent?.replace(/\n/g,' ')}`;
     }
 
@@ -191,20 +189,22 @@ function wrapLastWord(title) {
       const item = document.createElement('div');
       item.className = 'film-item';
       const num = String(idx + 1).padStart(2,'0');
-      item.innerHTML = `
-        <span class="film-num">${num}</span>
-        <div class="film-info">
-          <h2 class="film-title">${wrapLastWord(film.title ?? '')}</h2>
-          <p class="film-meta">
-            ${esc(film.year ?? '')}
-            <span class="dot">·</span>${esc(film.director ?? '')}
-            <span class="dot">·</span>${esc(film.genre ?? '')}
-            <span class="dot">·</span>${esc(film.runtime ?? '')} min
-            <span class="dot">·</span>★ ${esc(film.rating ?? '')}
-          </p>
-          <p class="film-reason">${esc(film.reason ?? '')}</p>
-        </div>
-      `;
+      const numEl = document.createElement('span');
+      numEl.className = 'film-num';
+      numEl.textContent = num;
+      const info = document.createElement('div');
+      info.className = 'film-info';
+      const title = document.createElement('h2');
+      title.className = 'film-title';
+      title.textContent = String(film.title ?? '');
+      const meta = document.createElement('p');
+      meta.className = 'film-meta';
+      meta.textContent = `${film.year ?? ''} · ${film.director ?? ''} · ${film.genre ?? ''} · ${film.runtime ?? ''} min · ★ ${film.rating ?? ''}`;
+      const reason = document.createElement('p');
+      reason.className = 'film-reason';
+      reason.textContent = String(film.reason ?? '');
+      info.append(title, meta, reason);
+      item.append(numEl, info);
       listEl.appendChild(item);
     });
 
