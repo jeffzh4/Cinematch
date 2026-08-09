@@ -20,8 +20,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1780081266.3915606,
-    "ast_hash": "fdeafbcd99305e64b248ff54ef1622dc",
+    "mtime": 1786316544.459839,
+    "ast_hash": "011d60aa38a3f7fe5feb4cf888e48ccb",
     "semantic_hash": ""
   },
   "vercel.json": {
@@ -122,6 +122,11 @@
   "portfolio-screenshots/cinematch-results-explanations.png": {
     "mtime": 1786071684.754468,
     "ast_hash": "48df244c893c54ab754c03256960301e",
+    "semantic_hash": ""
+  },
+  "scripts/check-site.mjs": {
+    "mtime": 1786316544.5801184,
+    "ast_hash": "3598ed311aac0938385c8179f5ac5c75",
     "semantic_hash": ""
   }
 }

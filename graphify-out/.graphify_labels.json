@@ -8,5 +8,6 @@
   "6": "recommend.ts",
   "7": "share.ts",
   "8": "vercel.json",
-  "9": "devDependencies"
+  "9": "devDependencies",
+  "10": "check-site.mjs"
 }

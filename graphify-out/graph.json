@@ -254,10 +254,30 @@
       "norm_label": "package.json"
     },
     {
-      "label": "devDependencies",
+      "label": "scripts",
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L2",
+      "_origin": "ast",
+      "id": "package_scripts",
+      "community": 9,
+      "norm_label": "scripts"
+    },
+    {
+      "label": "check",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "package_scripts_check",
+      "community": 9,
+      "norm_label": "check"
+    },
+    {
+      "label": "devDependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L5",
       "_origin": "ast",
       "id": "package_devdependencies",
       "community": 9,
@@ -267,11 +287,61 @@
       "label": "@vercel/node",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L3",
+      "source_location": "L6",
       "_origin": "ast",
       "id": "package_devdependencies_vercel_node",
       "community": 9,
       "norm_label": "@vercel/node"
+    },
+    {
+      "label": "check-site.mjs",
+      "file_type": "code",
+      "source_file": "scripts/check-site.mjs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_check_site",
+      "community": 10,
+      "norm_label": "check-site.mjs"
+    },
+    {
+      "label": "pages",
+      "file_type": "code",
+      "source_file": "scripts/check-site.mjs",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "scripts_check_site_pages",
+      "community": 10,
+      "norm_label": "pages"
+    },
+    {
+      "label": "publicPages",
+      "file_type": "code",
+      "source_file": "scripts/check-site.mjs",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "scripts_check_site_publicpages",
+      "community": 10,
+      "norm_label": "publicpages"
+    },
+    {
+      "label": "failures",
+      "file_type": "code",
+      "source_file": "scripts/check-site.mjs",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "scripts_check_site_failures",
+      "community": 10,
+      "norm_label": "failures"
+    },
+    {
+      "label": "combined",
+      "file_type": "code",
+      "source_file": "scripts/check-site.mjs",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "scripts_check_site_combined",
+      "community": 10,
+      "norm_label": "combined"
     },
     {
       "label": "vercel.json",
@@ -1264,7 +1334,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L2",
+      "source_location": "L5",
       "weight": 1.0,
       "source": "package",
       "target": "package_devdependencies",
@@ -1274,10 +1344,70 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_scripts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
       "source_location": "L3",
+      "weight": 1.0,
+      "source": "package_scripts",
+      "target": "package_scripts_check",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "package_devdependencies",
       "target": "package_devdependencies_vercel_node",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/check-site.mjs",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "scripts_check_site",
+      "target": "scripts_check_site_combined",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/check-site.mjs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "scripts_check_site",
+      "target": "scripts_check_site_failures",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/check-site.mjs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "scripts_check_site",
+      "target": "scripts_check_site_pages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/check-site.mjs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "scripts_check_site",
+      "target": "scripts_check_site_publicpages",
       "confidence_score": 1.0
     },
     {
@@ -1662,5 +1792,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "c2748d1d3f2492b33aa4ecc855bff915ff56d84d"
+  "built_at_commit": "439d1c1199505cb0eafb97b1f798b2bad31f0f43"
 }
