@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "check": "node scripts/check-site.mjs"
+  },
   "devDependencies": {
     "@vercel/node": "^3.0.0"
   }
