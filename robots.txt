@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /analytics
+Disallow: /analytics.html
+Disallow: /loading
+Disallow: /loading.html
+Disallow: /results
+Disallow: /results.html
+Sitemap: https://cinematch-navy.vercel.app/sitemap.xml

@@ -38,6 +38,7 @@ async function kvPipeline(commands: unknown[][]): Promise<KVResult[]> {
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
   applySecurityHeaders(res);
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
   if (!rateLimit(req, res, req.method === 'GET' ? 30 : 20, 60_000)) return;
 
   // ── POST: log one anonymised entry ──────────────────────────────────────

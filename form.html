@@ -6,7 +6,12 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://cinematch-navy.vercel.app/form.html">
 <link rel="prefetch" href="loading.html">
-<title>CineMatch — Begin</title>
+<title>CineMatch — Choose your next film</title>
+<meta name="description" content="Tell CineMatch what you want to watch and get six film recommendations.">
+<meta property="og:title" content="CineMatch — Choose your next film">
+<meta property="og:description" content="Tell CineMatch what you want to watch and get six film recommendations.">
+<meta property="og:image" content="https://cinematch-navy.vercel.app/portfolio-screenshots/cinematch-questions.png">
+<meta property="og:type" content="website">
 <link rel="dns-prefetch" href="https://api.anthropic.com">
 <link rel="dns-prefetch" href="https://api.themoviedb.org">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -415,6 +420,9 @@ textarea {
 }
 
 </style>
+<style>
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+</style>
 </head>
 <body>
 
@@ -430,6 +438,7 @@ textarea {
 
 <main class="form-page">
 
+  <h1 class="sr-only">Find a film to watch</h1>
   <p class="eyebrow">Three questions</p>
   <p class="intro">
     Tell us a little about <em>what you're looking for</em>. We'll handle the rest.
@@ -556,6 +565,15 @@ textarea {
 </div>
 
 <script>
+function readStoredArray(key) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key) || '[]');
+    return Array.isArray(value) ? value.filter(item => typeof item === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // chip toggle — keeps aria-pressed in sync for screen readers
@@ -592,17 +610,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.querySelector('.chip-group .chip.active')) count++;
     if (occasionEl.value.trim()) count++;
     progressEl.textContent = `${count} of 3 answered`;
-    ctaBtn.disabled = count === 0;
+    ctaBtn.disabled = count < 3;
   }
 
   // pre-populate ONLY when returning via "Refine your mood" on results
   if (localStorage.getItem('cm_refine') === '1') {
     const prevMood      = localStorage.getItem('cm_mood');
-    const prevGenres    = JSON.parse(localStorage.getItem('cm_genres')    || '[]');
+    const prevGenres    = readStoredArray('cm_genres');
     const prevOccasion  = localStorage.getItem('cm_occasion');
     const prevRuntime   = localStorage.getItem('cm_runtime')  || '';
     const prevDecade    = localStorage.getItem('cm_decade')   || '';
-    const prevPlatforms = JSON.parse(localStorage.getItem('cm_platforms') || '[]');
+    const prevPlatforms = readStoredArray('cm_platforms');
 
     if (prevMood)     moodEl.value = prevMood;
     if (prevOccasion) occasionEl.value = prevOccasion;

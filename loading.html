@@ -8,6 +8,8 @@
 <link rel="dns-prefetch" href="https://api.anthropic.com">
 <link rel="dns-prefetch" href="https://api.themoviedb.org">
 <title>CineMatch — Choosing your six</title>
+<meta name="description" content="CineMatch is preparing six film recommendations for you.">
+<meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -205,12 +207,21 @@ body {
 </div>
 
 <script>
+function readStoredArray(key) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key) || '[]');
+    return Array.isArray(value) ? value.filter(item => typeof item === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
 const mood      = localStorage.getItem('cm_mood')      || '';
-const genres    = JSON.parse(localStorage.getItem('cm_genres')    || '[]');
+const genres    = readStoredArray('cm_genres');
 const occasion  = localStorage.getItem('cm_occasion')  || '';
 const runtime   = localStorage.getItem('cm_runtime')   || '';
 const decade    = localStorage.getItem('cm_decade')    || '';
-const platforms = JSON.parse(localStorage.getItem('cm_platforms') || '[]');
+const platforms = readStoredArray('cm_platforms');
 
 // step1 lights up immediately — we've read the inputs
 document.getElementById('step1').classList.add('active');
