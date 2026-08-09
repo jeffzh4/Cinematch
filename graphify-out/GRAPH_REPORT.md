@@ -1,16 +1,16 @@
 # Graph Report - CineMatch  (2026-08-09)
 
 ## Corpus Check
-- 10 files · ~17,128 words
+- 11 files · ~17,297 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 68 nodes · 94 edges · 10 communities (9 shown, 1 thin omitted)
+- 75 nodes · 100 edges · 11 communities
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c2748d1d`
+- Built from commit: `439d1c11`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -25,6 +25,7 @@
 - [[_COMMUNITY_share.ts|share.ts]]
 - [[_COMMUNITY_vercel.json|vercel.json]]
 - [[_COMMUNITY_devDependencies|devDependencies]]
+- [[_COMMUNITY_check-site.mjs|check-site.mjs]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `rateLimit()` - 10 edges
@@ -53,7 +54,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (10 total, 1 thin omitted)
+## Communities (11 total, 0 thin omitted)
 
 ### Community 0 - "CineMatch — CLAUDE.md"
 Cohesion: 0.17
@@ -91,15 +92,22 @@ Nodes (4): applySecurityHeaders(), handler(), kvPipeline(), KVResult
 Cohesion: 0.33
 Nodes (5): cleanUrls, headers, redirects, $schema, trailingSlash
 
+### Community 9 - "devDependencies"
+Cohesion: 0.40
+Nodes (4): devDependencies, @vercel/node, scripts, check
+
+### Community 10 - "check-site.mjs"
+Cohesion: 0.40
+Nodes (4): combined, failures, pages, publicPages
+
 ## Knowledge Gaps
-- **39 isolated node(s):** `buckets`, `AnalyticsEntry`, `KVResult`, `TMDBMovie`, `TMDBSearchResponse` (+34 more)
+- **44 isolated node(s):** `buckets`, `AnalyticsEntry`, `KVResult`, `TMDBMovie`, `TMDBSearchResponse` (+39 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `CineMatch` connect `CineMatch` to `Technical Decisions`?**
-  _High betweenness centrality (0.073) - this node is a cross-community bridge._
+  _High betweenness centrality (0.060) - this node is a cross-community bridge._
 - **What connects `buckets`, `AnalyticsEntry`, `KVResult` to the rest of the system?**
-  _39 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _44 weakly-connected nodes found - possible documentation gaps or missing edges._
