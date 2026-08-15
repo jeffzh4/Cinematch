@@ -1,0 +1,16 @@
+{
+  "name": "CineMatch",
+  "short_name": "CineMatch",
+  "description": "Answer three questions and get six film recommendations with spoiler-free explanations.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c0c0c",
+  "theme_color": "#0c0c0c",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

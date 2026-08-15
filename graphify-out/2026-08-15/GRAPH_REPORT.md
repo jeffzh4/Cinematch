@@ -1,16 +1,16 @@
-# Graph Report - CineMatch  (2026-08-15)
+# Graph Report - CineMatch  (2026-08-09)
 
 ## Corpus Check
-- 11 files · ~17,472 words
+- 11 files · ~17,297 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 73 nodes · 98 edges · 11 communities
+- 75 nodes · 100 edges · 11 communities
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1435e7ee`
+- Built from commit: `439d1c11`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -33,8 +33,8 @@
 3. `boundedString()` - 9 edges
 4. `CineMatch — CLAUDE.md` - 8 edges
 5. `CineMatch` - 8 edges
-6. `handler()` - 6 edges
-7. `Key Decisions` - 6 edges
+6. `Technical Decisions` - 7 edges
+7. `handler()` - 6 edges
 8. `boundedStringArray()` - 5 edges
 9. `handler()` - 5 edges
 10. `handler()` - 5 edges
@@ -61,12 +61,12 @@ Cohesion: 0.17
 Nodes (11): API architecture, Architecture, CineMatch — CLAUDE.md, Claude Prompt Strategy, Current State — Fully Shipped, Data flow, Design System, Environment variables required (+3 more)
 
 ### Community 1 - "CineMatch"
-Cohesion: 0.20
-Nodes (10): API Surface, Architecture, CineMatch, Deployment, How it works, Local Development, Product Summary, Product Surface (+2 more)
+Cohesion: 0.18
+Nodes (11): Architecture, CineMatch, Deploying to Vercel, Environment variables, How it works, Local development, Local development, Pages (+3 more)
 
 ### Community 2 - "Technical Decisions"
-Cohesion: 0.18
-Nodes (9): CineMatch — Case Study, Key Decisions, LLM-generated recommendations over a rules engine, Problem, Prompt caching, Serverless over a traditional backend, TypeScript on the API layer only, Vercel KV for analytics and share links (+1 more)
+Cohesion: 0.17
+Nodes (10): CineMatch — Case Study, Technical Decisions, The Problem, TypeScript for the API layer, Vercel KV for analytics and sharing, What I'd Do Differently, Why Claude for recommendations?, Why prompt caching? (+2 more)
 
 ### Community 3 - "analytics.ts"
 Cohesion: 0.50
@@ -101,13 +101,13 @@ Cohesion: 0.40
 Nodes (4): combined, failures, pages, publicPages
 
 ## Knowledge Gaps
-- **42 isolated node(s):** `buckets`, `AnalyticsEntry`, `KVResult`, `TMDBMovie`, `TMDBSearchResponse` (+37 more)
+- **44 isolated node(s):** `buckets`, `AnalyticsEntry`, `KVResult`, `TMDBMovie`, `TMDBSearchResponse` (+39 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `CineMatch` connect `CineMatch` to `Technical Decisions`?**
-  _High betweenness centrality (0.052) - this node is a cross-community bridge._
+  _High betweenness centrality (0.060) - this node is a cross-community bridge._
 - **What connects `buckets`, `AnalyticsEntry`, `KVResult` to the rest of the system?**
-  _42 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _44 weakly-connected nodes found - possible documentation gaps or missing edges._
