@@ -1,49 +1,57 @@
 # CineMatch
 
-A movie recommendation web app. Three questions → six film picks with spoiler-free explanations, powered by Claude.
+CineMatch is a movie recommendation product that replaces browsing with a single decision point: answer three questions, receive six curated picks with spoiler-free rationale. It targets the choice-fatigue problem inherent to modern streaming catalogs — more titles, worse discovery.
 
-**Live demo:** https://cinematch-navy.vercel.app
-
-**GitHub:** https://github.com/jeffzh4/Cinematch
+**Live:** https://cinematch-navy.vercel.app
+**Repository:** https://github.com/jeffzh4/Cinematch
 
 ---
 
-## How it works
+## Product Summary
 
-1. User answers up to six questions on the form (three required, three optional filters)
-2. Inputs are sent to a serverless function that calls Claude's API with prompt caching
-3. Claude returns 6 films + a literary headline as structured JSON
-4. Results page renders the films and fetches poster art from TMDB
-5. Users can share their list via a short link (stored in Vercel KV, 30-day TTL)
-6. Every recommendation is anonymously logged to Vercel KV for the analytics dashboard
-7. Errors at any step fall through to a dedicated error page
+| | |
+|---|---|
+| **Problem** | Streaming discovery UIs optimize for engagement, not decision quality. Users spend more time browsing than watching. |
+| **Solution** | A three-question intake (mood, genre, occasion) converted into a structured LLM prompt, returning six ranked recommendations with individual justifications. |
+| **Differentiator** | Recommendation reasoning is generated per-user, not retrieved from a static catalog — output reflects the specific input, not a genre-matched template. |
 
-## Pages
+### How it works
 
-| File | Purpose |
+1. User completes a three-question intake; three additional filters (runtime, decade, platform) are optional.
+2. Input is sent to a serverless endpoint that constructs a prompt and calls the Claude API.
+3. Claude returns six films and a headline as structured JSON.
+4. The results view renders the films and resolves poster art via TMDB.
+5. Results can be shared via a generated link (stored with a 30-day retention window) or reviewed in an aggregate usage dashboard.
+6. Failure states — malformed input, upstream API errors, missing data — route to a dedicated error page rather than failing silently.
+
+---
+
+## Product Surface
+
+| Page | Function |
 |---|---|
 | `index.html` | Landing |
-| `form.html` | Six-question input form (3 required + 3 optional filters) |
-| `loading.html` | Calls the recommendation API |
-| `results.html` | Renders Claude's response + TMDB posters + share button |
-| `share.html` | Read-only shared results card (`?id=xxx`) |
-| `analytics.html` | Usage dashboard (genre breakdown, moods, occasions) |
-| `error.html` | Fallback when API calls fail |
-| `404.html` | Custom page-not-found |
-| `about.html`, `contact.html` | Static info pages |
+| `form.html` | Intake — three required questions, three optional filters |
+| `loading.html` | Recommendation request in flight |
+| `results.html` | Recommendation output, poster art, share action |
+| `share.html` | Read-only view of a shared result set (`?id=`) |
+| `analytics.html` | Aggregate usage dashboard — genre distribution, mood/occasion trends |
+| `error.html` | Failure state |
+| `404.html` | Not-found state |
+| `about.html`, `contact.html` | Supporting pages |
 
-## Serverless functions (Vercel)
+## API Surface
 
-| Endpoint | Purpose |
+| Endpoint | Function |
 |---|---|
-| `POST /api/recommend` | Proxies Anthropic API — accepts `{ mood, genres, occasion, runtime?, decade?, platforms? }`, returns Claude's parsed JSON |
-| `GET /api/poster?title=X&year=Y` | Proxies TMDB — returns poster URL for a film |
-| `POST /api/analytics` | Logs anonymised recommendation entry to KV |
-| `GET /api/analytics` | Returns aggregated stats (totals, genre counts, recent moods) |
-| `POST /api/share` | Stores a result set in KV, returns `{ id, url }` |
-| `GET /api/share?id=X` | Retrieves stored results by ID |
+| `POST /api/recommend` | Accepts `{ mood, genres, occasion, runtime?, decade?, platforms? }`, returns structured recommendation JSON |
+| `GET /api/poster?title=&year=` | Resolves poster art via TMDB |
+| `POST /api/analytics` | Logs an anonymized usage event |
+| `GET /api/analytics` | Returns aggregated usage statistics |
+| `POST /api/share` | Persists a result set, returns a share link |
+| `GET /api/share?id=` | Retrieves a persisted result set |
 
-All functions are written in TypeScript. Keys are read from environment variables — **never in source.**
+All endpoints are implemented in TypeScript. Credentials are read from server-side environment variables only; no key material is present in client-served code.
 
 ---
 
@@ -54,15 +62,14 @@ flowchart LR
     Browser["Browser\nHTML / CSS / JS"] -->|"form submit"| LS[(localStorage)]
     LS -->|"read inputs"| Loading["loading.html"]
 
-    Loading -->|"Option A · dev only\ndirect fetch"| Anthropic["Anthropic API\nclaude-sonnet-4-6\n+ prompt cache"]
-    Loading -->|"Option B · production\nPOST /api/recommend"| VFR["Vercel fn\nrecommend.ts"]
-    VFR --> Anthropic
+    Loading -->|"POST /api/recommend"| VFR["Vercel fn\nrecommend.ts"]
+    VFR --> Anthropic["Anthropic API\nclaude-sonnet-4-6\n+ prompt cache"]
     Anthropic -->|"JSON: 6 films"| VFR
     VFR -->|"parsed JSON"| Loading
 
     Loading -->|"save results"| LS
     Loading -->|"POST /api/analytics"| VFA["Vercel fn\nanalytics.ts"]
-    VFA -->|"LPUSH"| KV[(Vercel KV\nRedis)]
+    VFA -->|"log event"| KV[(Vercel KV\nRedis)]
 
     LS -->|"read results"| Results["results.html"]
     Results -->|"GET /api/poster"| VFP["Vercel fn\nposter.ts"]
@@ -71,72 +78,58 @@ flowchart LR
     VFP -->|"posterUrl"| Results
 
     Results -->|"POST /api/share"| VFS["Vercel fn\nshare.ts"]
-    VFS -->|"SET ttl=30d"| KV
-    VFS -->|"{ id, url }"| Results
+    VFS -->|"store, 30-day TTL"| KV
+    VFS -->|"share URL"| Results
 
-    KV -->|"GET"| VFS
-    KV -->|"LRANGE"| VFA
+    KV -->|"read"| VFS
+    KV -->|"read"| VFA
     VFA -->|"aggregated stats"| Analytics["analytics.html"]
 ```
 
+The application has no database and no user accounts. State is either client-side (`localStorage`, single session) or ephemeral server-side (Vercel KV, time-bounded). This keeps operational surface area minimal — no schema migrations, no auth layer, no persistent user data to secure.
+
 ---
 
-## Local development
+## Local Development
 
-### Local development
-
-1. Create a `.env.local` with the server-side keys listed below.
-2. Install Vercel CLI: `npm i -g vercel`.
-3. Run the local server:
-   ```
-   vercel dev
-   ```
-
-API keys are never sent to the browser; local development uses the same serverless proxies as production.
-
-### Environment variables
-
-Create `.env.local`:
+1. Install the Vercel CLI: `npm i -g vercel`
+2. Create `.env.local`:
    ```
    ANTHROPIC_API_KEY=sk-ant-...
    TMDB_API_KEY=...
    KV_REST_API_URL=...
    KV_REST_API_TOKEN=...
    ```
-Open the URL printed by `vercel dev`.
+3. Run `vercel dev` and open the printed URL.
+
+Local development uses the same serverless proxy path as production — no separate dev-only code branch.
 
 ---
 
-## Deploying to Vercel
+## Deployment
 
-1. Push this repo to GitHub
-2. Go to [vercel.com](https://vercel.com), sign in, **Add New → Project**, import the repo
-3. In **Project Settings → Environment Variables**, add:
-   - `ANTHROPIC_API_KEY` — your Anthropic API key
-   - `TMDB_API_KEY` — your TMDB API key
-   - `ANTHROPIC_MODEL` _(optional)_ — defaults to `claude-sonnet-4-6`
-4. Click **Deploy**
+1. Push the repository to GitHub.
+2. In Vercel, import the repository as a new project.
+3. Set environment variables: `ANTHROPIC_API_KEY`, `TMDB_API_KEY`, and optionally `ANTHROPIC_MODEL` (defaults to `claude-sonnet-4-6`).
+4. Deploy. Static assets and serverless functions are detected automatically — no build configuration required.
 
-### Setting up Vercel KV (for analytics + share links)
+### Vercel KV (required for analytics and share links)
 
-1. In your Vercel project dashboard, go to **Storage → Create Database → KV**
-2. Connect the KV store to your project
-3. Vercel automatically adds `KV_REST_API_URL` and `KV_REST_API_TOKEN` to your environment variables
-4. Redeploy — analytics logging and share links will start working immediately
-
-The static HTML files and `api/` serverless functions are detected automatically — no build step required.
+1. In the Vercel dashboard: **Storage → Create Database → KV**, connect it to the project.
+2. `KV_REST_API_URL` and `KV_REST_API_TOKEN` are added automatically.
+3. Redeploy.
 
 ---
 
-## Tech
+## Stack
 
-- Plain HTML/CSS/JS — no framework, no build step
-- TypeScript for all Vercel serverless functions
-- Claude (`claude-sonnet-4-6`) with prompt caching for recommendations
-- TMDB for poster art
-- Vercel KV (Redis) for analytics and share links
-- Vercel for hosting + serverless functions
+- HTML/CSS/vanilla JS on the client — no framework, no build step
+- TypeScript for all serverless functions
+- Claude (`claude-sonnet-4-6`) with prompt caching for recommendation generation
+- TMDB for poster art resolution
+- Vercel KV (Redis) for analytics and share-link storage
+- Vercel for hosting and serverless compute
 
-→ See [CASE_STUDY.md](./CASE_STUDY.md) for technical decisions and lessons learned.
+See [CASE_STUDY.md](./CASE_STUDY.md) for the reasoning behind these choices, including trade-offs and what would change in a v2.
 
 Built by Jeffrey Zhang, 2026.

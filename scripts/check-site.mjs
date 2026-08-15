@@ -11,7 +11,14 @@ for (const file of pages) {
   if (!/<title>[^<]+<\/title>/.test(html)) failures.push(`${file}: missing title`);
   if (h1Count !== 1) failures.push(`${file}: expected 1 h1, found ${h1Count}`);
   if (!html.includes('<link rel="canonical"')) failures.push(`${file}: missing canonical`);
-  if (publicPages.has(file) && !html.includes('meta name="description"')) failures.push(`${file}: missing description`);
+  if (!html.includes('meta name="description"')) failures.push(`${file}: missing description`);
+  if (!html.includes('og:title')) failures.push(`${file}: missing og:title`);
+  if (!html.includes('og:description')) failures.push(`${file}: missing og:description`);
+  if (publicPages.has(file) && !html.includes('og:image')) failures.push(`${file}: missing og:image`);
+  if (!html.includes('rel="manifest"')) failures.push(`${file}: missing web-app manifest link`);
+  if (!/focus-visible/.test(html)) failures.push(`${file}: missing focus-visible styling`);
+  if (!/prefers-reduced-motion/.test(html)) failures.push(`${file}: missing prefers-reduced-motion handling`);
+  if (!/<main\b/.test(html)) failures.push(`${file}: missing <main> landmark`);
 }
 
 const robots = await readFile('robots.txt', 'utf8');

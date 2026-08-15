@@ -337,7 +337,7 @@
       "label": "combined",
       "file_type": "code",
       "source_file": "scripts/check-site.mjs",
-      "source_location": "L32",
+      "source_location": "L25",
       "_origin": "ast",
       "id": "scripts_check_site_combined",
       "community": 10,
@@ -424,84 +424,94 @@
       "norm_label": "cinematch \u2014 case study"
     },
     {
-      "label": "Problem",
+      "label": "The Problem",
       "file_type": "document",
       "source_file": "CASE_STUDY.md",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "case_study_problem",
+      "id": "case_study_the_problem",
       "community": 2,
-      "norm_label": "problem"
+      "norm_label": "the problem"
     },
     {
-      "label": "Key Decisions",
+      "label": "Technical Decisions",
       "file_type": "document",
       "source_file": "CASE_STUDY.md",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "case_study_key_decisions",
+      "id": "case_study_technical_decisions",
       "community": 2,
-      "norm_label": "key decisions"
+      "norm_label": "technical decisions"
     },
     {
-      "label": "Serverless over a traditional backend",
+      "label": "Why serverless?",
       "file_type": "document",
       "source_file": "CASE_STUDY.md",
       "source_location": "L17",
       "_origin": "ast",
-      "id": "case_study_serverless_over_a_traditional_backend",
+      "id": "case_study_why_serverless",
       "community": 2,
-      "norm_label": "serverless over a traditional backend"
+      "norm_label": "why serverless?"
     },
     {
-      "label": "LLM-generated recommendations over a rules engine",
+      "label": "Why Claude for recommendations?",
       "file_type": "document",
       "source_file": "CASE_STUDY.md",
       "source_location": "L23",
       "_origin": "ast",
-      "id": "case_study_llm_generated_recommendations_over_a_rules_engine",
+      "id": "case_study_why_claude_for_recommendations",
       "community": 2,
-      "norm_label": "llm-generated recommendations over a rules engine"
+      "norm_label": "why claude for recommendations?"
     },
     {
-      "label": "Prompt caching",
+      "label": "Why prompt caching?",
       "file_type": "document",
       "source_file": "CASE_STUDY.md",
       "source_location": "L29",
       "_origin": "ast",
-      "id": "case_study_prompt_caching",
+      "id": "case_study_why_prompt_caching",
       "community": 2,
-      "norm_label": "prompt caching"
+      "norm_label": "why prompt caching?"
     },
     {
-      "label": "TypeScript on the API layer only",
+      "label": "Why TMDB for posters?",
       "file_type": "document",
       "source_file": "CASE_STUDY.md",
       "source_location": "L33",
       "_origin": "ast",
-      "id": "case_study_typescript_on_the_api_layer_only",
+      "id": "case_study_why_tmdb_for_posters",
       "community": 2,
-      "norm_label": "typescript on the api layer only"
+      "norm_label": "why tmdb for posters?"
     },
     {
-      "label": "Vercel KV for analytics and share links",
+      "label": "TypeScript for the API layer",
       "file_type": "document",
       "source_file": "CASE_STUDY.md",
       "source_location": "L37",
       "_origin": "ast",
-      "id": "case_study_vercel_kv_for_analytics_and_share_links",
+      "id": "case_study_typescript_for_the_api_layer",
       "community": 2,
-      "norm_label": "vercel kv for analytics and share links"
+      "norm_label": "typescript for the api layer"
     },
     {
-      "label": "What I'd Revisit for a V2",
+      "label": "Vercel KV for analytics and sharing",
       "file_type": "document",
       "source_file": "CASE_STUDY.md",
-      "source_location": "L43",
+      "source_location": "L41",
       "_origin": "ast",
-      "id": "case_study_what_i_d_revisit_for_a_v2",
+      "id": "case_study_vercel_kv_for_analytics_and_sharing",
       "community": 2,
-      "norm_label": "what i'd revisit for a v2"
+      "norm_label": "vercel kv for analytics and sharing"
+    },
+    {
+      "label": "What I'd Do Differently",
+      "file_type": "document",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "case_study_what_i_d_do_differently",
+      "community": 2,
+      "norm_label": "what i'd do differently"
     },
     {
       "label": "CLAUDE.md",
@@ -644,94 +654,104 @@
       "norm_label": "cinematch"
     },
     {
-      "label": "Product Summary",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L10",
-      "_origin": "ast",
-      "id": "readme_product_summary",
-      "community": 1,
-      "norm_label": "product summary"
-    },
-    {
       "label": "How it works",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L18",
+      "source_location": "L11",
       "_origin": "ast",
       "id": "readme_how_it_works",
       "community": 1,
       "norm_label": "how it works"
     },
     {
-      "label": "Product Surface",
+      "label": "Pages",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L29",
+      "source_location": "L21",
       "_origin": "ast",
-      "id": "readme_product_surface",
+      "id": "readme_pages",
       "community": 1,
-      "norm_label": "product surface"
+      "norm_label": "pages"
     },
     {
-      "label": "API Surface",
+      "label": "Serverless functions (Vercel)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L43",
+      "source_location": "L35",
       "_origin": "ast",
-      "id": "readme_api_surface",
+      "id": "readme_serverless_functions_vercel",
       "community": 1,
-      "norm_label": "api surface"
+      "norm_label": "serverless functions (vercel)"
     },
     {
       "label": "Architecture",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L58",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "readme_architecture",
       "community": 1,
       "norm_label": "architecture"
     },
     {
-      "label": "Local Development",
+      "label": "Local development",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L93",
+      "source_location": "L84",
       "_origin": "ast",
       "id": "readme_local_development",
       "community": 1,
       "norm_label": "local development"
     },
     {
-      "label": "Deployment",
+      "label": "Local development",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L109",
+      "source_location": "L86",
       "_origin": "ast",
-      "id": "readme_deployment",
+      "id": "readme_local_development_86",
       "community": 1,
-      "norm_label": "deployment"
+      "norm_label": "local development"
     },
     {
-      "label": "Vercel KV (required for analytics and share links)",
+      "label": "Environment variables",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L116",
+      "source_location": "L97",
       "_origin": "ast",
-      "id": "readme_vercel_kv_required_for_analytics_and_share_links",
+      "id": "readme_environment_variables",
       "community": 1,
-      "norm_label": "vercel kv (required for analytics and share links)"
+      "norm_label": "environment variables"
     },
     {
-      "label": "Stack",
+      "label": "Deploying to Vercel",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L124",
+      "source_location": "L110",
       "_origin": "ast",
-      "id": "readme_stack",
+      "id": "readme_deploying_to_vercel",
       "community": 1,
-      "norm_label": "stack"
+      "norm_label": "deploying to vercel"
+    },
+    {
+      "label": "Setting up Vercel KV (for analytics + share links)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L120",
+      "_origin": "ast",
+      "id": "readme_setting_up_vercel_kv_for_analytics_share_links",
+      "community": 1,
+      "norm_label": "setting up vercel kv (for analytics + share links)"
+    },
+    {
+      "label": "Tech",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L131",
+      "_origin": "ast",
+      "id": "readme_tech",
+      "community": 1,
+      "norm_label": "tech"
     }
   ],
   "links": [
@@ -1354,7 +1374,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/check-site.mjs",
-      "source_location": "L32",
+      "source_location": "L25",
       "weight": 1.0,
       "source": "scripts_check_site",
       "target": "scripts_check_site_combined",
@@ -1454,7 +1474,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L133",
+      "source_location": "L140",
       "weight": 1.0,
       "source": "readme",
       "target": "case_study",
@@ -1467,7 +1487,7 @@
       "source_location": "L15",
       "weight": 1.0,
       "source": "case_study_cinematch_case_study",
-      "target": "case_study_key_decisions",
+      "target": "case_study_technical_decisions",
       "confidence_score": 1.0
     },
     {
@@ -1477,57 +1497,17 @@
       "source_location": "L7",
       "weight": 1.0,
       "source": "case_study_cinematch_case_study",
-      "target": "case_study_problem",
+      "target": "case_study_the_problem",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CASE_STUDY.md",
-      "source_location": "L43",
+      "source_location": "L50",
       "weight": 1.0,
       "source": "case_study_cinematch_case_study",
-      "target": "case_study_what_i_d_revisit_for_a_v2",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CASE_STUDY.md",
-      "source_location": "L23",
-      "weight": 1.0,
-      "source": "case_study_key_decisions",
-      "target": "case_study_llm_generated_recommendations_over_a_rules_engine",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CASE_STUDY.md",
-      "source_location": "L29",
-      "weight": 1.0,
-      "source": "case_study_key_decisions",
-      "target": "case_study_prompt_caching",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CASE_STUDY.md",
-      "source_location": "L17",
-      "weight": 1.0,
-      "source": "case_study_key_decisions",
-      "target": "case_study_serverless_over_a_traditional_backend",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CASE_STUDY.md",
-      "source_location": "L33",
-      "weight": 1.0,
-      "source": "case_study_key_decisions",
-      "target": "case_study_typescript_on_the_api_layer_only",
+      "target": "case_study_what_i_d_do_differently",
       "confidence_score": 1.0
     },
     {
@@ -1536,8 +1516,58 @@
       "source_file": "CASE_STUDY.md",
       "source_location": "L37",
       "weight": 1.0,
-      "source": "case_study_key_decisions",
-      "target": "case_study_vercel_kv_for_analytics_and_share_links",
+      "source": "case_study_technical_decisions",
+      "target": "case_study_typescript_for_the_api_layer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "case_study_technical_decisions",
+      "target": "case_study_vercel_kv_for_analytics_and_sharing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "case_study_technical_decisions",
+      "target": "case_study_why_claude_for_recommendations",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "case_study_technical_decisions",
+      "target": "case_study_why_prompt_caching",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "case_study_technical_decisions",
+      "target": "case_study_why_serverless",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CASE_STUDY.md",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "case_study_technical_decisions",
+      "target": "case_study_why_tmdb_for_posters",
       "confidence_score": 1.0
     },
     {
@@ -1664,17 +1694,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L43",
-      "weight": 1.0,
-      "source": "readme_cinematch",
-      "target": "readme_api_surface",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L58",
+      "source_location": "L50",
       "weight": 1.0,
       "source": "readme_cinematch",
       "target": "readme_architecture",
@@ -1684,17 +1704,27 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L109",
+      "source_location": "L110",
       "weight": 1.0,
       "source": "readme_cinematch",
-      "target": "readme_deployment",
+      "target": "readme_deploying_to_vercel",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L93",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "readme_cinematch",
+      "target": "readme_how_it_works",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L84",
       "weight": 1.0,
       "source": "readme_cinematch",
       "target": "readme_local_development",
@@ -1704,53 +1734,63 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L10",
+      "source_location": "L21",
       "weight": 1.0,
       "source": "readme_cinematch",
-      "target": "readme_product_summary",
+      "target": "readme_pages",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L29",
+      "source_location": "L35",
       "weight": 1.0,
       "source": "readme_cinematch",
-      "target": "readme_product_surface",
+      "target": "readme_serverless_functions_vercel",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L124",
+      "source_location": "L131",
       "weight": 1.0,
       "source": "readme_cinematch",
-      "target": "readme_stack",
+      "target": "readme_tech",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L18",
+      "source_location": "L97",
       "weight": 1.0,
-      "source": "readme_product_summary",
-      "target": "readme_how_it_works",
+      "source": "readme_local_development",
+      "target": "readme_environment_variables",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L116",
+      "source_location": "L86",
       "weight": 1.0,
-      "source": "readme_deployment",
-      "target": "readme_vercel_kv_required_for_analytics_and_share_links",
+      "source": "readme_local_development",
+      "target": "readme_local_development_86",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "readme_deploying_to_vercel",
+      "target": "readme_setting_up_vercel_kv_for_analytics_share_links",
       "confidence_score": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "1435e7eefe6ce90316d6fc15ec5fef02dc907aa2"
+  "built_at_commit": "439d1c1199505cb0eafb97b1f798b2bad31f0f43"
 }
