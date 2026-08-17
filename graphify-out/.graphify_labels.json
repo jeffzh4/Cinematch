@@ -1,13 +1,1 @@
-{
-  "0": "CineMatch — CLAUDE.md",
-  "1": "CineMatch",
-  "2": "Technical Decisions",
-  "3": "analytics.ts",
-  "4": "CineMatch — Case Study",
-  "5": "poster.ts",
-  "6": "recommend.ts",
-  "7": "share.ts",
-  "8": "vercel.json",
-  "9": "devDependencies",
-  "10": "check-site.mjs"
-}
+{"0": "Serverless Feature Endpoints", "1": "Docs and Design Rationale", "2": "Question Form UI", "3": "Landing and Static Pages", "4": "Vercel Config", "5": "Analytics KV Handler", "6": "Poster Lookup Handler", "7": "Recommend Handler", "8": "Share Link Handler", "9": "Package Tooling", "10": "Results Page Screenshot", "11": "Site Quality Gate Script", "12": "Rate Limiting Security", "13": "Favicon Icon"}

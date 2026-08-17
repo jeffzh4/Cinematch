@@ -125,7 +125,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       return;
     }
 
-    if (!parsed.films || !Array.isArray(parsed.films) || parsed.films.length === 0) {
+    if (!parsed.films || !Array.isArray(parsed.films) || parsed.films.length !== 6) {
       res.status(502).json({ error: 'Invalid response shape from Claude' });
       return;
     }

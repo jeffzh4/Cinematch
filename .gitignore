@@ -7,3 +7,4 @@ config.local.js
 .vercel/
 node_modules/
 _error_*.html
+graphify-out/.graphify_python
