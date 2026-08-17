@@ -1,7 +1,58 @@
 {
   "directed": false,
   "multigraph": false,
-  "graph": {},
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "cinematch_core_flow",
+        "label": "CineMatch Core Recommendation Flow",
+        "nodes": [
+          "form_html",
+          "loading_html",
+          "results_html",
+          "api_recommend_ts"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 0.9,
+        "source_file": "README.md"
+      },
+      {
+        "id": "cinematch_shared_header_pattern",
+        "label": "Brutalist Header + Bottom-Bar Pattern (shared across pages)",
+        "nodes": [
+          "index_html",
+          "form_html",
+          "about_html",
+          "contact_html",
+          "error_html",
+          "404_html",
+          "analytics_html",
+          "results_html",
+          "share_html"
+        ],
+        "relation": "implement",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "CLAUDE.md"
+      },
+      {
+        "id": "cinematch_kv_backed_features",
+        "label": "Vercel KV Backed Features (analytics + share)",
+        "nodes": [
+          "analytics_html",
+          "share_html",
+          "api_analytics_ts",
+          "api_share_ts",
+          "concept_vercel_kv"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.9,
+        "source_file": "CASE_STUDY.md"
+      }
+    ]
+  },
   "nodes": [
     {
       "label": "_security.ts",
@@ -10,7 +61,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_security",
-      "community": 4,
+      "community": 12,
       "norm_label": "_security.ts"
     },
     {
@@ -20,7 +71,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "api_security_buckets",
-      "community": 4,
+      "community": 12,
       "norm_label": "buckets"
     },
     {
@@ -30,7 +81,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "api_security_applysecurityheaders",
-      "community": 7,
+      "community": 8,
       "norm_label": "applysecurityheaders()"
     },
     {
@@ -40,7 +91,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "api_security_clientkey",
-      "community": 4,
+      "community": 12,
       "norm_label": "clientkey()"
     },
     {
@@ -50,7 +101,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "api_security_ratelimit",
-      "community": 4,
+      "community": 12,
       "norm_label": "ratelimit()"
     },
     {
@@ -60,7 +111,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "api_security_boundedstring",
-      "community": 5,
+      "community": 6,
       "norm_label": "boundedstring()"
     },
     {
@@ -70,7 +121,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "api_security_boundedstringarray",
-      "community": 6,
+      "community": 7,
       "norm_label": "boundedstringarray()"
     },
     {
@@ -80,7 +131,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_analytics",
-      "community": 3,
+      "community": 5,
       "norm_label": "analytics.ts"
     },
     {
@@ -90,7 +141,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "api_analytics_analyticsentry",
-      "community": 3,
+      "community": 5,
       "norm_label": "analyticsentry"
     },
     {
@@ -100,7 +151,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "api_analytics_kvresult",
-      "community": 3,
+      "community": 5,
       "norm_label": "kvresult"
     },
     {
@@ -110,7 +161,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "api_analytics_kvpipeline",
-      "community": 3,
+      "community": 5,
       "norm_label": "kvpipeline()"
     },
     {
@@ -120,7 +171,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "api_analytics_handler",
-      "community": 3,
+      "community": 5,
       "norm_label": "handler()"
     },
     {
@@ -130,7 +181,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_poster",
-      "community": 5,
+      "community": 6,
       "norm_label": "poster.ts"
     },
     {
@@ -140,7 +191,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "api_poster_tmdbmovie",
-      "community": 5,
+      "community": 6,
       "norm_label": "tmdbmovie"
     },
     {
@@ -150,7 +201,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "api_poster_tmdbsearchresponse",
-      "community": 5,
+      "community": 6,
       "norm_label": "tmdbsearchresponse"
     },
     {
@@ -160,7 +211,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "api_poster_handler",
-      "community": 5,
+      "community": 6,
       "norm_label": "handler()"
     },
     {
@@ -170,7 +221,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_recommend",
-      "community": 6,
+      "community": 7,
       "norm_label": "recommend.ts"
     },
     {
@@ -180,7 +231,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "api_recommend_film",
-      "community": 6,
+      "community": 7,
       "norm_label": "film"
     },
     {
@@ -190,7 +241,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "api_recommend_recommendationresult",
-      "community": 6,
+      "community": 7,
       "norm_label": "recommendationresult"
     },
     {
@@ -200,7 +251,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "api_recommend_handler",
-      "community": 6,
+      "community": 7,
       "norm_label": "handler()"
     },
     {
@@ -210,7 +261,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_share",
-      "community": 7,
+      "community": 8,
       "norm_label": "share.ts"
     },
     {
@@ -220,7 +271,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "api_share_kvresult",
-      "community": 7,
+      "community": 8,
       "norm_label": "kvresult"
     },
     {
@@ -230,7 +281,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "api_share_kvpipeline",
-      "community": 7,
+      "community": 8,
       "norm_label": "kvpipeline()"
     },
     {
@@ -240,7 +291,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "api_share_handler",
-      "community": 7,
+      "community": 8,
       "norm_label": "handler()"
     },
     {
@@ -300,7 +351,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_check_site",
-      "community": 10,
+      "community": 11,
       "norm_label": "check-site.mjs"
     },
     {
@@ -310,7 +361,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "scripts_check_site_pages",
-      "community": 10,
+      "community": 11,
       "norm_label": "pages"
     },
     {
@@ -320,7 +371,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "scripts_check_site_publicpages",
-      "community": 10,
+      "community": 11,
       "norm_label": "publicpages"
     },
     {
@@ -330,7 +381,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "scripts_check_site_failures",
-      "community": 10,
+      "community": 11,
       "norm_label": "failures"
     },
     {
@@ -340,7 +391,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "scripts_check_site_combined",
-      "community": 10,
+      "community": 11,
       "norm_label": "combined"
     },
     {
@@ -350,7 +401,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vercel",
-      "community": 8,
+      "community": 4,
       "norm_label": "vercel.json"
     },
     {
@@ -360,7 +411,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "vercel_schema",
-      "community": 8,
+      "community": 4,
       "norm_label": "$schema"
     },
     {
@@ -370,7 +421,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "vercel_cleanurls",
-      "community": 8,
+      "community": 4,
       "norm_label": "cleanurls"
     },
     {
@@ -380,7 +431,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "vercel_trailingslash",
-      "community": 8,
+      "community": 4,
       "norm_label": "trailingslash"
     },
     {
@@ -390,7 +441,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "vercel_redirects",
-      "community": 8,
+      "community": 4,
       "norm_label": "redirects"
     },
     {
@@ -400,338 +451,658 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "vercel_headers",
-      "community": 8,
+      "community": 4,
       "norm_label": "headers"
     },
     {
-      "label": "CASE_STUDY.md",
-      "file_type": "document",
-      "source_file": "CASE_STUDY.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "case_study",
-      "community": 2,
-      "norm_label": "case_study.md"
+      "label": "404.html \u2014 Not Found Page",
+      "file_type": "code",
+      "source_file": "404.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "404_html",
+      "community": 0,
+      "norm_label": "404.html \u2014 not found page"
     },
     {
-      "label": "CineMatch \u2014 Case Study",
-      "file_type": "document",
-      "source_file": "CASE_STUDY.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "case_study_cinematch_case_study",
-      "community": 2,
-      "norm_label": "cinematch \u2014 case study"
+      "label": "about.html \u2014 About Page",
+      "file_type": "code",
+      "source_file": "about.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "about_html",
+      "community": 3,
+      "norm_label": "about.html \u2014 about page"
     },
     {
-      "label": "Problem",
-      "file_type": "document",
-      "source_file": "CASE_STUDY.md",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "case_study_problem",
-      "community": 2,
-      "norm_label": "problem"
+      "label": "analytics.html \u2014 Usage Dashboard",
+      "file_type": "code",
+      "source_file": "analytics.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "analytics_html",
+      "community": 0,
+      "norm_label": "analytics.html \u2014 usage dashboard"
     },
     {
-      "label": "Key Decisions",
+      "label": "contact.html \u2014 Contact Page",
+      "file_type": "code",
+      "source_file": "contact.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "contact_html",
+      "community": 3,
+      "norm_label": "contact.html \u2014 contact page"
+    },
+    {
+      "label": "error.html \u2014 Error Fallback Page",
+      "file_type": "code",
+      "source_file": "error.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "error_html",
+      "community": 0,
+      "norm_label": "error.html \u2014 error fallback page"
+    },
+    {
+      "label": "form.html \u2014 Six-Question Intake Form",
+      "file_type": "code",
+      "source_file": "form.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "form_html",
+      "community": 0,
+      "norm_label": "form.html \u2014 six-question intake form"
+    },
+    {
+      "label": "index.html \u2014 Landing Page",
+      "file_type": "code",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_html",
+      "community": 3,
+      "norm_label": "index.html \u2014 landing page"
+    },
+    {
+      "label": "loading.html \u2014 Recommendation Loading Page",
+      "file_type": "code",
+      "source_file": "loading.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "loading_html",
+      "community": 0,
+      "norm_label": "loading.html \u2014 recommendation loading page"
+    },
+    {
+      "label": "results.html \u2014 Results Page",
+      "file_type": "code",
+      "source_file": "results.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "results_html",
+      "community": 0,
+      "norm_label": "results.html \u2014 results page"
+    },
+    {
+      "label": "share.html \u2014 Shared Results Page",
+      "file_type": "code",
+      "source_file": "share.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "share_html",
+      "community": 0,
+      "norm_label": "share.html \u2014 shared results page"
+    },
+    {
+      "label": "robots.txt \u2014 Crawler Rules",
+      "file_type": "code",
+      "source_file": "robots.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "robots_txt",
+      "community": 0,
+      "norm_label": "robots.txt \u2014 crawler rules"
+    },
+    {
+      "label": "CLAUDE.md \u2014 Project Instructions",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_md",
+      "community": 1,
+      "norm_label": "claude.md \u2014 project instructions"
+    },
+    {
+      "label": "README.md \u2014 Project Overview",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_md",
+      "community": 1,
+      "norm_label": "readme.md \u2014 project overview"
+    },
+    {
+      "label": "CASE_STUDY.md \u2014 Design Case Study",
       "file_type": "document",
       "source_file": "CASE_STUDY.md",
-      "source_location": "L15",
-      "_origin": "ast",
-      "id": "case_study_key_decisions",
-      "community": 2,
-      "norm_label": "key decisions"
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "case_study_md",
+      "community": 1,
+      "norm_label": "case_study.md \u2014 design case study"
     },
     {
       "label": "Serverless over a traditional backend",
-      "file_type": "document",
+      "file_type": "rationale",
       "source_file": "CASE_STUDY.md",
-      "source_location": "L17",
-      "_origin": "ast",
-      "id": "case_study_serverless_over_a_traditional_backend",
-      "community": 2,
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "case_study_md_serverless_over_backend",
+      "community": 0,
       "norm_label": "serverless over a traditional backend"
     },
     {
       "label": "LLM-generated recommendations over a rules engine",
-      "file_type": "document",
+      "file_type": "rationale",
       "source_file": "CASE_STUDY.md",
-      "source_location": "L23",
-      "_origin": "ast",
-      "id": "case_study_llm_generated_recommendations_over_a_rules_engine",
-      "community": 2,
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "case_study_md_llm_generated_recommendations",
+      "community": 1,
       "norm_label": "llm-generated recommendations over a rules engine"
     },
     {
-      "label": "Prompt caching",
-      "file_type": "document",
+      "label": "Prompt Caching Strategy",
+      "file_type": "rationale",
       "source_file": "CASE_STUDY.md",
-      "source_location": "L29",
-      "_origin": "ast",
-      "id": "case_study_prompt_caching",
-      "community": 2,
-      "norm_label": "prompt caching"
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "case_study_md_prompt_caching",
+      "community": 1,
+      "norm_label": "prompt caching strategy"
     },
     {
       "label": "TypeScript on the API layer only",
-      "file_type": "document",
+      "file_type": "rationale",
       "source_file": "CASE_STUDY.md",
-      "source_location": "L33",
-      "_origin": "ast",
-      "id": "case_study_typescript_on_the_api_layer_only",
-      "community": 2,
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "case_study_md_typescript_api_layer",
+      "community": 0,
       "norm_label": "typescript on the api layer only"
     },
     {
       "label": "Vercel KV for analytics and share links",
-      "file_type": "document",
+      "file_type": "rationale",
       "source_file": "CASE_STUDY.md",
-      "source_location": "L37",
-      "_origin": "ast",
-      "id": "case_study_vercel_kv_for_analytics_and_share_links",
-      "community": 2,
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "case_study_md_vercel_kv_analytics_share",
+      "community": 0,
       "norm_label": "vercel kv for analytics and share links"
     },
     {
-      "label": "What I'd Revisit for a V2",
-      "file_type": "document",
+      "label": "V2: Define the data model before the features",
+      "file_type": "rationale",
       "source_file": "CASE_STUDY.md",
-      "source_location": "L43",
-      "_origin": "ast",
-      "id": "case_study_what_i_d_revisit_for_a_v2",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "case_study_md_v2_data_model",
+      "community": 1,
+      "norm_label": "v2: define the data model before the features"
+    },
+    {
+      "label": "V2: Add schema validation at the LLM boundary",
+      "file_type": "rationale",
+      "source_file": "CASE_STUDY.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "case_study_md_v2_schema_validation",
+      "community": 0,
+      "norm_label": "v2: add schema validation at the llm boundary"
+    },
+    {
+      "label": "V2: Move share-link previews server-side",
+      "file_type": "rationale",
+      "source_file": "CASE_STUDY.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "case_study_md_v2_server_side_previews",
+      "community": 0,
+      "norm_label": "v2: move share-link previews server-side"
+    },
+    {
+      "label": "Vercel KV (Redis)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_vercel_kv",
+      "community": 0,
+      "norm_label": "vercel kv (redis)"
+    },
+    {
+      "label": "Anthropic API (claude-sonnet-4-6)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_anthropic_api",
+      "community": 1,
+      "norm_label": "anthropic api (claude-sonnet-4-6)"
+    },
+    {
+      "label": "TMDB API",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_tmdb_api",
+      "community": 1,
+      "norm_label": "tmdb api"
+    },
+    {
+      "label": "localStorage-based client data flow",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_localstorage_data_flow",
+      "community": 1,
+      "norm_label": "localstorage-based client data flow"
+    },
+    {
+      "label": "api/recommend.ts (referenced endpoint)",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "api_recommend_ts",
+      "community": 0,
+      "norm_label": "api/recommend.ts (referenced endpoint)"
+    },
+    {
+      "label": "api/poster.ts (referenced endpoint)",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "api_poster_ts",
+      "community": 0,
+      "norm_label": "api/poster.ts (referenced endpoint)"
+    },
+    {
+      "label": "api/analytics.ts (referenced endpoint)",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "api_analytics_ts",
+      "community": 0,
+      "norm_label": "api/analytics.ts (referenced endpoint)"
+    },
+    {
+      "label": "api/share.ts (referenced endpoint)",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "api_share_ts",
+      "community": 0,
+      "norm_label": "api/share.ts (referenced endpoint)"
+    },
+    {
+      "label": "Film Frame Icon",
+      "file_type": "image",
+      "source_file": "favicon.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "favicon_svg_film_frame_icon",
+      "community": 13,
+      "norm_label": "film frame icon"
+    },
+    {
+      "label": "CineMatch Landing Page Screenshot",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-landing.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_landing_landing_page_screenshot",
+      "community": 3,
+      "norm_label": "cinematch landing page screenshot"
+    },
+    {
+      "label": "\"Find Your Film.\" Hero Headline",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-landing.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_landing_hero_headline",
+      "community": 3,
+      "norm_label": "\"find your film.\" hero headline"
+    },
+    {
+      "label": "Begin CTA Button",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-landing.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_landing_begin_cta_button",
+      "community": 3,
+      "norm_label": "begin cta button"
+    },
+    {
+      "label": "Brutalist Header Nav (About/Contact)",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-landing.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_landing_brutalist_header",
+      "community": 3,
+      "norm_label": "brutalist header nav (about/contact)"
+    },
+    {
+      "label": "Footer Credit \"A Passion Project - J. Zhang - 2026\"",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-landing.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_landing_footer_credit",
+      "community": 3,
+      "norm_label": "footer credit \"a passion project - j. zhang - 2026\""
+    },
+    {
+      "label": "CineMatch Question Form Screenshot",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_questions_question_form_screenshot",
       "community": 2,
-      "norm_label": "what i'd revisit for a v2"
+      "norm_label": "cinematch question form screenshot"
     },
     {
-      "label": "CLAUDE.md",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "claude",
-      "community": 0,
-      "norm_label": "claude.md"
-    },
-    {
-      "label": "CineMatch \u2014 CLAUDE.md",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "claude_cinematch_claude_md",
-      "community": 0,
-      "norm_label": "cinematch \u2014 claude.md"
-    },
-    {
-      "label": "Project Overview",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L3",
-      "_origin": "ast",
-      "id": "claude_project_overview",
-      "community": 0,
-      "norm_label": "project overview"
-    },
-    {
-      "label": "Current State \u2014 Fully Shipped",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "claude_current_state_fully_shipped",
-      "community": 0,
-      "norm_label": "current state \u2014 fully shipped"
-    },
-    {
-      "label": "Design System",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L40",
-      "_origin": "ast",
-      "id": "claude_design_system",
-      "community": 0,
-      "norm_label": "design system"
-    },
-    {
-      "label": "Architecture",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L52",
-      "_origin": "ast",
-      "id": "claude_architecture",
-      "community": 0,
-      "norm_label": "architecture"
-    },
-    {
-      "label": "Data flow",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L54",
-      "_origin": "ast",
-      "id": "claude_data_flow",
-      "community": 0,
-      "norm_label": "data flow"
-    },
-    {
-      "label": "API architecture",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L67",
-      "_origin": "ast",
-      "id": "claude_api_architecture",
-      "community": 0,
-      "norm_label": "api architecture"
-    },
-    {
-      "label": "Environment variables required",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L70",
-      "_origin": "ast",
-      "id": "claude_environment_variables_required",
-      "community": 0,
-      "norm_label": "environment variables required"
-    },
-    {
-      "label": "Form Inputs & localStorage Keys",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L79",
-      "_origin": "ast",
-      "id": "claude_form_inputs_localstorage_keys",
-      "community": 0,
-      "norm_label": "form inputs & localstorage keys"
-    },
-    {
-      "label": "Claude Prompt Strategy",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L94",
-      "_origin": "ast",
-      "id": "claude_claude_prompt_strategy",
-      "community": 0,
-      "norm_label": "claude prompt strategy"
-    },
-    {
-      "label": "What NOT to Change",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L107",
-      "_origin": "ast",
-      "id": "claude_what_not_to_change",
-      "community": 0,
-      "norm_label": "what not to change"
-    },
-    {
-      "label": "README.md",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "readme",
+      "label": "Three Questions Intro Copy",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_questions_three_questions_intro",
       "community": 2,
-      "norm_label": "readme.md"
+      "norm_label": "three questions intro copy"
     },
     {
-      "label": "CineMatch",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "readme_cinematch",
-      "community": 1,
-      "norm_label": "cinematch"
+      "label": "Question 01: What are you feeling?",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_questions_mood_question",
+      "community": 2,
+      "norm_label": "question 01: what are you feeling?"
     },
     {
-      "label": "Product Summary",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L10",
-      "_origin": "ast",
-      "id": "readme_product_summary",
-      "community": 1,
-      "norm_label": "product summary"
+      "label": "Question 02: What kind of film? (genre chips)",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_questions_genre_question",
+      "community": 2,
+      "norm_label": "question 02: what kind of film? (genre chips)"
     },
     {
-      "label": "How it works",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L18",
-      "_origin": "ast",
-      "id": "readme_how_it_works",
-      "community": 1,
-      "norm_label": "how it works"
+      "label": "Brutalist Header (CINEMATCH / About / Contact)",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_questions_brutalist_header",
+      "community": 2,
+      "norm_label": "brutalist header (cinematch / about / contact)"
     },
     {
-      "label": "Product Surface",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L29",
-      "_origin": "ast",
-      "id": "readme_product_surface",
-      "community": 1,
-      "norm_label": "product surface"
+      "label": "cm_mood (localStorage key)",
+      "file_type": "code",
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "cm_mood_key",
+      "community": 2,
+      "norm_label": "cm_mood (localstorage key)"
     },
     {
-      "label": "API Surface",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L43",
-      "_origin": "ast",
-      "id": "readme_api_surface",
-      "community": 1,
-      "norm_label": "api surface"
+      "label": "cm_genres (localStorage key)",
+      "file_type": "code",
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "cm_genres_key",
+      "community": 2,
+      "norm_label": "cm_genres (localstorage key)"
     },
     {
-      "label": "Architecture",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L58",
-      "_origin": "ast",
-      "id": "readme_architecture",
-      "community": 1,
-      "norm_label": "architecture"
+      "label": "Accent Purple #a78bff Design Token",
+      "file_type": "code",
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "design_system_accent_purple",
+      "community": 2,
+      "norm_label": "accent purple #a78bff design token"
     },
     {
-      "label": "Local Development",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L93",
-      "_origin": "ast",
-      "id": "readme_local_development",
-      "community": 1,
-      "norm_label": "local development"
+      "label": "Fraunces Serif Display Font",
+      "file_type": "code",
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "design_system_fraunces_font",
+      "community": 2,
+      "norm_label": "fraunces serif display font"
     },
     {
-      "label": "Deployment",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L109",
-      "_origin": "ast",
-      "id": "readme_deployment",
-      "community": 1,
-      "norm_label": "deployment"
+      "label": "Results Page Explanations Screenshot",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-results-explanations.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_results_explanations_results_page",
+      "community": 10,
+      "norm_label": "results page explanations screenshot"
     },
     {
-      "label": "Vercel KV (required for analytics and share links)",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L116",
-      "_origin": "ast",
-      "id": "readme_vercel_kv_required_for_analytics_and_share_links",
-      "community": 1,
-      "norm_label": "vercel kv (required for analytics and share links)"
+      "label": "The Double Life of V\u00e9ronique Film Card",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-results-explanations.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_results_explanations_double_life_of_veronique_card",
+      "community": 10,
+      "norm_label": "the double life of veronique film card"
     },
     {
-      "label": "Stack",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L124",
-      "_origin": "ast",
-      "id": "readme_stack",
-      "community": 1,
-      "norm_label": "stack"
+      "label": "Certified Copy Film Card",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-results-explanations.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_results_explanations_certified_copy_card",
+      "community": 10,
+      "norm_label": "certified copy film card"
+    },
+    {
+      "label": "User Mood Quote Block",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-results-explanations.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_results_explanations_mood_quote",
+      "community": 10,
+      "norm_label": "user mood quote block"
+    },
+    {
+      "label": "Editorial Headline Ending in a little longer",
+      "file_type": "image",
+      "source_file": "portfolio-screenshots/cinematch-results-explanations.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "portfolio_screenshots_cinematch_results_explanations_headline",
+      "community": 10,
+      "norm_label": "editorial headline ending in a little longer"
     }
   ],
   "links": [
@@ -1441,316 +1812,735 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CASE_STUDY.md",
-      "source_location": "L1",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "404.html",
+      "source_location": null,
       "weight": 1.0,
-      "source": "case_study",
-      "target": "case_study_cinematch_case_study",
-      "confidence_score": 1.0
+      "source": "404_html",
+      "target": "error_html"
     },
     {
       "relation": "references",
       "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L133",
+      "confidence_score": 1.0,
+      "source_file": "404.html",
+      "source_location": null,
       "weight": 1.0,
-      "source": "readme",
-      "target": "case_study",
-      "confidence_score": 1.0
+      "source": "404_html",
+      "target": "form_html"
     },
     {
-      "relation": "contains",
+      "relation": "references",
       "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "404.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "404_html",
+      "target": "index_html"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "about.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "about_html",
+      "target": "contact_html"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "about.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "about_html",
+      "target": "index_html"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "analytics.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "analytics_html",
+      "target": "api_analytics_ts"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "analytics.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "analytics_html",
+      "target": "index_html"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "robots.txt",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "robots_txt",
+      "target": "analytics_html"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "contact.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "contact_html",
+      "target": "index_html"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "error.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "error_html",
+      "target": "form_html"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "error.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "error_html",
+      "target": "loading_html"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "results.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "results_html",
+      "target": "error_html"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "form.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "form_html",
+      "target": "loading_html"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_html",
+      "target": "form_html"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "portfolio_screenshots_cinematch_questions_question_form_screenshot",
+      "target": "form_html"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "results.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "results_html",
+      "target": "form_html"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "share.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "share_html",
+      "target": "form_html"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "portfolio-screenshots/cinematch-landing.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "portfolio_screenshots_cinematch_landing_landing_page_screenshot",
+      "target": "index_html"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "loading.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "loading_html",
+      "target": "api_analytics_ts"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "loading.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "loading_html",
+      "target": "api_recommend_ts"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "loading.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "loading_html",
+      "target": "results_html"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "robots.txt",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "robots_txt",
+      "target": "loading_html"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "results.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "results_html",
+      "target": "api_poster_ts"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "results.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "results_html",
+      "target": "api_share_ts"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "robots.txt",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "robots_txt",
+      "target": "results_html"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "share.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "share_html",
+      "target": "results_html"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "CASE_STUDY.md",
-      "source_location": "L15",
+      "source_location": null,
       "weight": 1.0,
-      "source": "case_study_cinematch_case_study",
-      "target": "case_study_key_decisions",
-      "confidence_score": 1.0
+      "source": "case_study_md_v2_server_side_previews",
+      "target": "share_html"
     },
     {
-      "relation": "contains",
+      "relation": "references",
       "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "share.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "share_html",
+      "target": "api_share_ts"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_md",
+      "target": "case_study_md"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_md",
+      "target": "readme_md"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_md",
+      "target": "api_analytics_ts"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_md",
+      "target": "api_poster_ts"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_md",
+      "target": "api_recommend_ts"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_md",
+      "target": "api_share_ts"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_md",
+      "target": "case_study_md"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_md",
+      "target": "concept_anthropic_api"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_md",
+      "target": "concept_localstorage_data_flow"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_md",
+      "target": "concept_tmdb_api"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_md",
+      "target": "concept_vercel_kv"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "CASE_STUDY.md",
-      "source_location": "L7",
+      "source_location": null,
       "weight": 1.0,
-      "source": "case_study_cinematch_case_study",
-      "target": "case_study_problem",
-      "confidence_score": 1.0
+      "source": "case_study_md_serverless_over_backend",
+      "target": "concept_vercel_kv"
     },
     {
-      "relation": "contains",
+      "relation": "rationale_for",
       "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "CASE_STUDY.md",
-      "source_location": "L43",
+      "source_location": null,
       "weight": 1.0,
-      "source": "case_study_cinematch_case_study",
-      "target": "case_study_what_i_d_revisit_for_a_v2",
-      "confidence_score": 1.0
+      "source": "case_study_md_llm_generated_recommendations",
+      "target": "concept_anthropic_api"
     },
     {
-      "relation": "contains",
+      "relation": "rationale_for",
       "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "CASE_STUDY.md",
-      "source_location": "L23",
+      "source_location": null,
       "weight": 1.0,
-      "source": "case_study_key_decisions",
-      "target": "case_study_llm_generated_recommendations_over_a_rules_engine",
-      "confidence_score": 1.0
+      "source": "case_study_md_prompt_caching",
+      "target": "concept_anthropic_api"
     },
     {
-      "relation": "contains",
+      "relation": "rationale_for",
       "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "CASE_STUDY.md",
-      "source_location": "L29",
+      "source_location": null,
       "weight": 1.0,
-      "source": "case_study_key_decisions",
-      "target": "case_study_prompt_caching",
-      "confidence_score": 1.0
+      "source": "case_study_md_typescript_api_layer",
+      "target": "api_analytics_ts"
     },
     {
-      "relation": "contains",
+      "relation": "rationale_for",
       "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "CASE_STUDY.md",
-      "source_location": "L17",
+      "source_location": null,
       "weight": 1.0,
-      "source": "case_study_key_decisions",
-      "target": "case_study_serverless_over_a_traditional_backend",
-      "confidence_score": 1.0
+      "source": "case_study_md_typescript_api_layer",
+      "target": "api_poster_ts"
     },
     {
-      "relation": "contains",
+      "relation": "rationale_for",
       "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "CASE_STUDY.md",
-      "source_location": "L33",
+      "source_location": null,
       "weight": 1.0,
-      "source": "case_study_key_decisions",
-      "target": "case_study_typescript_on_the_api_layer_only",
-      "confidence_score": 1.0
+      "source": "case_study_md_typescript_api_layer",
+      "target": "api_recommend_ts"
     },
     {
-      "relation": "contains",
+      "relation": "rationale_for",
       "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "CASE_STUDY.md",
-      "source_location": "L37",
+      "source_location": null,
       "weight": 1.0,
-      "source": "case_study_key_decisions",
-      "target": "case_study_vercel_kv_for_analytics_and_share_links",
-      "confidence_score": 1.0
+      "source": "case_study_md_typescript_api_layer",
+      "target": "api_share_ts"
     },
     {
-      "relation": "contains",
+      "relation": "rationale_for",
       "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L1",
+      "confidence_score": 1.0,
+      "source_file": "CASE_STUDY.md",
+      "source_location": null,
       "weight": 1.0,
-      "source": "claude",
-      "target": "claude_cinematch_claude_md",
-      "confidence_score": 1.0
+      "source": "case_study_md_vercel_kv_analytics_share",
+      "target": "api_analytics_ts"
     },
     {
-      "relation": "contains",
+      "relation": "rationale_for",
       "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L52",
+      "confidence_score": 1.0,
+      "source_file": "CASE_STUDY.md",
+      "source_location": null,
       "weight": 1.0,
-      "source": "claude_cinematch_claude_md",
-      "target": "claude_architecture",
-      "confidence_score": 1.0
+      "source": "case_study_md_vercel_kv_analytics_share",
+      "target": "api_share_ts"
     },
     {
-      "relation": "contains",
+      "relation": "rationale_for",
       "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L94",
+      "confidence_score": 1.0,
+      "source_file": "CASE_STUDY.md",
+      "source_location": null,
       "weight": 1.0,
-      "source": "claude_cinematch_claude_md",
-      "target": "claude_claude_prompt_strategy",
-      "confidence_score": 1.0
+      "source": "case_study_md_vercel_kv_analytics_share",
+      "target": "concept_vercel_kv"
     },
     {
-      "relation": "contains",
+      "relation": "rationale_for",
       "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L12",
+      "confidence_score": 1.0,
+      "source_file": "CASE_STUDY.md",
+      "source_location": null,
       "weight": 1.0,
-      "source": "claude_cinematch_claude_md",
-      "target": "claude_current_state_fully_shipped",
-      "confidence_score": 1.0
+      "source": "case_study_md_v2_data_model",
+      "target": "concept_localstorage_data_flow"
     },
     {
-      "relation": "contains",
+      "relation": "rationale_for",
       "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L40",
+      "confidence_score": 1.0,
+      "source_file": "CASE_STUDY.md",
+      "source_location": null,
       "weight": 1.0,
-      "source": "claude_cinematch_claude_md",
-      "target": "claude_design_system",
-      "confidence_score": 1.0
+      "source": "case_study_md_v2_schema_validation",
+      "target": "api_recommend_ts"
     },
     {
-      "relation": "contains",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L79",
+      "confidence_score": 1.0,
+      "source_file": "portfolio-screenshots/cinematch-landing.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "claude_cinematch_claude_md",
-      "target": "claude_form_inputs_localstorage_keys",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_landing_begin_cta_button",
+      "target": "portfolio_screenshots_cinematch_landing_landing_page_screenshot"
     },
     {
-      "relation": "contains",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L3",
+      "confidence_score": 1.0,
+      "source_file": "portfolio-screenshots/cinematch-landing.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "claude_cinematch_claude_md",
-      "target": "claude_project_overview",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_landing_brutalist_header",
+      "target": "portfolio_screenshots_cinematch_landing_landing_page_screenshot"
     },
     {
-      "relation": "contains",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L107",
+      "confidence_score": 1.0,
+      "source_file": "portfolio-screenshots/cinematch-landing.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "claude_cinematch_claude_md",
-      "target": "claude_what_not_to_change",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_landing_footer_credit",
+      "target": "portfolio_screenshots_cinematch_landing_landing_page_screenshot"
     },
     {
-      "relation": "contains",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L67",
+      "confidence_score": 1.0,
+      "source_file": "portfolio-screenshots/cinematch-landing.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "claude_architecture",
-      "target": "claude_api_architecture",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_landing_hero_headline",
+      "target": "portfolio_screenshots_cinematch_landing_landing_page_screenshot"
     },
     {
-      "relation": "contains",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L54",
+      "confidence_score": 1.0,
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "claude_architecture",
-      "target": "claude_data_flow",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_questions_question_form_screenshot",
+      "target": "design_system_accent_purple"
     },
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L70",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "claude_architecture",
-      "target": "claude_environment_variables_required",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_questions_question_form_screenshot",
+      "target": "design_system_fraunces_font"
     },
     {
-      "relation": "contains",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L1",
+      "confidence_score": 1.0,
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "readme",
-      "target": "readme_cinematch",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_questions_question_form_screenshot",
+      "target": "portfolio_screenshots_cinematch_questions_brutalist_header"
     },
     {
-      "relation": "contains",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L43",
+      "confidence_score": 1.0,
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "readme_cinematch",
-      "target": "readme_api_surface",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_questions_question_form_screenshot",
+      "target": "portfolio_screenshots_cinematch_questions_genre_question"
     },
     {
-      "relation": "contains",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L58",
+      "confidence_score": 1.0,
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "readme_cinematch",
-      "target": "readme_architecture",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_questions_question_form_screenshot",
+      "target": "portfolio_screenshots_cinematch_questions_mood_question"
     },
     {
-      "relation": "contains",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L109",
+      "confidence_score": 1.0,
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "readme_cinematch",
-      "target": "readme_deployment",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_questions_question_form_screenshot",
+      "target": "portfolio_screenshots_cinematch_questions_three_questions_intro"
     },
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L93",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "readme_cinematch",
-      "target": "readme_local_development",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_questions_mood_question",
+      "target": "cm_mood_key"
     },
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L10",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "portfolio-screenshots/cinematch-questions.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "readme_cinematch",
-      "target": "readme_product_summary",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_questions_genre_question",
+      "target": "cm_genres_key"
     },
     {
-      "relation": "contains",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L29",
+      "confidence_score": 1.0,
+      "source_file": "portfolio-screenshots/cinematch-results-explanations.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "readme_cinematch",
-      "target": "readme_product_surface",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_results_explanations_results_page",
+      "target": "portfolio_screenshots_cinematch_results_explanations_certified_copy_card"
     },
     {
-      "relation": "contains",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L124",
+      "confidence_score": 1.0,
+      "source_file": "portfolio-screenshots/cinematch-results-explanations.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "readme_cinematch",
-      "target": "readme_stack",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_results_explanations_results_page",
+      "target": "portfolio_screenshots_cinematch_results_explanations_double_life_of_veronique_card"
     },
     {
-      "relation": "contains",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L18",
+      "confidence_score": 1.0,
+      "source_file": "portfolio-screenshots/cinematch-results-explanations.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "readme_product_summary",
-      "target": "readme_how_it_works",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_results_explanations_results_page",
+      "target": "portfolio_screenshots_cinematch_results_explanations_headline"
     },
     {
-      "relation": "contains",
+      "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L116",
+      "confidence_score": 1.0,
+      "source_file": "portfolio-screenshots/cinematch-results-explanations.png",
+      "source_location": null,
       "weight": 1.0,
-      "source": "readme_deployment",
-      "target": "readme_vercel_kv_required_for_analytics_and_share_links",
-      "confidence_score": 1.0
+      "source": "portfolio_screenshots_cinematch_results_explanations_results_page",
+      "target": "portfolio_screenshots_cinematch_results_explanations_mood_quote"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "portfolio-screenshots/cinematch-results-explanations.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "portfolio_screenshots_cinematch_results_explanations_double_life_of_veronique_card",
+      "target": "portfolio_screenshots_cinematch_results_explanations_mood_quote"
     }
   ],
-  "hyperedges": [],
-  "built_at_commit": "1435e7eefe6ce90316d6fc15ec5fef02dc907aa2"
+  "hyperedges": [
+    {
+      "id": "cinematch_core_flow",
+      "label": "CineMatch Core Recommendation Flow",
+      "nodes": [
+        "form_html",
+        "loading_html",
+        "results_html",
+        "api_recommend_ts"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.9,
+      "source_file": "README.md"
+    },
+    {
+      "id": "cinematch_shared_header_pattern",
+      "label": "Brutalist Header + Bottom-Bar Pattern (shared across pages)",
+      "nodes": [
+        "index_html",
+        "form_html",
+        "about_html",
+        "contact_html",
+        "error_html",
+        "404_html",
+        "analytics_html",
+        "results_html",
+        "share_html"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "CLAUDE.md"
+    },
+    {
+      "id": "cinematch_kv_backed_features",
+      "label": "Vercel KV Backed Features (analytics + share)",
+      "nodes": [
+        "analytics_html",
+        "share_html",
+        "api_analytics_ts",
+        "api_share_ts",
+        "concept_vercel_kv"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "CASE_STUDY.md"
+    }
+  ],
+  "built_at_commit": "b106b2fd5b76548aa6be8144c1892829918af8e5"
 }
