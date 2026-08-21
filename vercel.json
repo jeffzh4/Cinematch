@@ -10,6 +10,18 @@
       "permanent": true
     }
   ],
+  "rewrites": [
+    {
+      "source": "/share",
+      "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|TelegramBot|Pinterest|redditbot|Applebot|Googlebot|bingbot).*" }],
+      "destination": "/api/share-og"
+    },
+    {
+      "source": "/share.html",
+      "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|TelegramBot|Pinterest|redditbot|Applebot|Googlebot|bingbot).*" }],
+      "destination": "/api/share-og"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
