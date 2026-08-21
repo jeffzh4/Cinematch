@@ -6,4 +6,6 @@ Disallow: /loading
 Disallow: /loading.html
 Disallow: /results
 Disallow: /results.html
+Disallow: /favorites
+Disallow: /favorites.html
 Sitemap: https://cinematch-navy.vercel.app/sitemap.xml

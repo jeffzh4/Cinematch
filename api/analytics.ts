@@ -6,6 +6,7 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { applySecurityHeaders, boundedString, boundedStringArray, rateLimit } from './_security';
+import { kvPipeline } from './_kv';
 
 interface AnalyticsEntry {
   mood:      string;
@@ -15,25 +16,6 @@ interface AnalyticsEntry {
   decade:    string;
   platforms: string[];
   ts:        number;
-}
-
-interface KVResult {
-  result: unknown;
-}
-
-async function kvPipeline(commands: unknown[][]): Promise<KVResult[]> {
-  const url   = process.env.KV_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN;
-  if (!url || !token) throw new Error('KV not configured');
-
-  const res = await fetch(`${url}/pipeline`, {
-    method:  'POST',
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    body:    JSON.stringify(commands),
-  });
-
-  if (!res.ok) throw new Error(`KV pipeline failed: ${res.status}`);
-  return res.json() as Promise<KVResult[]>;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
