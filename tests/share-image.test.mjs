@@ -1,7 +1,7 @@
-// api/share-image.tsx uses JSX, which Node's built-in TS type-stripping does
-// NOT support (JSX is non-erasable syntax, not just type annotations). So
-// this test bundles the file with esbuild first (same transform tool Vercel
-// itself uses), stubs '@vercel/og' with a fake package that records what it
+// api/share-image.ts imports a sibling .ts module by extensionless
+// specifier, which Node's raw ESM resolver can't follow without a loader.
+// So this test bundles the file with esbuild first (same transform tool
+// Vercel uses), stubs '@vercel/og' with a fake package that records what it
 // was called with, then imports and exercises the compiled handler directly.
 
 import { test, describe, before, after } from 'node:test';
@@ -37,7 +37,7 @@ before(async () => {
 
   const outFile = join(workDir, 'handler.mjs');
   execFileSync(ESBUILD_BIN, [
-    join(REPO_ROOT, 'api', 'share-image.tsx'),
+    join(REPO_ROOT, 'api', 'share-image.ts'),
     '--bundle', '--platform=neutral', '--format=esm',
     '--external:@vercel/og',
     `--outfile=${outFile}`,
