@@ -102,10 +102,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       ? `Featuring ${firstFilm.title}${firstFilm.year ? ` (${firstFilm.year})` : ''} and ${Math.max(films.length - 1, 0)} more — curated by CineMatch.`
       : 'Six film picks curated by CineMatch — powered by Claude.';
 
+    const host  = String(req.headers.host ?? '');
+    const proto = host.startsWith('localhost') ? 'http' : 'https';
+    const image = `${proto}://${host}/api/share-image?id=${encodeURIComponent(id)}`;
+
     res.status(200).send(renderHtml({
       title:       `CineMatch — ${headline}`,
       description,
-      image:       FALLBACK_IMAGE,
+      image,
       redirectUrl,
     }));
   } catch {

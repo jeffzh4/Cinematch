@@ -1,21 +1,8 @@
 import { readFile } from 'node:fs/promises';
+import { contrastRatio } from './contrast.mjs';
 
 const pages = ['index.html', 'form.html', 'about.html', 'contact.html', 'results.html', 'share.html', 'analytics.html', 'loading.html', 'error.html', '404.html', 'favorites.html'];
 const failures = [];
-
-// WCAG 2.1 relative luminance + contrast ratio — real math, not a substring grep.
-function relativeLuminance(hex) {
-  const n = hex.replace('#', '');
-  const [r, g, b] = [n.slice(0, 2), n.slice(2, 4), n.slice(4, 6)].map((h) => {
-    const c = parseInt(h, 16) / 255;
-    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-  });
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-function contrastRatio(hexA, hexB) {
-  const [lA, lB] = [relativeLuminance(hexA), relativeLuminance(hexB)].sort((a, b) => b - a);
-  return (lA + 0.05) / (lB + 0.05);
-}
 
 // Text-color tokens checked against --bg. 4.5:1 is the WCAG AA minimum for normal text.
 const TEXT_TOKENS = ['--ink', '--ink-mute', '--ink-faint', '--accent'];

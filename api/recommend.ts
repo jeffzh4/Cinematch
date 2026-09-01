@@ -2,23 +2,26 @@
 // API key lives in Vercel env vars (ANTHROPIC_API_KEY), never in source.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { z } from 'zod';
 import { applySecurityHeaders, boundedString, boundedStringArray, rateLimit } from './_security';
 
-interface Film {
-  num:      number;
-  title:    string;
-  director: string;
-  year:     number;
-  runtime:  number;
-  genre:    string;
-  rating:   number;
-  reason:   string;
-}
+const FilmSchema = z.object({
+  num:      z.number(),
+  title:    z.string().min(1),
+  director: z.string(),
+  year:     z.number(),
+  runtime:  z.number(),
+  genre:    z.string(),
+  rating:   z.number(),
+  reason:   z.string(),
+});
 
-interface RecommendationResult {
-  headline: string;
-  films:    Film[];
-}
+const RecommendationResultSchema = z.object({
+  headline: z.string(),
+  films:    z.array(FilmSchema).length(6),
+});
+
+type RecommendationResult = z.infer<typeof RecommendationResultSchema>;
 
 const SYSTEM_PROMPT = `You are CineMatch, a film curator with deep knowledge across world cinema, decades, and genres. Given a person's mood, preferred genres, and the occasion, recommend exactly 6 films that match what they're truly looking for.
 
@@ -117,19 +120,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       .replace(/\s*```\s*$/i, '')
       .trim();
 
-    let parsed: RecommendationResult;
+    let rawParsed: unknown;
     try {
-      parsed = JSON.parse(cleaned) as RecommendationResult;
+      rawParsed = JSON.parse(cleaned);
     } catch {
       res.status(502).json({ error: 'Failed to parse Claude response' });
       return;
     }
 
-    if (!parsed.films || !Array.isArray(parsed.films) || parsed.films.length !== 6) {
+    const validated = RecommendationResultSchema.safeParse(rawParsed);
+    if (!validated.success) {
       res.status(502).json({ error: 'Invalid response shape from Claude' });
       return;
     }
 
+    const parsed: RecommendationResult = validated.data;
     res.status(200).json(parsed);
   } catch (err) {
     res.status(502).json({ error: 'Recommendation provider unavailable' });
