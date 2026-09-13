@@ -679,7 +679,7 @@ document.addEventListener('DOMContentLoaded', () => {
   try { results = JSON.parse(resultsJson); }
   catch { window.location.href = 'error.html'; return; }
 
-  const films = Array.isArray(results.films) ? results.films : [];
+  const films = Array.isArray(results?.films) ? results.films.filter(f => f && typeof f === 'object' && typeof f.title === 'string') : [];
   if (!films.length) { window.location.href = 'error.html'; return; }
 
   // --- Helpers ---

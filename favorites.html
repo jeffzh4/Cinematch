@@ -153,7 +153,7 @@ function wrapLastWord(title) {
 function readFavorites() {
   try {
     const arr = JSON.parse(localStorage.getItem('cm_favorites') || '[]');
-    return Array.isArray(arr) ? arr : [];
+    return Array.isArray(arr) ? arr.filter(f => f && typeof f === 'object' && typeof f.title === 'string') : [];
   } catch { return []; }
 }
 

@@ -58,10 +58,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
       const entries: AnalyticsEntry[] = rawEntries
         .map((e) => { try { return JSON.parse(e) as AnalyticsEntry; } catch { return null; } })
-        .filter((e): e is AnalyticsEntry => e !== null);
+        .filter((e): e is AnalyticsEntry => e !== null && typeof e === 'object' &&
+          Array.isArray(e.genres) && e.genres.every(g => typeof g === 'string') &&
+          typeof e.runtime === 'string' && typeof e.mood === 'string' && typeof e.occasion === 'string');
 
       // Genre counts
-      const genreCounts: Record<string, number> = {};
+      const genreCounts: Record<string, number> = Object.create(null);
       for (const entry of entries) {
         for (const g of entry.genres) {
           genreCounts[g] = (genreCounts[g] || 0) + 1;
@@ -69,7 +71,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       }
 
       // Unique runtime preferences
-      const runtimeCounts: Record<string, number> = {};
+      const runtimeCounts: Record<string, number> = Object.create(null);
       for (const entry of entries) {
         if (entry.runtime) runtimeCounts[entry.runtime] = (runtimeCounts[entry.runtime] || 0) + 1;
       }

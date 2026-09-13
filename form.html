@@ -467,7 +467,7 @@ textarea {
       <h2 class="field-num">02</h2>
       <div class="field-body">
         <span class="field-label">What kind of film?<span class="hint">pick a few</span></span>
-        <div class="chip-group" data-multi="true">
+        <div class="chip-group" data-multi="true" id="genre-group">
           <button type="button" class="chip" data-value="drama" aria-pressed="false">Drama</button>
           <button type="button" class="chip" data-value="comedy" aria-pressed="false">Comedy</button>
           <button type="button" class="chip" data-value="thriller" aria-pressed="false">Thriller</button>
@@ -608,7 +608,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateProgress() {
     let count = 0;
     if (moodEl.value.trim()) count++;
-    if (document.querySelector('.chip-group .chip.active')) count++;
+    if (document.querySelector('#genre-group .chip.active')) count++;
     if (occasionEl.value.trim()) count++;
     progressEl.textContent = `${count} of 3 answered`;
     ctaBtn.disabled = count < 3;
@@ -627,20 +627,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (prevOccasion) occasionEl.value = prevOccasion;
 
     prevGenres.forEach(g => {
-      const chip = document.querySelector(`.chip[data-value="${g}"]`);
+      const chip = [...document.querySelectorAll('#genre-group .chip')].find(c => c.dataset.value === g);
       if (chip) { chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true'); }
     });
 
     if (prevRuntime) {
-      const chip = document.querySelector(`#runtime-group .chip[data-value="${prevRuntime}"]`);
+      const chip = [...document.querySelectorAll('#runtime-group .chip')].find(c => c.dataset.value === prevRuntime);
       if (chip) { chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true'); }
     }
     if (prevDecade) {
-      const chip = document.querySelector(`#decade-group .chip[data-value="${prevDecade}"]`);
+      const chip = [...document.querySelectorAll('#decade-group .chip')].find(c => c.dataset.value === prevDecade);
       if (chip) { chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true'); }
     }
     prevPlatforms.forEach(p => {
-      const chip = document.querySelector(`#platform-group .chip[data-value="${p}"]`);
+      const chip = [...document.querySelectorAll('#platform-group .chip')].find(c => c.dataset.value === p);
       if (chip) { chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true'); }
     });
 
@@ -657,7 +657,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // save inputs to localStorage then go to loading
   document.getElementById('form').addEventListener('submit', e => {
     e.preventDefault();
-    const genres    = [...document.querySelectorAll('.chip-group[data-multi="true"] .chip.active')].map(c => c.dataset.value);
+    updateProgress();
+    if (ctaBtn.disabled) return;
+    const genres    = [...document.querySelectorAll('#genre-group .chip.active')].map(c => c.dataset.value);
     const runtime   = document.querySelector('#runtime-group .chip.active')?.dataset.value  || '';
     const decade    = document.querySelector('#decade-group .chip.active')?.dataset.value   || '';
     const platforms = [...document.querySelectorAll('#platform-group .chip.active')].map(c => c.dataset.value);

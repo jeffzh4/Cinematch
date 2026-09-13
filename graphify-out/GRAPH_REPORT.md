@@ -1,13 +1,18 @@
-# Graph Report - .  (2026-09-01)
+# Graph Report - CineMatch  (2026-09-13)
 
 ## Corpus Check
-- 22 files · ~21,746 words
+- 21 files · ~22,231 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 142 nodes · 174 edges · 14 communities (13 shown, 1 thin omitted)
-- Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 12 edges (avg confidence: 0.83)
-- Token cost: 91,435 input · 0 output
+- 174 nodes · 221 edges · 28 communities (13 shown, 15 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.83)
+- Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `87f1a814`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - [[_COMMUNITY_KV-Backed API Endpoints|KV-Backed API Endpoints]]
@@ -22,19 +27,33 @@
 - [[_COMMUNITY_share-og Test Suite|share-og Test Suite]]
 - [[_COMMUNITY_Recommend Handler + Zod Schema|Recommend Handler + Zod Schema]]
 - [[_COMMUNITY_Results Page Screenshot|Results Page Screenshot]]
+- [[_COMMUNITY_Security Test Suite|Security Test Suite]]
 - [[_COMMUNITY_Favicon Icon|Favicon Icon]]
+- [[_COMMUNITY_apiposter.ts (referenced endpoint)|api/poster.ts (referenced endpoint)]]
+- [[_COMMUNITY_apirecommend.ts (referenced endpoint)|api/recommend.ts (referenced endpoint)]]
+- [[_COMMUNITY_CASE_STUDY.md — Design Case Study|CASE_STUDY.md — Design Case Study]]
+- [[_COMMUNITY_Prompt Caching Strategy|Prompt Caching Strategy]]
+- [[_COMMUNITY_V2 Define the data model before the features|V2: Define the data model before the features]]
+- [[_COMMUNITY_V2 Add schema validation at the LLM boundary|V2: Add schema validation at the LLM boundary]]
+- [[_COMMUNITY_V2 Move share-link previews server-side|V2: Move share-link previews server-side]]
+- [[_COMMUNITY_CLAUDE.md — Project Instructions|CLAUDE.md — Project Instructions]]
+- [[_COMMUNITY_Anthropic API (claude-sonnet-4-6)|Anthropic API (claude-sonnet-4-6)]]
+- [[_COMMUNITY_localStorage-based client data flow|localStorage-based client data flow]]
+- [[_COMMUNITY_TMDB API|TMDB API]]
+- [[_COMMUNITY_Vercel KV (Redis)|Vercel KV (Redis)]]
+- [[_COMMUNITY_README.md — Project Overview|README.md — Project Overview]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `kvPipeline()` - 12 edges
-2. `README.md — Project Overview` - 10 edges
-3. `Results Page` - 10 edges
-4. `CineMatch Question Form Screenshot` - 7 edges
-5. `Loading Page` - 7 edges
-6. `CineMatch Landing Page Screenshot` - 5 edges
-7. `rateLimit()` - 4 edges
-8. `handler()` - 4 edges
-9. `index.html — Landing Page` - 4 edges
-10. `TypeScript on the API layer only` - 4 edges
+1. `rateLimit()` - 13 edges
+2. `kvPipeline()` - 12 edges
+3. `applySecurityHeaders()` - 12 edges
+4. `boundedString()` - 12 edges
+5. `Results Page` - 10 edges
+6. `CineMatch — CLAUDE.md` - 8 edges
+7. `CineMatch` - 8 edges
+8. `handler()` - 7 edges
+9. `CineMatch Question Form Screenshot` - 7 edges
+10. `Loading Page` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `CineMatch Question Form Screenshot` --semantically_similar_to--> `form.html — Six-Question Intake Form`  [INFERRED] [semantically similar]
@@ -55,23 +74,16 @@
 - **Form-to-Results Data Flow** — loading, cm_results, results, error [EXTRACTED 0.90]
 - **Noindexed Utility Pages** — analytics, loading, results, favorites [EXTRACTED 0.90]
 - **Favorites Save/Load Flow** — results, cm_favorites, favorites [INFERRED 0.85]
-- **CineMatch Core Recommendation Flow** — form_html, loading_html, results_html, api_recommend_ts [EXTRACTED 0.90]
-- **Brutalist Header + Bottom-Bar Pattern (shared across pages)** — index_html, form_html, about_html, contact_html, error_html, 404_html, analytics_html, results_html, share_html [INFERRED 0.85]
-- **Vercel KV Backed Features (analytics + share)** — analytics_html, share_html, api_analytics_ts, api_share_ts, concept_vercel_kv [INFERRED 0.90]
 
-## Communities (14 total, 1 thin omitted)
+## Communities (28 total, 15 thin omitted)
 
 ### Community 0 - "KV-Backed API Endpoints"
-Cohesion: 0.14
-Nodes (17): AnalyticsEntry, handler(), isRetryableStatus(), kvPipeline(), KVResult, sleep(), handler(), config (+9 more)
-
-### Community 1 - "Docs, Design Rationale, Share Page"
-Cohesion: 0.13
-Nodes (20): api/analytics.ts (referenced endpoint), api/poster.ts (referenced endpoint), api/recommend.ts (referenced endpoint), api/share.ts (referenced endpoint), CASE_STUDY.md — Design Case Study, LLM-generated recommendations over a rules engine, Prompt Caching Strategy, Serverless over a traditional backend (+12 more)
+Cohesion: 0.17
+Nodes (14): isRetryableStatus(), kvPipeline(), KVResult, sleep(), config, Film, handler(), stripTags() (+6 more)
 
 ### Community 2 - "Static Pages + Landing/Form Screenshots"
-Cohesion: 0.12
-Nodes (18): about.html — About Page, cm_genres (localStorage key), cm_mood (localStorage key), contact.html — Contact Page, Accent Purple #a78bff Design Token, Fraunces Serif Display Font, form.html — Six-Question Intake Form, index.html — Landing Page (+10 more)
+Cohesion: 0.11
+Nodes (20): about.html — About Page, api/share.ts (referenced endpoint), cm_genres (localStorage key), cm_mood (localStorage key), contact.html — Contact Page, Accent Purple #a78bff Design Token, Fraunces Serif Display Font, form.html — Six-Question Intake Form (+12 more)
 
 ### Community 3 - "Client localStorage + Page Flow"
 Cohesion: 0.20
@@ -82,8 +94,8 @@ Cohesion: 0.15
 Nodes (12): dependencies, react, @vercel/og, zod, devDependencies, esbuild, @types/node, @types/react (+4 more)
 
 ### Community 5 - "Poster + Security Helpers"
-Cohesion: 0.31
-Nodes (8): handler(), TMDBMovie, TMDBSearchResponse, applySecurityHeaders(), boundedString(), buckets, clientKey(), rateLimit()
+Cohesion: 0.23
+Nodes (16): AnalyticsEntry, handler(), handler(), TMDBMovie, TMDBSearchResponse, FilmSchema, handler(), RecommendationResult (+8 more)
 
 ### Community 6 - "Quality Gate + Contrast Math"
 Cohesion: 0.33
@@ -102,32 +114,34 @@ Cohesion: 0.33
 Nodes (4): ESBUILD_BIN, ORIGINAL_ENV, REPO_ROOT, VALID_ID
 
 ### Community 10 - "Recommend Handler + Zod Schema"
-Cohesion: 0.50
-Nodes (4): FilmSchema, handler(), RecommendationResult, RecommendationResultSchema
+Cohesion: 0.10
+Nodes (19): CineMatch — Case Study, Key Decisions, LLM-generated recommendations over a rules engine, Problem, Prompt caching, Serverless over a traditional backend, TypeScript on the API layer only, Vercel KV for analytics and share links (+11 more)
 
 ### Community 11 - "Results Page Screenshot"
 Cohesion: 0.50
 Nodes (5): Certified Copy Film Card, The Double Life of Véronique Film Card, Editorial Headline Ending in a little longer, User Mood Quote Block, Results Page Explanations Screenshot
 
+### Community 12 - "Security Test Suite"
+Cohesion: 0.17
+Nodes (11): API architecture, Architecture, CineMatch — CLAUDE.md, Claude Prompt Strategy, Current State — Fully Shipped, Data flow, Design System, Environment variables required (+3 more)
+
 ## Knowledge Gaps
-- **56 isolated node(s):** `buckets`, `TMDBMovie`, `TMDBSearchResponse`, `TMDB API`, `Film Frame Icon` (+51 more)
+- **89 isolated node(s):** `KVResult`, `buckets`, `AnalyticsEntry`, `TMDBMovie`, `TMDBSearchResponse` (+84 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **15 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Results Page` connect `Client localStorage + Page Flow` to `KV-Backed API Endpoints`, `Poster + Security Helpers`?**
-  _High betweenness centrality (0.070) - this node is a cross-community bridge._
-- **Why does `Loading Page` connect `Client localStorage + Page Flow` to `KV-Backed API Endpoints`, `Recommend Handler + Zod Schema`?**
-  _High betweenness centrality (0.046) - this node is a cross-community bridge._
-- **Are the 2 inferred relationships involving `CineMatch Question Form Screenshot` (e.g. with `Fraunces Serif Display Font` and `form.html — Six-Question Intake Form`) actually correct?**
-  _`CineMatch Question Form Screenshot` has 2 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `buckets`, `TMDBMovie`, `TMDBSearchResponse` to the rest of the system?**
-  _62 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `KV-Backed API Endpoints` be split into smaller, more focused modules?**
-  _Cohesion score 0.13768115942028986 - nodes in this community are weakly interconnected._
-- **Should `Docs, Design Rationale, Share Page` be split into smaller, more focused modules?**
-  _Cohesion score 0.13157894736842105 - nodes in this community are weakly interconnected._
+- **Why does `Results Page` connect `Client localStorage + Page Flow` to `Poster + Security Helpers`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+- **Why does `kvPipeline()` connect `KV-Backed API Endpoints` to `Poster + Security Helpers`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+- **Why does `Loading Page` connect `Client localStorage + Page Flow` to `Poster + Security Helpers`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **What connects `KVResult`, `buckets`, `AnalyticsEntry` to the rest of the system?**
+  _93 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Static Pages + Landing/Form Screenshots` be split into smaller, more focused modules?**
-  _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
+- **Should `Recommend Handler + Zod Schema` be split into smaller, more focused modules?**
+  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._

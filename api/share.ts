@@ -16,7 +16,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   // ── POST: persist a result set and return a short ID ────────────────────
   if (req.method === 'POST') {
     const body = req.body as Record<string, unknown>;
-    if (!body || !Array.isArray(body.films) || body.films.length !== 6) {
+    if (!body || !Array.isArray(body.films) || body.films.length !== 6 ||
+        body.films.some(film => !film || typeof film !== 'object' || Array.isArray(film) ||
+          typeof film.title !== 'string' || !film.title.trim())) {
       res.status(400).json({ error: 'Invalid payload — expected { headline, films }' });
       return;
     }

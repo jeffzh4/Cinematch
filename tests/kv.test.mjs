@@ -20,6 +20,20 @@ function jsonResponse(status, body) {
 }
 
 describe('kvPipeline', () => {
+  test('does not replay an uncertain LPUSH write', async () => {
+    let calls = 0;
+    global.fetch = async () => { calls++; throw new Error('response lost'); };
+    await assert.rejects(() => kvPipeline([['LPUSH', 'events', 'entry']]), /response lost/);
+    assert.equal(calls, 1);
+  });
+  test('rejects command errors and malformed successful responses without retrying', async () => {
+    for (const payload of [[{ error: 'ERR command failed' }], [], null, [{}]]) {
+      let calls = 0;
+      global.fetch = async () => { calls++; return jsonResponse(200, payload); };
+      await assert.rejects(() => kvPipeline([['SET', 'x', 'value']]), /Invalid KV pipeline response/);
+      assert.equal(calls, 1);
+    }
+  });
   test('throws immediately if KV env vars are missing — no fetch attempted', async () => {
     delete process.env.KV_REST_API_URL;
     let fetchCalled = false;
