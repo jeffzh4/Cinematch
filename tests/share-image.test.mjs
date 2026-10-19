@@ -32,19 +32,22 @@ before(async () => {
         globalThis.__lastImageCall = { element, options };
         this.status = 200;
       }
+      async arrayBuffer() {
+        return Uint8Array.from([137, 80, 78, 71, 13, 10, 26, 10]).buffer;
+      }
     }
   `);
 
-  const outFile = join(workDir, 'handler.mjs');
+  const outFile = join(workDir, 'handler.cjs');
   execFileSync(ESBUILD_BIN, [
     join(REPO_ROOT, 'api', 'share-image.ts'),
-    '--bundle', '--platform=neutral', '--format=esm',
+    '--bundle', '--platform=node', '--format=cjs',
     '--external:@vercel/og',
     `--outfile=${outFile}`,
   ], { stdio: 'pipe' });
 
   const mod = await import(outFile);
-  handler = mod.default;
+  handler = mod.default.default;
   getLastCall = () => globalThis.__lastImageCall;
 });
 
@@ -70,6 +73,19 @@ function resetEnv() {
 
 const VALID_ID = 'a'.repeat(32);
 
+async function invoke(url, method = 'GET') {
+  const parsed = new URL(url);
+  const res = {
+    statusCode: 200,
+    headers: {},
+    setHeader(name, value) { this.headers[name] = value; },
+    status(code) { this.statusCode = code; return this; },
+    end(body) { this.body = body; },
+  };
+  await handler({ method, query: Object.fromEntries(parsed.searchParams) }, res);
+  return { ...res, status: res.statusCode };
+}
+
 describe('api/share-image handler (bundled via esbuild)', () => {
   test('valid id + KV hit: renders headline (em stripped) and first 3 film titles', async () => {
     resetEnv();
@@ -81,9 +97,10 @@ describe('api/share-image handler (bundled via esbuild)', () => {
       }) }],
     });
 
-    const req = new Request(`https://example.com/api/share-image?id=${VALID_ID}`);
-    const res = await handler(req);
+    const res = await invoke(`https://example.com/api/share-image?id=${VALID_ID}`);
     assert.equal(res.status, 200);
+    assert.equal(res.headers['Content-Type'], 'image/png');
+    assert.deepEqual([...res.body], [137, 80, 78, 71, 13, 10, 26, 10]);
 
     const { element, options } = getLastCall();
     assert.deepEqual(options, { width: 1200, height: 630 });
@@ -99,8 +116,7 @@ describe('api/share-image handler (bundled via esbuild)', () => {
 
   test('invalid id format: falls back to generic headline, status 200', async () => {
     resetEnv();
-    const req = new Request('https://example.com/api/share-image?id=not-valid');
-    const res = await handler(req);
+    const res = await invoke('https://example.com/api/share-image?id=not-valid');
     assert.equal(res.status, 200);
     assert.ok(flattenText(getLastCall().element).includes('Six films, picked for you'));
     process.env = { ...ORIGINAL_ENV };
@@ -109,8 +125,7 @@ describe('api/share-image handler (bundled via esbuild)', () => {
   test('KV miss: falls back to generic headline, status 200', async () => {
     resetEnv();
     global.fetch = async () => ({ ok: true, status: 200, json: async () => [{ result: null }] });
-    const req = new Request(`https://example.com/api/share-image?id=${VALID_ID}`);
-    const res = await handler(req);
+    const res = await invoke(`https://example.com/api/share-image?id=${VALID_ID}`);
     assert.equal(res.status, 200);
     assert.ok(flattenText(getLastCall().element).includes('Six films, picked for you'));
     global.fetch = ORIGINAL_FETCH;
@@ -120,11 +135,16 @@ describe('api/share-image handler (bundled via esbuild)', () => {
   test('KV throws: never fails the image response, status 200', async () => {
     resetEnv();
     global.fetch = async () => { throw new Error('network down'); };
-    const req = new Request(`https://example.com/api/share-image?id=${VALID_ID}`);
-    const res = await handler(req);
+    const res = await invoke(`https://example.com/api/share-image?id=${VALID_ID}`);
     assert.equal(res.status, 200);
     assert.ok(flattenText(getLastCall().element).includes('Six films, picked for you'));
     global.fetch = ORIGINAL_FETCH;
     process.env = { ...ORIGINAL_ENV };
+  });
+
+  test('rejects unsupported methods', async () => {
+    const res = await invoke('https://example.com/api/share-image', 'POST');
+    assert.equal(res.status, 405);
+    assert.equal(res.headers.Allow, 'GET');
   });
 });

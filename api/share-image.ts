@@ -1,23 +1,8 @@
-// Vercel Edge Function: generates a per-share PNG image with the real
-// headline and top film titles for a share link, using @vercel/og (Satori).
-// Reached from api/share-og.ts as the og:image URL. Never reached by a
-// regular browser — only referenced inside crawler-served HTML.
-//
-// Edge runtime, not Node: @vercel/og's ImageResponse requires it. _kv.ts
-// only uses fetch (no Node-only APIs), so it works unchanged here too.
-//
-// Plain React.createElement calls, no JSX: this is a .ts file (not .tsx)
-// so Vercel's file-based routing reliably detects it as an API route —
-// api/share-image.tsx was silently never registered by Vercel's build
-// (clean 404, not a runtime error), most likely because .tsx isn't in its
-// auto-detected api/ function extension list. Rather than guess at that
-// further, this sidesteps the whole question: no JSX means no JSX
-// transform to depend on either.
+// Node function generating per-share PNG previews for api/share-og.ts.
+// Use the Node renderer: its dependencies are unsupported in Edge bundles.
 
-export const config = { runtime: 'edge' };
-
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createElement, type ReactElement } from 'react';
-import { ImageResponse } from '@vercel/og';
 import { kvPipeline } from './_kv';
 
 function stripTags(s: string): string {
@@ -28,9 +13,15 @@ interface Film {
   title?: string;
 }
 
-export default async function handler(req: Request): Promise<Response> {
-  const url = new URL(req.url);
-  const id  = (url.searchParams.get('id') || '').trim();
+export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', 'GET');
+    res.status(405).end();
+    return;
+  }
+  // Preserve ESM loading when Vercel compiles this CommonJS project.
+  const { ImageResponse } = await import('@vercel/og');
+  const id = typeof req.query.id === 'string' ? req.query.id.trim() : '';
 
   let headline = 'Six films, picked for you';
   let filmLine = '';
@@ -74,7 +65,7 @@ export default async function handler(req: Request): Promise<Response> {
     );
   }
 
-  return new ImageResponse(
+  const image = new ImageResponse(
     createElement(
       'div',
       {
@@ -92,4 +83,7 @@ export default async function handler(req: Request): Promise<Response> {
     ),
     { width: 1200, height: 630 },
   );
+  const png = Buffer.from(await image.arrayBuffer());
+  res.setHeader('Content-Type', 'image/png');
+  res.status(200).end(png);
 }
