@@ -1,5 +1,10 @@
 # CineMatch — CLAUDE.md
 
+## Local code graph
+- For codebase and architecture questions, query `graphify-out/graph.json` first.
+- Run `graphify update .` when source files have changed since the graph was built.
+- Keep `graphify-out/` local; it is generated working context and must not be committed.
+
 ## Project Overview
 CineMatch is a personalized movie recommendation web app. Users answer up to six questions (three required, three optional filters) and receive 6 tailored film picks with spoiler-free explanations powered by Claude's API.
 
@@ -9,9 +14,9 @@ CineMatch is a personalized movie recommendation web app. Users answer up to six
 
 ---
 
-## Current State — Fully Shipped
+## Current State
 
-All pages are live, API-connected, and deployed on Vercel.
+The repository contains the following pages and Vercel API routes. Check the live deployment before assuming a recent push completed successfully.
 
 | File | Purpose | Status |
 |---|---|---|
@@ -21,6 +26,7 @@ All pages are live, API-connected, and deployed on Vercel.
 | `results.html` | Dynamic film cards + TMDB posters + share button | ✅ Complete |
 | `share.html` | Shared results card (read-only, `?id=xxx`) | ✅ Complete |
 | `analytics.html` | Usage dashboard via Vercel KV | ✅ Complete |
+| `favorites.html` | Browser-local saved films | ✅ Complete |
 | `error.html` | Error fallback ("Erm.") | ✅ Complete |
 | `404.html` | Custom 404 ("Wrong reel.") | ✅ Complete |
 | `about.html` | Project description | ✅ Complete |
@@ -34,6 +40,8 @@ All pages are live, API-connected, and deployed on Vercel.
 | `api/poster.ts` | Proxies TMDB poster search |
 | `api/analytics.ts` | Logs to / reads from Vercel KV |
 | `api/share.ts` | Stores / retrieves shareable result sets (30-day TTL) |
+| `api/share-og.ts` | Serves crawler metadata for shared lists |
+| `api/share-image.ts` | Generates crawler preview images |
 
 ---
 
@@ -41,7 +49,7 @@ All pages are live, API-connected, and deployed on Vercel.
 Preserve this across all changes — the aesthetic is intentional and polished.
 
 - **Background:** `#0c0c0c`
-- **Ink:** `#f5f5f0` / muted `#a8a8a3` / faint `#5a5a58`
+- **Ink:** `#f5f5f0` / muted `#a8a8a3` / faint `#8f8f89`
 - **Accent:** `#a78bff` (purple) / deep `#6b48d6`
 - **Fonts:** Fraunces (serif, display) + JetBrains Mono (labels, metadata)
 - **Motion:** `cubic-bezier(.2, .7, .2, 1)`, film grain overlay fixed at z-index 100

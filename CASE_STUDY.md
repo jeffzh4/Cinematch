@@ -6,9 +6,9 @@
 
 ## Problem
 
-Streaming catalogs have solved supply, not decision-making. The interface pattern across major platforms — infinite grids, engagement-optimized ranking, algorithmic rows — increases browsing time without improving match quality. The cost of choosing frequently exceeds the cost of watching.
+I built CineMatch around a familiar problem: opening a streaming app with a film in mind, then spending the evening browsing. Large catalogs offer plenty of choice but do little to narrow it to a film that fits a particular mood.
 
-CineMatch's product bet: replace browsing with a single structured decision. Three inputs (mood, genre, occasion) in, six ranked recommendations with individual rationale out. No infinite scroll, no ranking games — a direct answer.
+The app asks for mood, genre, and occasion, then returns six recommendations with a reason for each. Runtime, decade, and streaming service are optional filters.
 
 ---
 
@@ -16,34 +16,34 @@ CineMatch's product bet: replace browsing with a single structured decision. Thr
 
 ### Serverless over a traditional backend
 
-The product has no persistent user data and no auth requirement — every session is stateless by design. A traditional backend (database, ORM, auth middleware) would have added operational surface with no corresponding product benefit. Vercel serverless functions cover the actual requirement — proxy two external APIs, keep credentials server-side — at effectively zero infrastructure cost and zero maintenance burden.
+There are no user accounts. The browser keeps favorites and the current recommendation in local storage. Vercel functions call Anthropic and TMDB while keeping their API keys on the server. Vercel KV stores analytics entries and share links, so a database and account system were not needed for this version.
 
-**Trade-off accepted:** no persistent user history across sessions. Given the target use case (a single, in-the-moment recommendation request), this was judged acceptable rather than a gap to solve for.
+The trade-off is that favorites stay on one browser. Analytics also stores submitted mood and occasion text with a timestamp, without account details. Share links expire after 30 days.
 
 ### LLM-generated recommendations over a rules engine
 
-An earlier approach — genre × mood mapped to a static candidate list — produced results that were technically relevant but qualitatively flat. "A rainy Sunday alone" is not reducible to a genre filter; it's a request for a specific *feeling*, which a lookup table cannot represent.
+I tried mapping mood and genre to a fixed list. It returned relevant titles, but missed the difference between requests like “a rainy Sunday alone” and “something tense for a group.”
 
-Claude is used to generate both the selection and the per-film rationale in a single pass, prompted explicitly to act as a curator rather than a search function — avoiding spoilers, avoiding generic recommendation-copy clichés, and varying era/geography rather than defaulting to the most obvious match. This produces output that reads as considered rather than templated, which is the actual product differentiator.
+Claude generates the film list and explanations in one request. The prompt asks for spoiler-free reasons and allows the model to consider era and country alongside the user's answers. Recommendations can still be inaccurate; the app does not verify every title or streaming-service listing.
 
 ### Prompt caching
 
-The system prompt (~450 tokens) is static across all requests. Anthropic's prompt caching means the first request in a caching window pays full input cost; every subsequent request within that window pays roughly 10% of it. At any meaningful request volume — or simply during a multi-query demo session — this is a direct, compounding cost reduction with no product-facing trade-off.
+The system prompt is the same for every request, so the API marks it for Anthropic prompt caching. This can lower repeat input-token costs during the cache window. It does not change what the user sees.
 
 ### TypeScript on the API layer only
 
-The four serverless functions (`recommend`, `poster`, `analytics`, `share`) are TypeScript with explicit interfaces for all request/response shapes. This is the boundary where a schema mismatch — malformed LLM output, an unexpected TMDB response — would otherwise surface as a silent runtime failure. Typing this layer catches that class of bug before it reaches the client. The client itself remains plain JS; a full-stack TypeScript conversion was evaluated and rejected as effort without proportional return, given the client has no complex state to model.
+The API functions use TypeScript. Recommendation output is checked with Zod before it reaches the browser. The static pages use plain JavaScript; keeping the client framework-free made sense for this small set of pages.
 
 ### Vercel KV for analytics and share links
 
-Two features required lightweight persistence without justifying a database: anonymized usage logging (mood/genre/occasion frequency, feeding the analytics dashboard) and shareable result links (30-day TTL, no auth). Vercel KV — Redis-compatible, free at this scale — covers both with key-value operations only (`LPUSH`/`LRANGE` for logs, `SET`/`GET` with TTL for shares). No ORM, no schema, no migration path to maintain.
+KV stores recommendation inputs for the analytics dashboard and result sets for share links. These are separate records: analytics uses a list; share links use keys with a 30-day expiry. The dashboard is public, so its recent mood and occasion examples should be treated as public text.
 
 ---
 
-## What I'd Revisit for a V2
+## What I'd Improve Next
 
-**Define the data model before the features, not during.** The `localStorage`-first approach was correct for the MVP but created retrofit cost when share links and analytics were added later — the shape of what gets persisted evolved ad hoc rather than being specified up front. A typed schema defined before the first feature that needed persistence would have made the second and third features cheaper to add, not just the first.
+**Add sign-in and sync only if people need cross-device favorites.** Favorites currently live in one browser. Sync would need accounts and a clear data-retention policy, neither of which this version has.
 
-**Add schema validation at the LLM boundary.** The current implementation checks response shape manually (`Array.isArray(...)`, length checks). A validation library (Zod or equivalent) would express the expected schema declaratively, fail with a clearer error when Claude returns an edge case, and reduce the manual-check surface as the schema grows.
+**Use shared schemas for every API payload.** Recommendation output already uses Zod. Share input still uses manual field checks; a schema there would make accepted values and limits easier to review.
 
-**Move share-link previews server-side.** Share links currently carry static Open Graph tags — accurate at the brand level, generic at the individual-link level. A Vercel Edge Function intercepting `/share?id=` and injecting the actual headline and film list into response-level meta tags would produce accurate rich previews on social platforms. Scoped as a v2 item: real product value, non-trivial to get right (edge runtime constraints, cache invalidation), and not blocking for the core product loop.
+**Replace per-instance rate limits if traffic grows.** Current limits live in process memory, so separate serverless instances do not share counts. A shared limiter would apply one quota across instances and deployments.

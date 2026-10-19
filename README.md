@@ -1,32 +1,24 @@
 # CineMatch
 
-CineMatch is a movie recommendation product that replaces browsing with a single decision point: answer three questions, receive six curated picks with spoiler-free rationale. It targets the choice-fatigue problem inherent to modern streaming catalogs — more titles, worse discovery.
+Describe your mood, choose a genre, and name the occasion. CineMatch returns six films with spoiler-free explanations.
 
 **Live:** https://cinematch-navy.vercel.app
 **Repository:** https://github.com/jeffzh4/Cinematch
 
 ---
 
-## Product Summary
+## How it works
 
-| | |
-|---|---|
-| **Problem** | Streaming discovery UIs optimize for engagement, not decision quality. Users spend more time browsing than watching. |
-| **Solution** | A three-question intake (mood, genre, occasion) converted into a structured LLM prompt, returning six ranked recommendations with individual justifications. |
-| **Differentiator** | Recommendation reasoning is generated per-user, not retrieved from a static catalog — output reflects the specific input, not a genre-matched template. |
+1. Answer three questions; optionally filter by runtime, decade, or platform.
+2. A Vercel function calls Claude for six films and a headline as JSON.
+3. Results display explanations and TMDB posters. Films can be saved locally or shared.
+4. Failed recommendations open an error page.
 
-### How it works
-
-1. User completes a three-question intake; three additional filters (runtime, decade, platform) are optional.
-2. Input is sent to a serverless endpoint that constructs a prompt and calls the Claude API.
-3. Claude returns six films and a headline as structured JSON.
-4. The results view renders the films and resolves poster art via TMDB.
-5. Results can be shared via a generated link (stored with a 30-day retention window) or reviewed in an aggregate usage dashboard.
-6. Failure states — malformed input, upstream API errors, missing data — route to a dedicated error page rather than failing silently.
+The public analytics page includes submitted mood and occasion text, filters, and timestamps, without account details. Shared recommendations expire after 30 days.
 
 ---
 
-## Product Surface
+## Pages
 
 | Page | Function |
 |---|---|
@@ -34,13 +26,14 @@ CineMatch is a movie recommendation product that replaces browsing with a single
 | `form.html` | Intake — three required questions, three optional filters |
 | `loading.html` | Recommendation request in flight |
 | `results.html` | Recommendation output, poster art, share action |
+| `favorites.html` | Films saved in this browser |
 | `share.html` | Read-only view of a shared result set (`?id=`) |
 | `analytics.html` | Aggregate usage dashboard — genre distribution, mood/occasion trends |
 | `error.html` | Failure state |
 | `404.html` | Not-found state |
 | `about.html`, `contact.html` | Supporting pages |
 
-## API Surface
+## API routes
 
 | Endpoint | Function |
 |---|---|
@@ -50,8 +43,10 @@ CineMatch is a movie recommendation product that replaces browsing with a single
 | `GET /api/analytics` | Returns aggregated usage statistics |
 | `POST /api/share` | Persists a result set, returns a share link |
 | `GET /api/share?id=` | Retrieves a persisted result set |
+| `/api/share-og` | Serves crawler metadata for a shared list |
+| `/api/share-image?id=` | Generates a preview image for a shared list |
 
-All endpoints are implemented in TypeScript. Credentials are read from server-side environment variables only; no key material is present in client-served code.
+TypeScript endpoints read credentials from server environment variables; keys never reach the browser.
 
 ---
 
@@ -86,7 +81,7 @@ flowchart LR
     VFA -->|"aggregated stats"| Analytics["analytics.html"]
 ```
 
-The application has no database and no user accounts. State is either client-side (`localStorage`, single session) or ephemeral server-side (Vercel KV, time-bounded). This keeps operational surface area minimal — no schema migrations, no auth layer, no persistent user data to secure.
+Favorites and current results stay in browser storage. Analytics and shares use Vercel KV.
 
 ---
 
@@ -102,7 +97,7 @@ The application has no database and no user accounts. State is either client-sid
    ```
 3. Run `vercel dev` and open the printed URL.
 
-Local development uses the same serverless proxy path as production — no separate dev-only code branch.
+Local development uses the production API routes.
 
 ---
 
@@ -124,12 +119,12 @@ Local development uses the same serverless proxy path as production — no separ
 ## Stack
 
 - HTML/CSS/vanilla JS on the client — no framework, no build step
-- TypeScript for all serverless functions
-- Claude (`claude-sonnet-4-6`) with prompt caching for recommendation generation
-- TMDB for poster art resolution
+- TypeScript serverless functions
+- Claude (`claude-sonnet-4-6`) with prompt caching
+- TMDB poster art
 - Vercel KV (Redis) for analytics and share-link storage
 - Vercel for hosting and serverless compute
 
-See [CASE_STUDY.md](./CASE_STUDY.md) for the reasoning behind these choices, including trade-offs and what would change in a v2.
+See [CASE_STUDY.md](./CASE_STUDY.md) for implementation decisions and remaining trade-offs.
 
 Built by Jeffrey Zhang, 2026.
