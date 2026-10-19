@@ -6,9 +6,9 @@
 
 ## Problem
 
-I built CineMatch around a familiar problem: opening a streaming app with a film in mind, then spending the evening browsing. Large catalogs offer plenty of choice but do little to narrow it to a film that fits a particular mood.
+I built CineMatch for evenings spent browsing instead of watching. Large catalogs offer plenty of choice but rarely narrow it to a film that fits a particular mood.
 
-The app asks for mood, genre, and occasion, then returns six recommendations with a reason for each. Runtime, decade, and streaming service are optional filters.
+Mood, genre, and occasion produce six recommendations with explanations. Runtime, decade, and streaming service are optional filters.
 
 ---
 
@@ -18,7 +18,7 @@ The app asks for mood, genre, and occasion, then returns six recommendations wit
 
 There are no user accounts. The browser keeps favorites and the current recommendation in local storage. Vercel functions call Anthropic and TMDB while keeping their API keys on the server. Vercel KV stores analytics entries and share links, so a database and account system were not needed for this version.
 
-The trade-off is that favorites stay on one browser. Analytics also stores submitted mood and occasion text with a timestamp, without account details. Share links expire after 30 days.
+Favorites stay on one browser. Analytics stores submitted mood and occasion text with timestamps, without account details. Share links expire after 30 days.
 
 ### LLM-generated recommendations over a rules engine
 
@@ -28,11 +28,11 @@ Claude generates the film list and explanations in one request. The prompt asks 
 
 ### Prompt caching
 
-The system prompt is the same for every request, so the API marks it for Anthropic prompt caching. This can lower repeat input-token costs during the cache window. It does not change what the user sees.
+The API marks its fixed system prompt for Anthropic prompt caching, which can lower repeat input-token costs during the cache window without changing results.
 
 ### TypeScript on the API layer only
 
-The API functions use TypeScript. Recommendation output is checked with Zod before it reaches the browser. The static pages use plain JavaScript; keeping the client framework-free made sense for this small set of pages.
+The API uses TypeScript and checks recommendation output with Zod. Static pages use plain JavaScript; a framework-free client suited this small set of pages.
 
 ### Vercel KV for analytics and share links
 

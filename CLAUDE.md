@@ -1,12 +1,12 @@
 # CineMatch — CLAUDE.md
 
 ## Local code graph
-- For codebase and architecture questions, query `graphify-out/graph.json` first.
-- Run `graphify update .` when source files have changed since the graph was built.
-- Keep `graphify-out/` local; it is generated working context and must not be committed.
+- Query `graphify-out/graph.json` first for codebase and architecture questions.
+- Run `graphify update .` after source changes.
+- Keep `graphify-out/` local and uncommitted.
 
 ## Project Overview
-CineMatch is a personalized movie recommendation web app. Users answer up to six questions (three required, three optional filters) and receive 6 tailored film picks with spoiler-free explanations powered by Claude's API.
+CineMatch returns six films with spoiler-free explanations from Claude. Users answer three required questions with three optional filters.
 
 **Deadline:** May 29th, 2026 (delivered)
 **Live URL:** https://cinematch-navy.vercel.app
@@ -16,7 +16,7 @@ CineMatch is a personalized movie recommendation web app. Users answer up to six
 
 ## Current State
 
-The repository contains the following pages and Vercel API routes. Check the live deployment before assuming a recent push completed successfully.
+Pages and Vercel routes below. Confirm deployment status after pushes.
 
 | File | Purpose | Status |
 |---|---|---|
@@ -46,7 +46,7 @@ The repository contains the following pages and Vercel API routes. Check the liv
 ---
 
 ## Design System
-Preserve this across all changes — the aesthetic is intentional and polished.
+Preserve these design choices:
 
 - **Background:** `#0c0c0c`
 - **Ink:** `#f5f5f0` / muted `#a8a8a3` / faint `#8f8f89`
@@ -103,12 +103,12 @@ form.html → localStorage → loading.html → /api/recommend → Anthropic API
 The system prompt instructs Claude to:
 - Act as a film curator, not a search engine
 - Return exactly 6 films in a consistent JSON schema
-- Write reasons in 2–3 sentences, in a voice matching the editorial tone of the UI (literary, not listicle)
+- Write 2–3 sentence reasons matching the UI's literary voice
 - Never spoil plot twists, endings, or reveals
 - Weight toward lesser-known films when mood/occasion allow
 - Honour optional runtime/decade/platform preferences as soft constraints
 
-Prompt caching is applied via `cache_control: { type: 'ephemeral' }` on the system prompt, reducing cost by ~90% after the first request in a 5-minute window.
+The system prompt uses `cache_control: { type: 'ephemeral' }`; eligible cache hits can reduce input-token costs.
 
 ---
 
@@ -118,4 +118,4 @@ Prompt caching is applied via `cache_control: { type: 'ephemeral' }` on the syst
 - The editorial copy voice ("For a slow night that asks nothing of you")
 - The zigzag layout pattern on results
 - The brutalist header + bottom-bar pattern shared across all pages
-- API keys must stay in server-side environment variables — never commit or expose them to browser code
+- Keep API keys in server environment variables; never commit them.
