@@ -16,7 +16,7 @@ Mood, genre, and occasion produce six recommendations with explanations. Runtime
 
 ### Serverless over a traditional backend
 
-There are no user accounts. The browser keeps favorites and the current recommendation in local storage. Vercel functions call Anthropic and TMDB while keeping their API keys on the server. Vercel KV stores analytics entries and share links, so a database and account system were not needed for this version.
+The browser keeps favorites and current recommendations in local storage, without accounts. Vercel functions call Anthropic and TMDB, keeping API keys on the server. Vercel KV stores analytics and share links; this version needs no separate database or account system.
 
 Favorites stay on one browser. Analytics stores submitted mood and occasion text with timestamps, without account details. Share links expire after 30 days.
 
@@ -24,7 +24,7 @@ Favorites stay on one browser. Analytics stores submitted mood and occasion text
 
 I tried mapping mood and genre to a fixed list. It returned relevant titles, but missed the difference between requests like “a rainy Sunday alone” and “something tense for a group.”
 
-Claude generates the film list and explanations in one request. The prompt asks for spoiler-free reasons and allows the model to consider era and country alongside the user's answers. Recommendations can still be inaccurate; the app does not verify every title or streaming-service listing.
+Claude generates films and explanations in one request. The prompt asks for spoiler-free reasons, considering era, country, and the user's answers. Recommendations can be inaccurate; the app does not verify every title or streaming-service listing.
 
 ### Prompt caching
 
@@ -44,6 +44,6 @@ KV stores recommendation inputs for the analytics dashboard and result sets for 
 
 **Add sign-in and sync only if people need cross-device favorites.** Favorites currently live in one browser. Sync would need accounts and a clear data-retention policy, neither of which this version has.
 
-**Use shared schemas for every API payload.** Recommendation output already uses Zod. Share input still uses manual field checks; a schema there would make accepted values and limits easier to review.
+**Use shared schemas for every API payload.** Recommendation output uses Zod. Share input uses manual checks; a schema would clarify accepted values and limits.
 
 **Replace per-instance rate limits if traffic grows.** Current limits live in process memory, so separate serverless instances do not share counts. A shared limiter would apply one quota across instances and deployments.
