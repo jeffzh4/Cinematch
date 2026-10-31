@@ -16,15 +16,15 @@ CineMatch returns six films with spoiler-free explanations from Claude. Users an
 
 ## Current State
 
-Pages and Vercel routes below. Confirm deployment status after pushes.
+Confirm deployment status after pushes.
 
 | File | Purpose | Status |
 |---|---|---|
 | `index.html` | Landing page | ✅ Complete |
 | `form.html` | Six-question form (3 required + 3 optional filters) | ✅ Complete |
 | `loading.html` | Calls recommendation API, logs analytics | ✅ Complete |
-| `results.html` | Dynamic film cards + TMDB posters + share button | ✅ Complete |
-| `share.html` | Shared results card (read-only, `?id=xxx`) | ✅ Complete |
+| `results.html` | Film cards, TMDB posters, sharing | ✅ Complete |
+| `share.html` | Read-only shared results (`?id=xxx`) | ✅ Complete |
 | `analytics.html` | Usage dashboard via Vercel KV | ✅ Complete |
 | `favorites.html` | Browser-local saved films | ✅ Complete |
 | `error.html` | Error fallback ("Erm.") | ✅ Complete |
@@ -36,12 +36,12 @@ Pages and Vercel routes below. Confirm deployment status after pushes.
 
 | File | Purpose |
 |---|---|
-| `api/recommend.ts` | Proxies Anthropic API with prompt caching |
+| `api/recommend.ts` | Anthropic proxy with prompt caching |
 | `api/poster.ts` | Proxies TMDB poster search |
 | `api/analytics.ts` | Logs to / reads from Vercel KV |
-| `api/share.ts` | Stores / retrieves shareable result sets (30-day TTL) |
-| `api/share-og.ts` | Serves crawler metadata for shared lists |
-| `api/share-image.ts` | Generates crawler preview images |
+| `api/share.ts` | Stores/retrieves shared results (30-day TTL) |
+| `api/share-og.ts` | Shared-list crawler metadata |
+| `api/share-image.ts` | Crawler preview images |
 
 ---
 
@@ -73,7 +73,7 @@ form.html → localStorage → loading.html → /api/recommend → Anthropic API
 ```
 
 ### API architecture
-- **All environments:** calls Vercel serverless proxies; provider keys never enter browser code
+- **All environments:** Vercel proxies keep provider keys server-side
 
 ### Environment variables required
 - `ANTHROPIC_API_KEY` — Anthropic API key
@@ -95,14 +95,14 @@ form.html → localStorage → loading.html → /api/recommend → Anthropic API
 | `cm_decade` | string | e.g. `"1980s"`, `"recent"` (optional) |
 | `cm_platforms` | JSON array | e.g. `["Netflix","Max"]` (optional) |
 | `cm_results` | JSON object | Full Claude response `{ headline, films[] }` |
-| `cm_refine` | `"1"` | Single-use flag — pre-populates form on "Refine your mood" |
+| `cm_refine` | `"1"` | Restores form on "Refine your mood"; single-use |
 
 ---
 
 ## Claude Prompt Strategy
-The system prompt instructs Claude to:
+The prompt asks Claude to:
 - Act as a film curator, not a search engine
-- Return exactly 6 films in a consistent JSON schema
+- Return exactly 6 films using the JSON schema
 - Write 2–3 sentence reasons matching the UI's literary voice
 - Never spoil plot twists, endings, or reveals
 - Weight toward lesser-known films when mood/occasion allow
@@ -113,9 +113,9 @@ The system prompt uses `cache_control: { type: 'ephemeral' }`; eligible cache hi
 ---
 
 ## What NOT to Change
-- The overall page flow (`index` → `form` → `loading` → `results`)
+- Page flow (`index` → `form` → `loading` → `results`)
 - The visual design system (colors, fonts, grain, animations)
 - The editorial copy voice ("For a slow night that asks nothing of you")
-- The zigzag layout pattern on results
-- The brutalist header + bottom-bar pattern shared across all pages
+- Results' zigzag layout
+- Shared brutalist header and bottom bar
 - Keep API keys in server environment variables; never commit them.

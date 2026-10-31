@@ -23,12 +23,12 @@ The public analytics page includes submitted mood and occasion text, filters, an
 | Page | Function |
 |---|---|
 | `index.html` | Landing |
-| `form.html` | Intake — three required questions, three optional filters |
-| `loading.html` | Recommendation request in flight |
-| `results.html` | Recommendation output, poster art, share action |
+| `form.html` | Three required questions, three optional filters |
+| `loading.html` | Requests recommendations |
+| `results.html` | Recommendations, posters, sharing |
 | `favorites.html` | Films saved in this browser |
-| `share.html` | Read-only view of a shared result set (`?id=`) |
-| `analytics.html` | Aggregate usage dashboard — genre distribution, mood/occasion trends |
+| `share.html` | Read-only shared results (`?id=`) |
+| `analytics.html` | Usage totals, genres, moods, occasions |
 | `error.html` | Failure state |
 | `404.html` | Not-found state |
 | `about.html`, `contact.html` | Supporting pages |
@@ -37,12 +37,12 @@ The public analytics page includes submitted mood and occasion text, filters, an
 
 | Endpoint | Function |
 |---|---|
-| `POST /api/recommend` | Accepts `{ mood, genres, occasion, runtime?, decade?, platforms? }`, returns structured recommendation JSON |
+| `POST /api/recommend` | Accepts `{ mood, genres, occasion, runtime?, decade?, platforms? }`, returns recommendation JSON |
 | `GET /api/poster?title=&year=` | Resolves poster art via TMDB |
 | `POST /api/analytics` | Logs an anonymized usage event |
 | `GET /api/analytics` | Returns aggregated usage statistics |
-| `POST /api/share` | Persists a result set, returns a share link |
-| `GET /api/share?id=` | Retrieves a persisted result set |
+| `POST /api/share` | Stores results, returns a share link |
+| `GET /api/share?id=` | Retrieves shared results |
 | `/api/share-og` | Serves crawler metadata for a shared list |
 | `/api/share-image?id=` | Generates a preview image for a shared list |
 
@@ -104,9 +104,9 @@ Local development uses the production API routes.
 ## Deployment
 
 1. Push the repository to GitHub.
-2. In Vercel, import the repository as a new project.
+2. Import the repository into Vercel.
 3. Set environment variables: `ANTHROPIC_API_KEY`, `TMDB_API_KEY`, and optionally `ANTHROPIC_MODEL` (defaults to `claude-sonnet-4-6`).
-4. Deploy. Static assets and serverless functions are detected automatically — no build configuration required.
+4. Deploy. Vercel detects static assets and serverless functions automatically.
 
 ### Vercel KV (required for analytics and share links)
 
@@ -125,6 +125,6 @@ Local development uses the production API routes.
 - Vercel KV (Redis) for analytics and share-link storage
 - Vercel for hosting and serverless compute
 
-See [CASE_STUDY.md](./CASE_STUDY.md) for implementation decisions and remaining trade-offs.
+See [CASE_STUDY.md](./CASE_STUDY.md) for decisions and trade-offs.
 
 Built by Jeffrey Zhang, 2026.
