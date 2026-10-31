@@ -8,3 +8,5 @@ config.local.js
 node_modules/
 _error_*.html
 graphify-out/
+output/
+tmp/
