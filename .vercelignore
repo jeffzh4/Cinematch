@@ -1,0 +1,7 @@
+graphify-out/
+output/
+tmp/
+tests/
+.claude/
+config.local.js
+*.md

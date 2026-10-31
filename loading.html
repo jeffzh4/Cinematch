@@ -6,8 +6,6 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="site.webmanifest">
 <link rel="canonical" href="https://cinematch-navy.vercel.app/loading.html">
-<link rel="dns-prefetch" href="https://api.anthropic.com">
-<link rel="dns-prefetch" href="https://api.themoviedb.org">
 <title>CineMatch — Choosing your six</title>
 <meta name="description" content="CineMatch is preparing six film recommendations for you.">
 <meta property="og:title" content="CineMatch — Choosing your six">
@@ -231,47 +229,6 @@ const platforms = readStoredArray('cm_platforms');
 
 // step1 lights up immediately — we've read the inputs
 document.getElementById('step1').classList.add('active');
-
-const SYSTEM_PROMPT = `You are CineMatch, a film curator with deep knowledge across world cinema, decades, and genres. Given a person's mood, preferred genres, and the occasion, recommend exactly 6 films that match what they're truly looking for.
-
-For each film, write a 2-3 sentence reason that:
-- Explains why this film fits their specific input
-- Captures the film's essence in literary, evocative prose
-- NEVER reveals plot twists, endings, or spoilers
-- Avoids cliché phrasing like "must-watch", "epic", or "hidden gem"
-
-Lean toward quality and intentionality. Don't always default to the most obvious title — surprise them when appropriate. Mix well-known and lesser-known films. Vary the decade and country of origin when it serves the request.
-
-Respond with ONLY a JSON object in this exact schema, no other text:
-
-{
-  "headline": "A brief literary phrase capturing the vibe of their request. You may include a single <em>word</em> for emphasis (rendered in purple) and an optional <br> for a line break. Maximum 12 words. Example: 'For a slow night<br>that asks <em>nothing</em> of you.'",
-  "films": [
-    {
-      "num": 1,
-      "title": "Film Title",
-      "director": "Director Name",
-      "year": 2003,
-      "runtime": 102,
-      "genre": "Drama",
-      "rating": 4.2,
-      "reason": "2-3 sentence spoiler-free explanation tailored to their input."
-    }
-  ]
-}
-
-Return runtime in minutes (integer), year as an integer, rating as a number out of 5 (one decimal). Return exactly 6 films. Output valid JSON only — no markdown, no code fences, no commentary.
-
-If the user provides optional preferences (runtime, decade, streaming platforms), use them to refine your picks. Weight toward films matching those constraints but do not exclude an otherwise ideal match because it falls slightly outside them. Streaming availability changes frequently — treat platform hints as a soft preference only.`;
-
-const userMessage = [
-  `Mood: ${mood || '(not specified)'}`,
-  `Genres: ${genres.length ? genres.join(', ') : '(no preference)'}`,
-  `Occasion: ${occasion || '(not specified)'}`,
-  ...(runtime          ? [`Runtime preference: ${runtime}`]                          : []),
-  ...(decade           ? [`Decade preference: ${decade}`]                            : []),
-  ...(platforms.length ? [`Streaming platforms available: ${platforms.join(', ')}`]  : []),
-].join('\n');
 
 // API keys stay server-side in all environments. A 30-second timeout prevents
 // the page hanging indefinitely when the proxy or provider is unavailable.
