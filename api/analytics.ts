@@ -1,8 +1,4 @@
-// Vercel serverless function: anonymised usage analytics via Vercel KV.
-// Requires KV_REST_API_URL and KV_REST_API_TOKEN in environment variables.
-//
-// POST — log an anonymised recommendation entry (called from loading.html)
-// GET  — return aggregated stats (used by analytics.html)
+// POST records preferences without account identifiers. GET returns counts and recent submitted text.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { applySecurityHeaders, boundedString, boundedStringArray, rateLimit } from './_security';
@@ -23,7 +19,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   res.setHeader('X-Robots-Tag', 'noindex, nofollow');
   if (!rateLimit(req, res, req.method === 'GET' ? 30 : 20, 60_000)) return;
 
-  // ── POST: log one anonymised entry ──────────────────────────────────────
   if (req.method === 'POST') {
     const body = (req.body as Record<string, unknown>) || {};
     const entry: AnalyticsEntry = {
@@ -39,15 +34,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     try {
       await kvPipeline([['LPUSH', 'cm:analytics', JSON.stringify(entry)]]);
     } catch {
-      // analytics must never break the main recommendation flow
+      // Analytics is best effort; a failed write must not interrupt recommendations.
     }
     res.status(200).json({ ok: true });
     return;
   }
 
-  // ── GET: return aggregated stats ─────────────────────────────────────────
   if (req.method === 'GET') {
     try {
+      // Keep the total count separate from the bounded sample used for breakdowns.
       const results = await kvPipeline([
         ['LLEN',   'cm:analytics'],
         ['LRANGE', 'cm:analytics', '0', '199'],
@@ -62,7 +57,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
           Array.isArray(e.genres) && e.genres.every(g => typeof g === 'string') &&
           typeof e.runtime === 'string' && typeof e.mood === 'string' && typeof e.occasion === 'string');
 
-      // Genre counts
+      // Use dictionaries without inherited keys because labels come from submitted text.
       const genreCounts: Record<string, number> = Object.create(null);
       for (const entry of entries) {
         for (const g of entry.genres) {
@@ -70,18 +65,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
         }
       }
 
-      // Unique runtime preferences
       const runtimeCounts: Record<string, number> = Object.create(null);
       for (const entry of entries) {
         if (entry.runtime) runtimeCounts[entry.runtime] = (runtimeCounts[entry.runtime] || 0) + 1;
       }
 
-      // Recent unique moods (last 30 entries, deduped)
+      // Show distinct labels from the 30 most recent valid entries.
       const moods = [...new Set(
         entries.slice(0, 30).map((e) => e.mood).filter(Boolean)
       )].slice(0, 15);
 
-      // Recent unique occasions (last 30 entries, deduped)
       const occasions = [...new Set(
         entries.slice(0, 30).map((e) => e.occasion).filter(Boolean)
       )].slice(0, 10);

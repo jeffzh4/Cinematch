@@ -1,3 +1,4 @@
+// Check static source conventions; this script does not render pages or exercise browser flows.
 import { readFile } from 'node:fs/promises';
 import { contrastRatio } from './contrast.mjs';
 

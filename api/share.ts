@@ -1,8 +1,4 @@
-// Vercel serverless function: store and retrieve shareable recommendation sets.
-// Requires KV_REST_API_URL and KV_REST_API_TOKEN in environment variables.
-//
-// POST { headline, films } → { id, url }    — store results, return share link
-// GET  ?id=xxx             → { headline, films } — retrieve stored results
+// POST creates a share link for six films. GET retrieves the stored list by ID.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { randomUUID } from 'node:crypto';
@@ -13,7 +9,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   applySecurityHeaders(res);
   if (!rateLimit(req, res, req.method === 'POST' ? 20 : 60, 60_000)) return;
 
-  // ── POST: persist a result set and return a short ID ────────────────────
   if (req.method === 'POST') {
     const body = req.body as Record<string, unknown>;
     if (!body || !Array.isArray(body.films) || body.films.length !== 6 ||
@@ -58,7 +53,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     return;
   }
 
-  // ── GET: retrieve stored results by ID ──────────────────────────────────
   if (req.method === 'GET') {
     const id = boundedString(req.query.id, 32);
     if (!/^[a-f0-9]{32}$/i.test(id)) {

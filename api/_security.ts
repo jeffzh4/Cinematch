@@ -9,12 +9,14 @@ export function applySecurityHeaders(res: VercelResponse): void {
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 }
 
+/** Use the deployment proxy's forwarded address, falling back to the socket for local requests. */
 export function clientKey(req: VercelRequest): string {
   const forwarded = req.headers['x-forwarded-for'];
   const ip = Array.isArray(forwarded) ? forwarded[0] : forwarded?.split(',')[0];
   return String(ip || req.socket?.remoteAddress || 'unknown').trim();
 }
 
+/** Apply a per-instance, fixed-window limit by client and path. Returns false after sending a 429. */
 export function rateLimit(req: VercelRequest, res: VercelResponse, limit: number, windowMs: number): boolean {
   const now = Date.now();
   const key = `${clientKey(req)}:${req.url?.split('?')[0] || 'api'}`;

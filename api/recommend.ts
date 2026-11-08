@@ -1,5 +1,4 @@
-// Vercel serverless function: proxies the Anthropic API.
-// API key lives in Vercel env vars (ANTHROPIC_API_KEY), never in source.
+// POST /api/recommend: send bounded preferences to Claude and validate its response.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { z } from 'zod';
@@ -115,6 +114,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
     const data    = await response.json() as { content: Array<{ text: string }> };
     const text    = data.content?.[0]?.text || '';
+    // Claude may wrap otherwise valid JSON in a Markdown fence.
     const cleaned = text
       .replace(/^\s*```(?:json)?\s*/i, '')
       .replace(/\s*```\s*$/i, '')
@@ -128,6 +128,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       return;
     }
 
+    // Both the results page and share endpoint expect a six-film result.
     const validated = RecommendationResultSchema.safeParse(rawParsed);
     if (!validated.success) {
       res.status(502).json({ error: 'Invalid response shape from Claude' });

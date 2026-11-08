@@ -1,5 +1,4 @@
-// WCAG 2.1 relative luminance + contrast ratio — real math, shared between
-// the quality gate (scripts/check-site.mjs) and its test suite.
+// WCAG 2.1 luminance and contrast calculations for six-digit sRGB hex colors.
 
 export function relativeLuminance(hex) {
   const n = hex.replace('#', '');
