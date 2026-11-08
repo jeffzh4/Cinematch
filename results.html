@@ -665,10 +665,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateTimestamp, 60000); // update every minute
   }
 
-  // --- Read API response from localStorage ---
+  // loading.html writes the recommendation before navigating here.
   const resultsJson = localStorage.getItem('cm_results');
   if (!resultsJson) {
-    // someone hit results.html directly — send them to start
     window.location.href = 'form.html';
     return;
   }
@@ -680,7 +679,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const films = Array.isArray(results?.films) ? results.films.filter(f => f && typeof f === 'object' && typeof f.title === 'string') : [];
   if (!films.length) { window.location.href = 'error.html'; return; }
 
-  // --- Helpers ---
   const esc = s => String(s ?? '')
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const escAttr = s => esc(s).replace(/"/g, '&quot;');
@@ -846,7 +844,7 @@ document.addEventListener('DOMContentLoaded', () => {
         posterEl.classList.add('has-image');
         posterEl.innerHTML = '';
         posterEl.appendChild(img);
-        // Double-rAF ensures the opacity:0 state is painted before we add .loaded
+        // Paint the initial opacity before starting the fade-in.
         requestAnimationFrame(() => requestAnimationFrame(() => img.classList.add('loaded')));
       };
       img.src = url; // set last — onload must be wired before src triggers the fetch

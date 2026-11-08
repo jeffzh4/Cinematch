@@ -14,7 +14,7 @@ Describe your mood, choose a genre, and name the occasion. CineMatch returns six
 3. Results display explanations and TMDB posters. Films can be saved locally or shared.
 4. Failed recommendations open an error page.
 
-The public analytics page includes submitted mood and occasion text, filters, and timestamps, without account details. Shared recommendations expire after 30 days.
+Analytics stores submitted preferences and timestamps without account identifiers. The public dashboard shows counts and recent mood and occasion text. Shared recommendations expire after 30 days.
 
 ---
 
@@ -98,6 +98,15 @@ Favorites and current results stay in browser storage. Analytics and shares use 
 3. Run `vercel dev` and open the printed URL.
 
 Local development uses the production API routes.
+
+### Checks before opening a pull request
+
+Run `npm ci` from the repository root, then:
+
+- `npm test` runs the Node test suite. API tests mock KV requests; the share image regression test also renders a PNG using the installed renderer.
+- `npm run check` checks page metadata, accessibility conventions, contrast tokens, and common credential exposure patterns in static HTML.
+
+These checks require no provider credentials. They do not exercise the full recommendation flow in a browser.
 
 ---
 

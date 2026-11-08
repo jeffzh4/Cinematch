@@ -1,5 +1,4 @@
-// Vercel serverless function: proxies the TMDB poster lookup.
-// API key lives in Vercel env vars (TMDB_API_KEY), never in source.
+// GET /api/poster?title=&year=: return the first TMDB match with artwork.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { applySecurityHeaders, boundedString, rateLimit } from './_security';
@@ -45,6 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     const data = await response.json() as TMDBSearchResponse;
     const hit  = data.results?.find((r) => r.poster_path) ?? null;
 
+    // A valid search without artwork is normal; the client keeps its placeholder.
     if (!hit) {
       res.status(200).json({ posterUrl: null });
       return;

@@ -1,3 +1,4 @@
+// Exercise the installed renderer through a CommonJS bundle to catch runtime import regressions.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { build } from 'esbuild';

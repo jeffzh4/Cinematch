@@ -1,11 +1,5 @@
-// Vercel serverless function: serves crawler-friendly HTML with real og:title/
-// og:description/og:image for a shared result set. Only reached via the
-// User-Agent-conditioned rewrite in vercel.json — regular browsers never hit
-// this route and always get the interactive share.html unchanged.
-//
-// GET ?id=xxx → minimal HTML document with accurate per-share meta tags,
-// then a client-side redirect to the real share.html for the rare crawler
-// that also renders the body.
+// The crawler rewrite in vercel.json serves share metadata here before any JavaScript runs.
+// Regular visitors get share.html, which fetches and renders the stored picks.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { applySecurityHeaders, boundedString, rateLimit } from './_security';

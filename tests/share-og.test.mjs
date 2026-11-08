@@ -1,8 +1,4 @@
-// api/share-og.ts imports sibling .ts modules by extensionless specifier
-// (idiomatic TS, and how Vercel's own bundler resolves it) — Node's raw ESM
-// resolver can't follow that without a loader, so this test bundles the
-// file with esbuild first (same tool Vercel uses) rather than importing the
-// source directly.
+// Bundle the handler so Node can resolve its extensionless TypeScript imports.
 
 import { test, describe, before, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';

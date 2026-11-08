@@ -612,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctaBtn.disabled = count < 3;
   }
 
-  // pre-populate ONLY when returning via "Refine your mood" on results
+  // The results page sets a one-use flag so ordinary visits start with an empty form.
   if (localStorage.getItem('cm_refine') === '1') {
     const prevMood      = localStorage.getItem('cm_mood');
     const prevGenres    = readStoredArray('cm_genres');
@@ -642,11 +642,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (chip) { chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true'); }
     });
 
-    // single-use flag — clear so any future visit is blank
     localStorage.removeItem('cm_refine');
   }
 
-  // initialize progress + CTA state
   updateProgress();
 
   moodEl.addEventListener('input', updateProgress);

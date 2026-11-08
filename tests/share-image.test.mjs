@@ -1,8 +1,4 @@
-// api/share-image.ts imports a sibling .ts module by extensionless
-// specifier, which Node's raw ESM resolver can't follow without a loader.
-// So this test bundles the file with esbuild first (same transform tool
-// Vercel uses), stubs '@vercel/og' with a fake package that records what it
-// was called with, then imports and exercises the compiled handler directly.
+// Stub the renderer to inspect preview content. share-image-node.test.mjs checks real PNG output.
 
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';

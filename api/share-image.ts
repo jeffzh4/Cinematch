@@ -37,8 +37,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
         filmLine = films.slice(0, 3).map((f) => f.title).filter(Boolean).join('  ·  ');
       }
     } catch {
-      // Image generation must never fail a crawler request — fall back
-      // to the generic headline/no-filmLine defaults set above.
+      // If KV is unavailable, render the generic preview.
     }
   }
 
