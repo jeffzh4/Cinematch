@@ -169,7 +169,7 @@ function wrapLastWord(title) {
   }
 
   try {
-    const res = await fetch(`/api/share?id=${encodeURIComponent(id)}`);
+    const res = await fetch(`/api/share?id=${encodeURIComponent(id)}`, { signal: AbortSignal.timeout(15000) });
     if (res.status === 404) throw new Error('expired');
     if (!res.ok)            throw new Error(`${res.status}`);
 

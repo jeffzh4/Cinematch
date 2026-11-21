@@ -155,10 +155,12 @@ function readFavorites() {
   } catch { return []; }
 }
 
+// Keep the empty-state node after rendering removes it from the DOM.
+const stateEl = document.getElementById('state-msg');
+
 function render() {
   const films   = readFavorites();
   const listEl  = document.getElementById('film-list');
-  const stateEl = document.getElementById('state-msg');
 
   if (!films.length) {
     listEl.innerHTML = '';

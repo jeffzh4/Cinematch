@@ -179,15 +179,14 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--accent);outline-off
 (async () => {
   const body = document.getElementById('stats-body');
 
-  function el(tag, cls, html) {
+  function el(tag, cls) {
     const e = document.createElement(tag);
     if (cls) e.className = cls;
-    if (html !== undefined) e.innerHTML = html;
     return e;
   }
 
   try {
-    const res  = await fetch('/api/analytics');
+    const res  = await fetch('/api/analytics', { signal: AbortSignal.timeout(15000) });
     if (!res.ok) throw new Error(`${res.status}`);
     const data = await res.json();
 
@@ -199,9 +198,10 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--accent);outline-off
     const totalBlock = el('div', 'stat-block');
     totalBlock.innerHTML = `
       <p class="stat-label">Total recommendations served</p>
-      <p class="stat-total"><em>${data.total ?? 0}</em></p>
+      <p class="stat-total"><em></em></p>
       <p class="stat-sublabel">queries · all time</p>
     `;
+    totalBlock.querySelector('em').textContent = String(data.total ?? 0);
     body.appendChild(totalBlock);
 
     // ── Genres ───────────────────────────────────────────────────────────
@@ -219,13 +219,15 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--accent);outline-off
 
       const bars = el('div', 'bars');
       for (const [genre, count] of sortedGenres) {
-        const pct = Math.round((count / maxCount) * 100);
+        const pct = maxCount > 0 ? Math.round((count / maxCount) * 100) : 0;
         const row = el('div', 'bar-row');
         row.innerHTML = `
-          <span class="bar-label">${genre}</span>
+          <span class="bar-label"></span>
           <div class="bar-track"><div class="bar-fill" style="--pct:${pct}%"></div></div>
-          <span class="bar-count">${count}</span>
+          <span class="bar-count"></span>
         `;
+        row.querySelector('.bar-label').textContent = genre;
+        row.querySelector('.bar-count').textContent = String(count);
         bars.appendChild(row);
       }
       genreBlock.appendChild(bars);

@@ -750,7 +750,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function readFavorites() {
     try {
       const arr = JSON.parse(localStorage.getItem('cm_favorites') || '[]');
-      return Array.isArray(arr) ? arr : [];
+      return Array.isArray(arr) ? arr.filter(f => f && typeof f === 'object' && typeof f.title === 'string') : [];
     } catch { return []; }
   }
   function isSaved(favorites, film) {
@@ -824,7 +824,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function fetchPosterUrl(title, year) {
     const params = new URLSearchParams({ title });
     if (year) params.set('year', String(year));
-    const res = await fetch(`/api/poster?${params}`);
+    const res = await fetch(`/api/poster?${params}`, { signal: AbortSignal.timeout(15000) });
     if (!res.ok) return null;
     const data = await res.json();
     return data.posterUrl || null;
@@ -866,6 +866,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const res  = await fetch('/api/share', {
         method:  'POST',
+        signal: AbortSignal.timeout(15000),
         headers: { 'content-type': 'application/json' },
         body:    JSON.stringify(results)
       });
@@ -875,18 +876,26 @@ document.addEventListener('DOMContentLoaded', () => {
       shareToast?.removeAttribute('hidden');
       document.body.style.overflow = 'hidden';
     } catch {
-      alert('Sharing requires the deployed Vercel app — not available in local dev.');
+      alert('Could not create a share link. Please try again.');
     }
 
     shareBtn.disabled = false;
     if (lbl) lbl.textContent = 'Share';
   });
 
-  copyBtn?.addEventListener('click', () => {
+  copyBtn?.addEventListener('click', async () => {
     const input = shareInput;
     input.select();
-    navigator.clipboard?.writeText(input.value).catch(() => document.execCommand('copy'));
-    copyBtn.textContent = 'Copied!';
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(input.value);
+      } else if (!document.execCommand('copy')) {
+        throw new Error('Copy unavailable');
+      }
+      copyBtn.textContent = 'Copied!';
+    } catch {
+      copyBtn.textContent = 'Select and copy the link';
+    }
     setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
   });
 

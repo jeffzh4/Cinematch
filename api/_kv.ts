@@ -34,6 +34,7 @@ export async function kvPipeline(commands: unknown[][]): Promise<KVResult[]> {
     try {
       res = await fetch(`${url}/pipeline`, {
         method:  'POST',
+        signal: AbortSignal.timeout(5000),
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body:    JSON.stringify(commands),
       });

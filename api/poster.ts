@@ -35,7 +35,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     const params = new URLSearchParams({ api_key: apiKey, query: title });
     if (year) params.set('year', year);
 
-    const response = await fetch(`https://api.themoviedb.org/3/search/movie?${params}`);
+    const response = await fetch(`https://api.themoviedb.org/3/search/movie?${params}`, { signal: AbortSignal.timeout(10000) });
     if (!response.ok) {
       res.status(response.status).json({ error: 'TMDB request failed' });
       return;

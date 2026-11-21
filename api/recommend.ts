@@ -88,6 +88,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
+      signal: AbortSignal.timeout(25000),
       headers: {
         'content-type':    'application/json',
         'x-api-key':       apiKey,
